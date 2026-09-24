@@ -1,7 +1,11 @@
+using Innlevering1_Gruppe2.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<Database>();
 
 var app = builder.Build();
 
