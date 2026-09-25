@@ -1,57 +1,23 @@
-﻿
-@{
-    ViewData["Title"] = "Logg inn";
-}
+﻿<div class="text-center py-5">
+    <h1 class="display-5">Brannressurser</h1>
 
+    <p class="lead">
+        Registrer og finn tilgjengelige ressurser.
+    </p>
 
+    <div class="mt-4">
+        <a asp-controller="Home"
+           asp-action="Register"
+           class="btn btn-primary me-2">
+            Registrer ressurs
+        </a>
 
-<div class="login-page">
-
-    <div class="login-card">
-
-        <div class="logo">TF</div>
-
-        <div class="eyebrow">TOTALFORSVARET</div>
-
-        <h1>Ressurs- og behovsportal</h1>
-
-        <p class="login-description">
-            Logg inn for å registrere Informasjon og posisjon.
-        </p>
-
-        <form method="post">
-
-            <div class="form-group">
-                <label for="username">Brukernavn</label>
-                <input
-                    type="text"
-                    id="username"
-                    name="Username"
-                    class="form-control"
-                    placeholder="Skriv inn brukernavn"
-                    required />
-            </div>
-
-            <div class="form-group">
-                <label for="password">Passord</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="Password"
-                    class="form-control"
-                    placeholder="Skriv inn passord"
-                    required />
-            </div>
-
-            <button type="submit" class="login-button">
-                Logg inn
-            </button>
-
-        </form>
-
+        <a asp-controller="Home"
+           asp-action="Map"
+           class="btn btn-outline-secondary">
+            Se kart
+        </a>
     </div>
-
 </div>
-
 
 
