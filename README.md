@@ -11,5 +11,5 @@ Mål:
 - Dokumenter deres bruk av KI i prosjektet fra ide til koding i Github READ ME (bruksområder, verktøy, prompt kommandoer).
 
 Vår bruk av AI
-Vi har brukt AI til alt.
+- Vi har brukt AI til alt.
 
