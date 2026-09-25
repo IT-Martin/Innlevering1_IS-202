@@ -15,6 +15,12 @@ namespace Innlevering1_Gruppe2.Controllers
         {
             return View();
         }
+        
+        // Legg inn en metode for å håndtere innlogging
+        public IActionResult LogIn()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
