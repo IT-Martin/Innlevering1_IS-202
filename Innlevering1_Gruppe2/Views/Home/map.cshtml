@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Kart";
+}
+
+<div class="container py-4">
+
+    <h1>Velg posisjon</h1>
+
+    <p class="text-muted">
+        Klikk på kartet for å velge posisjonen til ressursen.
+    </p>
+
+    <div id="map" style="height: 500px;"></div>
+
+    <div class="mt-3">
+        <p>
+            <strong>Latitude:</strong>
+            <span id="latitude">-</span>
+        </p>
+
+        <p>
+            <strong>Longitude:</strong>
+            <span id="longitude">-</span>
+        </p>
+    </div>
+
+    <button type="button" class="btn btn-primary">
+        Bekreft posisjon
+    </button>
+
+</div>
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    const map = L.map('map').setView([58.1467, 7.9956], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', function (e) {
+
+        const latitude = e.latlng.lat;
+        const longitude = e.latlng.lng;
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([latitude, longitude]).addTo(map);
+
+        document.getElementById('latitude').textContent =
+            latitude.toFixed(6);
+
+        document.getElementById('longitude').textContent =
+            longitude.toFixed(6);
+    });
+</script>

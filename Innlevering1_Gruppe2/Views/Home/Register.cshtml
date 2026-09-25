@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Register ressurs";
+}
+
+<div class="text-center py-5">
+    <h1>Registrer ressurs</h1>
+
+    <form method="post">
+
+        <div class="mb-3">
+            <label for="resourceType" class="form-label">Type ressurs</label>
+            <input type="text"
+                   id="resourceType"
+                   name="ResourceType"
+                   class="form-control"
+                   required />
+        </div>
+
+        <div class="mb-3">
+            <label for="dateTime" class="form-label">Tidspunkt</label>
+            <input type="datetime-local"
+                   id="dateTime"
+                   name="DateTime"
+                   class="form-control"
+                   required />
+        </div>
+
+        <div class="mb-3">
+            <label for="contact" class="form-label">Kontaktpunkt</label>
+            <input type="text"
+                   id="contact"
+                   name="Contact"
+                   class="form-control"
+                   required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Velg posisjon på kart
+        </button>
+
+    </form>
+</div>
