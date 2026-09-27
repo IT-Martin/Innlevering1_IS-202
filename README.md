@@ -15,6 +15,10 @@ Vår bruk av AI
 
 
 
+
+
+
+
 Martin:
 Jeg har brukt KI til å prøve forstå koding i praksis. Først prøvd og lest hva koden gjør og handler om. Så vest jeg ser noe nytt, spør jeg 
 Ai hva den mener med de kode linjenen. Å skrivet inn direkte eller endre koden til AI.
