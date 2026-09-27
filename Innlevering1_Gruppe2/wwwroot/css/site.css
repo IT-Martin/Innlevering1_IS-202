@@ -72,3 +72,69 @@ footer {
     footer .container {
         font-size: 0.9rem;
     }
+
+
+/* Map */
+.map-page {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+}
+
+.coordinates p {
+    margin-bottom: 0.25rem;
+}
+
+
+/* Resultat Siden */
+
+.result-page {
+    max-width: 700px;
+    margin: 3rem auto;
+}
+
+.result-card {
+    border: 0;
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #d1e7dd;
+    color: #198754;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+
+
+/*Legge inn ressurs siden*/
+
+.resource-input {
+    max-width: 500px;
+}
+
+.resource-input .form-control {
+    border-radius: 8px;
+    padding: 0.75rem;
+}
