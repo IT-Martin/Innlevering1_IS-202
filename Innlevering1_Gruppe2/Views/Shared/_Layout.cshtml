@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Innlevering1_Gruppe2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
     <header>
@@ -45,19 +46,23 @@
 
                         <!-- Disse kobles til riktige controllere når gruppa har bestemt navnene -->
                         <li class="nav-item">
-                            <a class="nav-link" href="#"> <!--Midlertidig-->
-                                Registrer ressurs
+                            <a class="nav-link"
+                                asp-controller="Home"
+                                asp-action="Register">
+                                Registrer Ressurs
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="#"> <!--Midlertidig-->
-                                Finn ressurs
+                                Finn Ressurs
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#"> <!--Midlertidig-->
+                            <a class="nav-link" 
+                               asp-controller="Home"
+                               asp-action="Map"> <!--Midlertidig-->
                                 Kart
                             </a>
                         </li>

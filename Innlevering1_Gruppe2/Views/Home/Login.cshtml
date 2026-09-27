@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Logg inn";
+}
+
+@{
+    if (ViewData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="alert alert-danger">
+            @errorMessage
+        </div>
+    }
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h1>Logg inn</h1>
+
+        <form method="post" asp-action="Login">
+            <div class="mb-3">
+                <label for="email" class="form-label">E-post</label>
+                <input id="email"
+                       name="email"
+                       type="email"
+                       class="form-control"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Passord</label>
+                <input id="password"
+                       name="password"
+                       type="password"
+                       class="form-control"
+                       required />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Logg inn
+            </button>
+        </form>
+    </div>
+</div>

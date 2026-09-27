@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Registrer ressurs";
+}
+
+<div class="register-page">
+    <div class="mb-4">
+        <h1 class="display-6">Registrer ressurs</h1>
+
+        <p class="text-muted">
+            Skriv inn ressursen og velg plasseringen på kartet.
+        </p>
+    </div>
+
+    <form asp-controller="Home"
+          asp-action="Register"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <div class="card register-card shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Ressursinformasjon</h2>
+
+                @if (ViewData["ErrorMessage"] is string errorMessage)
+                {
+                    <div class="alert alert-danger">
+                        @errorMessage
+                    </div>
+                }
+
+                <div class="resource-input mb-3">
+                    <label for="resourceName" class="form-label">
+                        Navn på ressurs
+                    </label>
+
+                    <input id="RessursNavn"
+                           name="RessursNavn"
+                           type="text"
+                           class="form-control"
+                           placeholder="For eksempel traktor"
+                           required />
+                </div>
+
+                <h2 class="h5 mb-3">Velg posisjon</h2>
+
+                <div id="map"
+                     aria-label="Kart for valg av posisjon">
+                </div>
+
+                <input type="hidden"
+                       id="latitudeInput"
+                       name="latitude" />
+
+                <input type="hidden"
+                       id="longitudeInput"
+                       name="longitude" />
+
+                <div class="coordinates-card mt-3">
+                    <div>
+                        <span class="coordinate-label">Latitude</span>
+                        <strong id="latitude">-</strong>
+                    </div>
+
+                    <div>
+                        <span class="coordinate-label">Longitude</span>
+                        <strong id="longitude">-</strong>
+                    </div>
+                </div>
+
+                <div id="map-message"
+                     class="alert alert-info mt-3 mb-0">
+                    Klikk på kartet for å velge en posisjon.
+                </div>
+
+                <button id="confirm-position"
+                        type="submit"
+                        class="btn btn-primary mt-3"
+                        disabled>
+                    Registrer ressurs
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        const map = L.map("map").setView([58.1467, 7.9956], 13);
+
+        const latitudeElement =
+            document.getElementById("latitude");
+
+        const longitudeElement =
+            document.getElementById("longitude");
+
+        const latitudeInput =
+            document.getElementById("latitudeInput");
+
+        const longitudeInput =
+            document.getElementById("longitudeInput");
+
+        const messageElement =
+            document.getElementById("map-message");
+
+        const confirmButton =
+            document.getElementById("confirm-position");
+
+        let marker = null;
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+                attribution:
+                    "&copy; OpenStreetMap-bidragsytere"
+            }
+        ).addTo(map);
+
+        map.on("click", function (event) {
+            const latitude = event.latlng.lat;
+            const longitude = event.latlng.lng;
+
+            if (marker !== null) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([latitude, longitude])
+                .addTo(map);
+
+            latitudeElement.textContent =
+                latitude.toFixed(6);
+
+            longitudeElement.textContent =
+                longitude.toFixed(6);
+
+            latitudeInput.value = latitude;
+            longitudeInput.value = longitude;
+
+            messageElement.className =
+                "alert alert-success mt-3 mb-0";
+
+            messageElement.textContent =
+                "Posisjon valgt.";
+
+            confirmButton.disabled = false;
+        });
+    </script>
+}
