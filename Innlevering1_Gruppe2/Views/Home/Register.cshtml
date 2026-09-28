@@ -11,6 +11,7 @@
         </p>
     </div>
 
+    @* Sender Ressursnavnet og koordinatene til Register-metoden i HomeController via POST *@
     <form asp-controller="Home"
           asp-action="Register"
           method="post">
@@ -21,6 +22,8 @@
             <div class="card-body">
                 <h2 class="h5 mb-3">Ressursinformasjon</h2>
 
+
+                @* Viser feilmeldingen Controller setter dersom registreringen avises. *@
                 @if (ViewData["ErrorMessage"] is string errorMessage)
                 {
                     <div class="alert alert-danger">
@@ -46,7 +49,7 @@
                 <div id="map"
                      aria-label="Kart for valg av posisjon">
                 </div>
-
+                @* JavaScript fyller disse feltene med valgt kartposisjon *@
                 <input type="hidden"
                        id="latitudeInput"
                        name="latitude" />
@@ -87,6 +90,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
+        //Oppretter kartet med Kristiansand som startposisjon
         const map = L.map("map").setView([58.1467, 7.9956], 13);
 
         const latitudeElement =
@@ -109,6 +113,7 @@
 
         let marker = null;
 
+        
         L.tileLayer(
             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             {
@@ -118,10 +123,12 @@
             }
         ).addTo(map);
 
+        //Henter koordinatene fra stedet brukeren klikker på
         map.on("click", function (event) {
             const latitude = event.latlng.lat;
             const longitude = event.latlng.lng;
-
+            
+            //Fjerner tidligere markør, slik at bare den valgte posisjonen vises.
             if (marker !== null) {
                 map.removeLayer(marker);
             }
@@ -134,7 +141,7 @@
 
             longitudeElement.textContent =
                 longitude.toFixed(6);
-
+            //Fyller skjemafeltene som sendes til serveren når brukeren registrerer ressursen
             latitudeInput.value = latitude;
             longitudeInput.value = longitude;
 
@@ -143,7 +150,7 @@
 
             messageElement.textContent =
                 "Posisjon valgt.";
-
+            //Aktiverer registreringsknappen etter at en posisjon er valgt.
             confirmButton.disabled = false;
         });
     </script>

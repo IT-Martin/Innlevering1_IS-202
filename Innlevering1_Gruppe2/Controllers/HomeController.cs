@@ -7,9 +7,11 @@ namespace Innlevering1_Gruppe2.Controllers;
 
 public class HomeController : Controller
 {
-
+    //Nøkkel som brukes til å lagre og hente ressurslisten i Session
     private const string RessurserSessionKey = "Ressurser";
 
+    //Henter ressurslisten fra brukerens Session
+    //Gjør JSON-teksten om til ressursobjekter , eller returnerer en tom liste
     private List <RessursViewModel> HentRessurser()
     {
         var json = HttpContext.Session.GetString(RessurserSessionKey);
@@ -27,7 +29,7 @@ public class HomeController : Controller
         return View();
     }
 
-    //Kartet
+    //Kart med GET Request, sender ressurslisten til kartvisning
 
     [HttpGet]
     public IActionResult Map()
@@ -41,6 +43,7 @@ public class HomeController : Controller
         return View();
     }
 
+    //Brukern registrere data med ressurs navn, og koordinater som er valgt på kartet.
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Register(
@@ -70,7 +73,7 @@ public class HomeController : Controller
         };
 
 
-        // Legg til i listen, slik at tidligere registreringer beholdes.
+        // Legger den nye ressursen til i listen, slik at tidligere registrering beholdes
         var ressurser = HentRessurser();
         ressurser.Add(ressurs);
 
@@ -81,18 +84,21 @@ public class HomeController : Controller
             new { id = ressurs.Id });
 
     }
-        [HttpGet]
-        public IActionResult Result(Guid? id)
+
+    //Finner ressursen med den oppgitte ID-en og viser den på resultatsiden.
+    //Hvis ressursen ikke finnes i brukerens Session, videresendes brukeren til kartet. 
+    [HttpGet]
+    public IActionResult Result(Guid? id)
+    {
+        var ressurs = HentRessurser().FirstOrDefault(r => r.Id == id);
+
+
+        if (ressurs is null)
         {
-            var ressurs = HentRessurser().FirstOrDefault(r => r.Id == id);
-
-
-            if (ressurs is null)
-            {
-                return RedirectToAction(nameof(Map));
-            }
-            return View(ressurs);
+            return RedirectToAction(nameof(Map));
         }
+        return View(ressurs);
+    }
 
 
     public IActionResult Error()

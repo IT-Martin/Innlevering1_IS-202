@@ -1,4 +1,6 @@
-﻿@model List<RessursViewModel>
+﻿@* Mottar ressurslisten fra HomeController.Map().  *@
+
+@model List<RessursViewModel>
 @using System.Globalization
 
 @{
@@ -30,6 +32,10 @@
     <div id="map"
          aria-label="Kart over registrerte ressurser">
     </div>
+
+    @* Viser ressursene som lenker til resultatsiden.
+       data-attributtene gjør navn og koordinater tilgjengelige for JavaScript
+    *@
 
     <ul id="resource-list" class="list-group mt-3">
         @foreach (var ressurs in Model)
@@ -84,7 +90,7 @@
                 const position = [latitude, longitude];
                 positions.push(position);
 
-                // Viser navnet som tekst, også hvis det inneholder HTML.
+                //Bruker tekstContent slik at Ressursnavnet behandles som tekst og ikke som HTML
                 const popup = document.createElement("strong");
                 popup.textContent = element.dataset.resourceName;
 
@@ -92,7 +98,8 @@
                     .addTo(map)
                     .bindPopup(popup);
             });
-
+            //Sentrerer kartet på valgte ressurs. 
+            //Hvis listen er tom, beholdes startutsnittet over Kristiansand
         if (positions.length === 1) {
             map.setView(positions[0], 15);
         } else if (positions.length > 1) {
