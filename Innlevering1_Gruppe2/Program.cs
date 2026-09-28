@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//Bruker appens minne som lagres for Session-data
+//Ressursen er midlertidige og lagres ikke som en database enda
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 

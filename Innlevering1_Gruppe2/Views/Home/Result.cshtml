@@ -1,4 +1,6 @@
-﻿@model RessursViewModel
+﻿@* Mottar ressursen controlleren fant ved hjelp av ID-en i forespørselen *@
+
+@model RessursViewModel
 
 @{
     ViewData["Title"] = "Resultat";
@@ -19,10 +21,14 @@
                 Ressursen er registrert med denne posisjonen:
             </p>
 
+            @* Viser registrerte posisjonen med seks desimaler *@
+
             <p>
                 Latitude: @Model.Latitude.ToString("F6")<br />
                 Longitude: @Model.Longitude.ToString("F6")
             </p>
+
+            @*  *@
 
             <a class="btn btn-primary"
                asp-controller="Home"
