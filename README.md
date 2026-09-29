@@ -91,6 +91,7 @@ Mål:
 - Dokumenter deres bruk av KI i prosjektet fra ide til koding i Github READ ME (bruksområder, verktøy, prompt kommandoer).
 
 ## Vår bruk av AI:
+Dokumentasjon på vårres bruk a KI i prosjektet fra ide til koding i Github (bruksområder, verktøy, prompt kommandoer)
 
 ### Martin
 Test
