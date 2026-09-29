@@ -38,10 +38,12 @@ Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller).
 
 | Komponent | Ansvar |
 |---|---|
-| 'HomeController.cs' | Håndterer GET og POST, kontrollerer innsendte data, leser og lagrer nye ressurser i ressurslisten
-| 'RessursViewModel.cs' | Gir mulighet til å lage en ressurs med verdier: ID, navn og kart koordinatene
-| 'Register.cshtml' | Viser skjemaet og kartet for valg av ressursens posisjon. 
-| '' | 
+| 'HomeController.cs' | Håndterer GET og POST, kontrollerer innsendte data, leser og lagrer nye ressurser i ressurslisten |
+| 'RessursViewModel.cs' | Gir mulighet til å lage en ressurs med verdier: ID, navn og kart koordinatene |
+| 'Register.cshtml' | Viser skjemaet og kartet for valg av ressursens posisjon. |
+| 'Result.cshtml' | Viser navn og koordinater for ressursen controlleren har hentet. |
+| 'Map.cshtml' | Viser ressurslisten og oppretter kartmarkører ved hjelp av JavaScript |
+| '_Layout.cshtml' | Inneholder felles navigasjon 
 
 
 
