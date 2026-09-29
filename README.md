@@ -24,7 +24,28 @@ For å kjøre prosjektet gjennom Visual Studio trenger du:
 
 NB: Første gang man starte prosjektet, kan det ta cirka 1 min før Visual studio åpner nettleseren. Etterpå er det lettere å starte prosjektet.
 
+### Stoppe applikasjonen
 
+Stopp kjøringen i Visual Studio ed å trykke på "Stop Debugging"
+
+### Lagring av data
+
+Ressursene lagres midlertidlig i brukerens Session. Ressurslisten gjlres om til JSON og oppbevares i applikasjonens minne.
+
+Det betyr at:
+
+- Ressursene tilhører den aktuelle brukerøkten.
+- Data kan forsvinne når økten utløper eller applikasjonen starter på nytt.
+- Denne versjonen bruker ikke database.
+
+### SystemArkitektur
+
+Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller). 
+- **Model:**
+- **View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
+- **Controller:** Er logikken i backend, som håndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer dataen og lagrer ressursen i Session.
+                  Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view.
+  Eller at brukeren åpner kartet og trenger å se ressursene lagt in (GET Request)
 
 | ID | Testscenario | Forventet resultat | Faktisk resultat | Status |
 |---|---|---|---|---|
