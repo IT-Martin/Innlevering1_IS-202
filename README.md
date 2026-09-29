@@ -12,3 +12,9 @@ Mål:
 
 Vår bruk av AI
 - Vi har brukt AI til alt.
+
+
+
+
+| ID | Testscenario | Forventet resultat | Faktisk resultat | Status |
+|---|---|---|---|---|
