@@ -111,7 +111,18 @@ Jeg har prøvd ut Copilot, men det har ikke fungert helt for meg siden det blir 
 Ok her er prosjektmappa min. Se gjennom alt og få med deg logikken. Så få med deg hva jeg burde kommentere der inne for Controller, view og model inne der.
 
 ## Ellen
-Test
+Jeg har brukt ChatGPT Plus som et støtteverkøty gjennom prosjektet, hovedsakelig for å forstå teknologien vi bruker, utvikle ideer og få hjelp underveis når jeg står fast. Jeg har blant annet brukt KI til å forstå ASP.NET Core MVC, HTML/SS og hvordan Views, Controllers og ViewModels henger sammen. ChatGPT har også blitt brukt som veiledning i Git/GitHub, blant annet med branches, git status, git add, git commit og git push. 
+
+I tillegg har jeg brukt KI til feilsøking ved å sende inn skjermbilder fra Visual Studio, terminalen og nettsiden, og til å diskutre hvordan nettsiden kan utformes. Jeg har hovedsakelig brukt KI for å forstå hva jeg gjør, ikke bare for å få en ferdig kode. Noe som har vært veldig nyttig i en slik oppgave. 
+
+Eksempler på prompts jeg har brukt:
+- "Hva er forskjellen på git commit og git push?"
+- "Kan du forklare forskjellen på <a> og <li>?"
+- "Kan du hjelpe meg å forstå denne Git-statusen?"
+- "Kan du forklare denne HTML/CSS-koden?"
+ 
+  osv.
+
 
 ## Sander
 Test
