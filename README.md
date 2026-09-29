@@ -107,6 +107,7 @@ Jeg har prøvd ut Copilot, men det har ikke fungert helt for meg siden det blir 
 ### Eksempel på en prompt fra meg:
 
 (Min prosjektmappe som ZIP.)
+
 Ok her er prosjektmappa min. Se gjennom alt og få med deg logikken. Så få med deg hva jeg burde kommentere der inne for Controller, view og model inne der.
 
 ## Ellen
