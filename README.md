@@ -117,7 +117,7 @@ I tillegg har jeg brukt KI til feilsøking ved å sende inn skjermbilder fra Vis
 
 Eksempler på prompts jeg har brukt:
 - "Hva er forskjellen på git commit og git push?"
-- "Kan du forklare forskjellen på <a> og <li>?"
+- "Kan du forklare forskjellen på "<a>" og "<li>"?"
 - "Kan du hjelpe meg å forstå denne Git-statusen?"
 - "Kan du forklare denne HTML/CSS-koden?"
  
