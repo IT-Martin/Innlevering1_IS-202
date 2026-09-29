@@ -32,11 +32,11 @@ Stopp kjøringen i Visual Studio ved å trykke på "Stop Debugging" oppe til hø
 
 Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller). 
 
-**Model:** I prosjektet brukes 'RessursViewModel' til å representere en ressurs med ID, navn og koordinater. Data sendes til Controller som deretter sendes til Viewet for brukeren.
+**Model:** I prosjektet brukes 'RessursViewModel' til å representere en ressurs med ID, navn og koordinater. Controller oppretter og bruker ressursobjektene og sender dem til viewet for visning.
 
 **View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
 
-**Controller:** Er logikken i backend, som håndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer dataen og lagrer ressursen i Session.
+**Controller:** åHndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer verdier som er mottat og lagrer ressursen i Session.
                   Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view. 
 
 | Komponent | Ansvar |
@@ -48,7 +48,7 @@ Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller).
 | Map.cshtml | Viser ressurslisten og oppretter kartmarkører ved hjelp av JavaScript |
 | _Layout.cshtml | Inneholder felles navigasjon for nettsiden
 | Program.cs | MVC, Session og ruting |
-| Dockerfile | Beskriver hvordan applikasjon håndterer midlertidige lagring og generelt oppstart av applikasjon
+| Dockerfile | Beskriver hvordan applikasjon bygges og kjøres i en Docker-container. |
 
 
 
