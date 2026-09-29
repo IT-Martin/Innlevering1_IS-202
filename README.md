@@ -1,18 +1,28 @@
 # Innlevering1
 
-Mål:
-- Controller, view modell og view.
-- Responsive nettsider med dynamisk innhold hentet fra web server.
-- At applikasjonen håndterer GET og POST forespørsler.
-- Skjema som tar data fra brukeren og at data vises i annen nettside.
-- Kart i tillegg til skjemaet (punktet over) og at data hentes fra kartet og vises i en annen nettside.
-- Dokumentasjon i Github om drift, system arkitektur, testing scenarier og resultater.
-- Dokumentasjonen i selve koden.
-- Dokumenter deres bruk av KI i prosjektet fra ide til koding i Github READ ME (bruksområder, verktøy, prompt kommandoer).
+Gruppe 2 holde på å utvikle en ASP.NET Core MVC-applikasjon for å registrere med visning av ressurser på et kart.
 
-Vår bruk av AI
-- Vi har brukt AI til alt.
+Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ressursen. Navn og koordinater vises deretter på en egen resultatside. Registrerte ressurser kan også vises samlet på kartet.
 
+## 1. Drift
+
+For å kjøre prosjektet gjennom Visual Studio trenger du:
+
+- Visual Studio med støtte for .NET 10, ASP.NET.
+- Docker Desktop installert på maskinen.
+- Internettilgang for å hente nødvendige pakker som Leaflet.
+
+### Starte applikasjonen
+
+1. Klon GitHub-repositoriet, eller last ned og pakk ut prosjektet.
+2. Start Docker Desktop.
+3. Åpne "Innlevering1.slnx" i Visual Studio.
+4. Kontroller at "Innlevering1_Gruppe2" er oppstartsprosjektet.
+5. Velg kjøreprofilen 'Container (Dockerfile)'.
+6. Start prosjektet med den grønne startknappen.
+7. Når applikasjonen har startet, åpner Visual Studio nettleseren.
+
+NB: Første gang man starte prosjektet, kan det ta cirka 1 min før Visual studio åpner nettleseren. Etterpå er det lettere å starte prosjektet.
 
 
 
@@ -25,3 +35,20 @@ Vår bruk av AI
 | T5 | Oppdater resultatsiden etter registrering | Ressursnavn og koordinater forblir uendret, og ingen ekstra ressurser opprettes. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
 | T6 | Klikk på en posisjon i registreringsskartet, og klikk deretter et annet sted. | Den gamle markøren fjernes. En markør vises på den nye posisjonen, og koordinatene oppdateres. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
 | T7 | Registrerer “Traktor”, trykk “Se alle ressursene på kartet” og se om markøren kommer med navnet “Traktor”. | En popup viser ressursnavnet ‘Traktor’. Etter registreringen. | Kartet ble sentrert på ressursen. Da jeg klikket på markøren, viste popupen navnet “Traktor” | Ikke bestått. |
+
+
+
+
+
+Mål:
+- Controller, view modell og view.
+- Responsive nettsider med dynamisk innhold hentet fra web server.
+- At applikasjonen håndterer GET og POST forespørsler.
+- Skjema som tar data fra brukeren og at data vises i annen nettside.
+- Kart i tillegg til skjemaet (punktet over) og at data hentes fra kartet og vises i en annen nettside.
+- Dokumentasjon i Github om drift, system arkitektur, testing scenarier og resultater.
+- Dokumentasjonen i selve koden.
+- Dokumenter deres bruk av KI i prosjektet fra ide til koding i Github READ ME (bruksområder, verktøy, prompt kommandoer).
+
+Vår bruk av AI
+- Vi har brukt AI til alt.
