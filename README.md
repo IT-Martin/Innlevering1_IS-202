@@ -31,6 +31,7 @@ Stopp kjøringen i Visual Studio ved å trykke på "Stop Debugging" oppe til hø
 ## 3. SystemArkitektur
 
 Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller). 
+
 **Model:** I prosjektet brukes 'RessursViewModel' til å representere en ressurs med ID, navn og koordinater. Data sendes til Controller som deretter sendes til Viewet for brukeren.
 
 **View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
