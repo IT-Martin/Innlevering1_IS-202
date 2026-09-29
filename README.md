@@ -32,11 +32,11 @@ Stopp kjøringen i Visual Studio ved å trykke på "Stop Debugging" oppe til hø
 
 Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller). 
 
-**Model:** I prosjektet brukes 'RessursViewModel' til å representere en ressurs med ID, navn og koordinater. Controller oppretter og bruker ressursobjektene og sender dem til viewet for visning.
+**Model:** I prosjektet brukes 'RessursViewModel' til å represen en ressurs med ID, navn og koordinater. Controller oppretter og bruker ressursobjektene og sender dem til viewet for visning.
 
 **View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
 
-**Controller:** åHndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer verdier som er mottat og lagrer ressursen i Session.
+**Controller:** Håndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer verdier som er mottat og lagrer ressursen i Session.
                   Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view. 
 
 | Komponent | Ansvar |
@@ -108,7 +108,7 @@ Jeg har prøvd ut Copilot, men det har ikke fungert helt for meg siden det blir 
 
 (Min prosjektmappe som ZIP.)
 
-Ok her er prosjektmappa min. Se gjennom alt og få med deg logikken. Så få med deg hva jeg burde kommentere der inne for Controller, view og model inne der.
+Ok her er prosjektmappa min. Se gjennom alt og få med deg logikken. Så få med deg hva jeg burde kommen der inne for Controller, view og model inne der.
 
 ## Ellen
 Jeg har brukt ChatGPT Plus som et støtteverkøty gjennom prosjektet, hovedsakelig for å forstå teknologien vi bruker, utvikle ideer og få hjelp underveis når jeg står fast. Jeg har blant annet brukt KI til å forstå ASP.NET Core MVC, HTML/SS og hvordan Views, Controllers og ViewModels henger sammen. ChatGPT har også blitt brukt som veiledning i Git/GitHub, blant annet med branches, git status, git add, git commit og git push. 
