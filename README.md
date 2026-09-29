@@ -90,5 +90,22 @@ Mål:
 - Dokumentasjonen i selve koden.
 - Dokumenter deres bruk av KI i prosjektet fra ide til koding i Github READ ME (bruksområder, verktøy, prompt kommandoer).
 
-Vår bruk av AI
-- Vi har brukt AI til alt.
+## Vår bruk av AI:
+
+### Martin
+Test
+
+### Ellen
+Test
+
+### Sander
+Test
+
+### Fredrik
+Test
+
+### Kornelius
+Test
+
+### Lennart
+Test
