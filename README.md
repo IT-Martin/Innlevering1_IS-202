@@ -22,7 +22,7 @@ For å kjøre prosjektet gjennom Visual Studio trenger du:
 6. Start prosjektet med den grønne startknappen.
 7. Når applikasjonen har startet, åpner Visual Studio nettleseren.
 
-NB: Første oppstart "kan ta litt tid", vent ca. 1 min for å se om applikasjonen starter.
+> Første oppstart "kan ta litt tid", vent ca. 1 min for å se om applikasjonen starter.
 
 ### Stoppe applikasjonen
 
@@ -35,6 +35,15 @@ Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller).
 - **View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
 - **Controller:** Er logikken i backend, som håndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer dataen og lagrer ressursen i Session.
                   Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view.
+
+| Komponent | Ansvar |
+|---|---|
+| 'HomeController.cs' | Håndterer GET og POST, kontrollerer innsendte data, leser og lagrer nye ressurser i ressurslisten
+| 'RessursViewModel.cs' | Gir mulighet til å lage en ressurs med verdier: ID, navn og kart koordinatene
+| 'Register.cshtml' | Viser skjemaet og kartet for valg av ressursens posisjon. 
+| '' | 
+
+
 
 ### Lagring av data
 
