@@ -34,7 +34,7 @@ Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller).
 **Model:** I prosjektet brukes 'RessursViewModel' til å representere en ressurs med ID, navn og koordinater. Data sendes til Controller som deretter sendes til Viewet for brukeren.
 **View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
 **Controller:** Er logikken i backend, som håndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer dataen og lagrer ressursen i Session.
-                  Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view.
+                  Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view. 
 
 | Komponent | Ansvar |
 |---|---|
