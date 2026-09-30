@@ -74,22 +74,6 @@ Det betyr at:
 | T6 | Klikk på en posisjon i registreringsskartet, og klikk deretter et annet sted. | Den gamle markøren fjernes. En markør vises på den nye posisjonen, og koordinatene oppdateres. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
 | T7 | Registrerer “Traktor”, trykk “Se alle ressursene på kartet” og se om markøren kommer med navnet “Traktor”. | En popup viser ressursnavnet ‘Traktor’. Etter registreringen. | Kartet ble sentrert på ressursen. Da jeg klikket på markøren, viste popupen navnet “Traktor” | Ikke bestått. |
 
-
-## KI Bruk:
-
-Gruppe deltakere sin bruk av KI.
-
-
-Mål:
-- Controller, view modell og view.
-- Responsive nettsider med dynamisk innhold hentet fra web server.
-- At applikasjonen håndterer GET og POST forespørsler.
-- Skjema som tar data fra brukeren og at data vises i annen nettside.
-- Kart i tillegg til skjemaet (punktet over) og at data hentes fra kartet og vises i en annen nettside.
-- Dokumentasjon i Github om drift, system arkitektur, testing scenarier og resultater.
-- Dokumentasjonen i selve koden.
-- Dokumenter deres bruk av KI i prosjektet fra ide til koding i Github READ ME (bruksområder, verktøy, prompt kommandoer).
-
 ## Vår bruk av AI:
 Dokumentasjon på vårres bruk a KI i prosjektet fra ide til koding i Github (bruksområder, verktøy, prompt kommandoer)
 
