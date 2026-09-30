@@ -125,7 +125,18 @@ Eksempler på prompts jeg har brukt:
 
 
 ## Sander
-Test
+
+Jeg har brukt ChatGPT litt underveis i prosjektet, hovedsakelig når jeg har stått fast eller trengt en forklaring på noe. Jeg har blant annet brukt det til å forstå enkelte deler av ASP.NET Core MVC og til å feilsøke når jeg har fått problemer.
+
+Jeg har også brukt KI til å få hjelp med enkelte deler av HTML, CSS og JavaScript. Forslagene har først og fremst vært brukt som veiledning, og jeg har selv testet og tilpasset det i prosjektet.
+
+Eksempler på prompts som eg har brukt er:
+
+* «Kan du forklare meg denne feilmeldingen?
+* «Hva gjør denne delen av koden?»
+* «Hvordan fungerer Controller og View sammen i MVC?»
+* «Hvorfor fungerer ikke dette?»
+
 
 ## Fredrik
 KI-verktøy har blitt brukt som et støtteverktøy gjennom arbeidet med oppgaven. Det har hovedsakelig blitt brukt til å få hjelp med forståelse av oppgaveteksten og relevante fagbegreper. KI har også blitt brukt til å diskutere mulige løsninger knyttet til modeller og systemstruktur.
