@@ -128,7 +128,7 @@ Eksempler på prompts jeg har brukt:
 Test
 
 ## Fredrik
-Test
+KI-verktøy har blitt brukt som et støtteverktøy gjennom arbeidet med oppgaven. Det har hovedsakelig blitt brukt til å få hjelp med forståelse av oppgaveteksten og relevante fagbegreper. KI har også blitt brukt til å diskutere mulige løsninger knyttet til modeller og systemstruktur.
 
 ## Kornelius
 Test
