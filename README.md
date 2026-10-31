@@ -131,3 +131,4 @@ Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøki
 ## Lennart
 Jeg har brukt Copilot som støtte i arbeidet for å få bedre oversikt, struktur og forståelse av hvordan prosjektet skulle bygges opp. Verktøyet hjalp med å organisere filer, forklare sammenhenger i MVC modellen og gi veiledning når jeg sto fast.
 
+testing testing
