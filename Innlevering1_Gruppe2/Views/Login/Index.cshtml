@@ -1,0 +1,42 @@
+@model Innlevering1_Gruppe2.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Logg inn";
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-card-heading">
+            <span class="auth-icon" aria-hidden="true">
+                <i class="fa-solid fa-right-to-bracket"></i>
+            </span>
+            <h1>Logg inn</h1>
+        </div>
+
+        <form asp-action="Index" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">E-post</label>
+                <input asp-for="Email" class="form-control" autocomplete="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Passord</label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary">Logg inn</button>
+                <a asp-action="Register" class="btn btn-link">Opprett konto</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

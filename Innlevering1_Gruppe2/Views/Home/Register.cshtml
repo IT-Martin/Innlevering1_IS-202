@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Registrer ressurs";
+    var resourceTypes = ViewBag.ResourceTypes as IEnumerable<Innlevering1_Gruppe2.Models.Entities.ResourceType>
+        ?? Enumerable.Empty<Innlevering1_Gruppe2.Models.Entities.ResourceType>();
 }
 
 <div class="register-page">
@@ -42,6 +44,39 @@
                            class="form-control"
                            placeholder="For eksempel traktor"
                            required />
+                </div>
+
+                <div class="resource-input mb-3">
+                    <label for="description" class="form-label">
+                        Beskrivelse
+                    </label>
+
+                    <textarea id="description"
+                              name="Description"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Skriv en beskrivelse av ressursen"></textarea>
+                </div>
+
+                
+
+                <div class="resource-input mb-3">
+                    <label for="type" class="form-label">
+                        Type
+                    </label>
+
+                    <select id="type"
+                            name="resourceTypeId"
+                            class="form-select"
+                            required>
+                        <option value="">Velg type</option>
+                        @foreach (var type in resourceTypes)
+                        {
+                            <option value="@type.resource_type_id">
+                                @type.category_name
+                            </option>
+                        }
+                    </select>
                 </div>
 
                 <h2 class="h5 mb-3">Velg posisjon</h2>
