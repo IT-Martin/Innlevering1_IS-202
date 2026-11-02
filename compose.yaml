@@ -1,0 +1,38 @@
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Innlevering1_Gruppe2/Dockerfile
+    container_name: brannressurser-web
+    ports:
+      - "8080:8081"
+    environment:
+      ASPNETCORE_HTTP_PORTS: 8081
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=${MARIADB_DATABASE};User=${MARIADB_USER};Password=${MARIADB_PASSWORD};"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:11.4
+    container_name: brannressurser-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  mariadb_data:
