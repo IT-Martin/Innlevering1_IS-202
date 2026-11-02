@@ -138,3 +138,377 @@ footer {
     border-radius: 8px;
     padding: 0.75rem;
 }
+
+
+
+/* =================================
+   BEREDSKAP - INNGANGSSIDE
+   ================================= */
+
+.entry-page {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f7f5f0;
+    color: #292b28;
+}
+
+.entry-container {
+    display: grid;
+    grid-template-columns: 1fr 1.07fr;
+    min-height: 100vh;
+}
+
+/* Venstre panel */
+
+.entry-intro {
+    background-color: #a34b2c;
+    color: white;
+    padding: 55px 9%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brand-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 18px;
+}
+
+.brand h1 {
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.brand p {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.intro-message span {
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.intro-message h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 16px;
+}
+
+/* Høyre panel */
+
+.entry-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px;
+}
+
+.entry-card {
+    width: 100%;
+    max-width: 780px;
+    background: white;
+    border: 1px solid #e4dfd5;
+    border-radius: 22px;
+    padding: 40px 50px;
+}
+
+.create-account {
+    display: inline-block;
+    color: #a34b2c;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+    .create-account:hover {
+        text-decoration: underline;
+    }
+
+.entry-card hr {
+    border-color: #ded9d0;
+    margin: 20px 0 28px;
+}
+
+.entry-card > h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 55px;
+}
+
+/* Brukerkort */
+
+.user-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.user-option {
+    background-color: #f5f1e7;
+    border: 1px solid #e2ddd2;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .user-option h3 {
+        font-size: 1.55rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .user-option p {
+        color: #858985;
+        font-size: 1.05rem;
+        margin-top: 0;
+        margin-bottom: 45px;
+    }
+
+.entry-button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    border-radius: 9px;
+    background-color: #a34b2c;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+    .entry-button:hover {
+        background-color: #843b25;
+        color: white;
+    }
+
+/* Mobiltilpasning */
+
+@media (max-width: 900px) {
+    .entry-container {
+        grid-template-columns: 1fr;
+    }
+
+    .entry-intro {
+        min-height: 280px;
+        padding: 35px 8%;
+        gap: 35px;
+    }
+
+    .entry-content {
+        padding: 20px 15px;
+    }
+
+    .entry-card {
+        padding: 28px 22px;
+    }
+
+        .entry-card > h2 {
+            margin-bottom: 35px;
+        }
+
+    .user-option p {
+        margin-bottom: 30px;
+    }
+}
+
+
+/* =================================
+   BEREDSKAP - INNLOGGING
+   ================================= */
+
+.login-page {
+    min-height: 100vh;
+    background-color: #f7f5f0;
+    color: #292b28;
+}
+
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1.07fr;
+    min-height: 100vh;
+}
+
+/* Venstre panel */
+
+.login-intro {
+    background-color: #a34b2c;
+    color: white;
+    padding: 55px 9%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 18px;
+}
+
+.login-brand h1 {
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-brand p {
+    font-size: 1.1rem;
+}
+
+.login-message span {
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.login-message h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 16px;
+}
+
+/* Høyre panel */
+
+.login-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 650px;
+    background-color: white;
+    border: 1px solid #e4dfd5;
+    border-radius: 22px;
+    padding: 45px 50px;
+}
+
+.login-back {
+    color: #a34b2c;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+    .login-back:hover {
+        text-decoration: underline;
+    }
+
+.login-card hr {
+    border-color: #ded9d0;
+    margin: 22px 0 30px;
+}
+
+.login-card > h2 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-description {
+    color: #858985;
+    margin-bottom: 32px;
+}
+
+/* Innloggingsfelter */
+
+.login-field {
+    margin-bottom: 22px;
+}
+
+    .login-field label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 9px;
+    }
+
+    .login-field .form-control {
+        border: 1px solid #ded9d0;
+        border-radius: 9px;
+        padding: 13px 15px;
+        font-size: 1rem;
+    }
+
+        .login-field .form-control:focus {
+            border-color: #a34b2c;
+            box-shadow: 0 0 0 0.2rem rgba(163, 75, 44, 0.12);
+        }
+
+        .login-field .form-control::placeholder {
+            color: #aaa9a3;
+        }
+
+/* Glemt passord */
+
+.forgot-password {
+    text-align: right;
+    margin-top: -8px;
+    margin-bottom: 28px;
+}
+
+    .forgot-password a,
+    .login-register a {
+        color: #a34b2c;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .forgot-password a:hover,
+        .login-register a:hover {
+            text-decoration: underline;
+        }
+
+/* Logg inn-knapp */
+
+.login-submit {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 9px;
+    background-color: #a34b2c;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+    .login-submit:hover {
+        background-color: #843b25;
+    }
+
+/* Opprett konto */
+
+.login-register {
+    text-align: center;
+    margin-top: 28px;
+    margin-bottom: 0;
+}
+
+/* Mobiltilpasning */
+
+@media (max-width: 900px) {
+    .login-container {
+        grid-template-columns: 1fr;
+    }
+
+    .login-intro {
+        min-height: 280px;
+        padding: 35px 8%;
+        gap: 35px;
+    }
+
+    .login-content {
+        padding: 20px 15px;
+    }
+
+    .login-card {
+        padding: 30px 22px;
+    }
+}

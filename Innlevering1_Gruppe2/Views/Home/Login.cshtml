@@ -1,47 +1,123 @@
 ﻿
-
-@* Koden er under utvikling, ikke i bruk *@
-
-
 @{
     ViewData["Title"] = "Logg inn";
-}
 
-@{
-    if (ViewData["ErrorMessage"] is string errorMessage)
+    var role = ViewData["Role"]?.ToString();
+
+    var roleTitle = role switch
     {
-        <div class="alert alert-danger">
-            @errorMessage
-        </div>
-    }
+        "provider" => "Ressursleverandør",
+        "public" => "Offentlig beredskapsaktør",
+        _ => "Velkommen tilbake"
+    };
+
+    var roleDescription = role switch
+    {
+        "provider" => "Logg inn for å administrere dine ressurser.",
+        "public" => "Logg inn for å få tilgang til beredskapsressursene.",
+        _ => "Logg inn for å fortsette til Beredskap."
+    };
+
+    var roleLabel = role switch
+    {
+        "provider" => "RESSURSLEVERANDØR",
+        "public" => "OFFENTLIG BEREDSKAPSAKTØR",
+        _ => "VELKOMMEN TILBAKE"
+    };
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <h1>Logg inn</h1>
+<div class="login-page">
+    <div class="login-container">
 
-        <form method="post" asp-action="Login">
-            <div class="mb-3">
-                <label for="email" class="form-label">E-post</label>
-                <input id="email"
-                       name="email"
-                       type="email"
-                       class="form-control"
-                       required />
+        <!-- Venstre introduksjonspanel -->
+        <section class="login-intro">
+
+            <div class="login-brand">
+                <img src="~/images/beredskap-logo-png.png"
+                     alt="Beredskap logo"
+                     class="login-logo" />
+
+                <h1>Beredskap</h1>
+                <p>Krisehåndtering når det gjelder.</p>
             </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Passord</label>
-                <input id="password"
-                       name="password"
-                       type="password"
-                       class="form-control"
-                       required />
+            <div class="login-message">
+                @* Viser hvilken brukergruppe som har valgt å logge inn. *@
+                <span>@roleLabel</span>
+                <h2>Sammen står vi sterkere.</h2>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Logg inn
-            </button>
-        </form>
+        </section>
+
+        <!-- Høyre innloggingspanel -->
+        <section class="login-content">
+
+            <div class="login-card">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="login-back">
+                    ← Tilbake
+                </a>
+
+                <hr />
+
+                @* Viser innloggingstekst tilpasset valgt brukerrolle. *@
+                <h2>@roleTitle</h2>
+                <p class="login-description">
+                    @roleDescription
+                </p>
+
+                @if (ViewData["ErrorMessage"] is string errorMessage)
+                {
+                    <div class="alert alert-danger">
+                        @errorMessage
+                    </div>
+                }
+
+                <form method="post" asp-action="Login">
+
+                    <div class="login-field">
+                        <label for="email">E-postadresse</label>
+                        <input id="email"
+                               name="email"
+                               type="email"
+                               class="form-control"
+                               placeholder="navn@eksempel.no"
+                               required />
+                    </div>
+
+                    <div class="login-field">
+                        <label for="password">Passord</label>
+                        <input id="password"
+                               name="password"
+                               type="password"
+                               class="form-control"
+                               placeholder="Skriv inn passord"
+                               required />
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="#">Glemt passord?</a>
+                    </div>
+
+                    <button type="submit" class="login-submit">
+                        Logg inn
+                    </button>
+
+                </form>
+
+                @* Sender brukeren videre til opprettelse av brukerkonto. *@
+<p class="login-register">
+    Har du ikke konto?
+    <a asp-controller="Home"
+       asp-action="Register">
+        Opprett konto
+    </a>
+</p>
+
+            </div>
+
+        </section>
     </div>
 </div>

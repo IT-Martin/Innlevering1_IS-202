@@ -44,11 +44,11 @@
                             </a>
                         </li>
 
-                        <!-- Åpner skjemaet for å registrere en ny ressurs. -->
+                        @* Åpner skjemaet for å registrere en ny ressurs. *@
                         <li class="nav-item">
                             <a class="nav-link"
-                                asp-controller="Home"
-                                asp-action="Register">
+                               asp-controller="Home"
+                               asp-action="RegisterResource">
                                 Registrer Ressurs
                             </a>
                         </li>
@@ -68,8 +68,11 @@
                             </a>
                         </li>
 
+                        @* Åpner innloggingssiden *@
                         <li class="nav-item">
-                            <a class="nav-link login-link" href="#">
+                            <a class="nav-link login-link"
+                               asp-controller="Home"
+                               asp-action="Login">
                                 Logg inn
                             </a>
                         </li>

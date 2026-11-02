@@ -19,7 +19,24 @@ public class HomeController : Controller
         return json is null ? new List<RessursViewModel>() : JsonSerializer.Deserialize<List<RessursViewModel>>(json) ?? new List<RessursViewModel>();
     }
 
+    // Viser forsiden med valg av brukerinngang.
+    [HttpGet]
     public IActionResult Index()
+    {
+        return View();
+    }
+
+    // ENDRET: Åpner innloggingssiden og sender med hvilken brukerrolle som er valgt på forsiden.
+    [HttpGet]
+    public IActionResult Login(string? role)
+    {
+        ViewData["Role"] = role;
+        return View();
+    }
+
+    // Åpner siden for opprettelse av ny brukerkonto.
+    [HttpGet]
+    public IActionResult Register()
     {
         return View();
     }
@@ -37,19 +54,20 @@ public class HomeController : Controller
         return View(HentRessurser());
     }
 
-    [HttpGet]
-    public IActionResult Register()
+    [HttpGet] //Endret navn fra Register til RegisterResource for å skille ressursregistrering fra brukerregistrering
+    public IActionResult RegisterResource()
     {
         return View();
     }
 
     //Brukern registrere data med ressurs navn, og koordinater som er valgt på kartet.
+    //Endret navn fra Register til RegisterResource slik at POST-metoden samsvarer med GET-metoden, og for ressursregistrering
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Register(
-        string RessursNavn,
-        double? latitude,
-        double? longitude)
+    public IActionResult RegisterResource(
+    string RessursNavn,
+    double? latitude,
+    double? longitude)
     {
         if (string.IsNullOrWhiteSpace(RessursNavn))
         {

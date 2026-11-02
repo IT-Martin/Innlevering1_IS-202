@@ -1,22 +1,106 @@
-﻿<div class="text-center py-5">
-    <h1 class="display-5">Brannressurser</h1>
+﻿@{
+    ViewData["Title"] = "Velg inngang";
+    Layout = null;
+}
 
-    <p class="lead">
-        Registrer og finn tilgjengelige ressurser.
-    </p>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Åpner skjemaet for å registrere en ny ressurs. -->
-    <div class="mt-4">
-        <a asp-controller="Home"
-           asp-action="Register"
-           class="btn btn-primary me-2">
-            Registrer ressurs
-        </a>
-        <!-- Åpner skjemaet for å kartet -->
-        <a asp-controller="Home"
-           asp-action="Map"
-           class="btn btn-outline-secondary">
-            Se kart
-        </a>
+    <title>Beredskap – Velg inngang</title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+</head>
+
+<body class="entry-page">
+
+    <div class="entry-container">
+
+        <!-- Venstre introduksjonspanel -->
+        <section class="entry-intro">
+
+            <div class="brand">
+               <img src="~/images/Beredskap_logo_Invisible.png"
+     alt="Beredskap logo"
+     class="brand-logo" />
+
+     <!-- Enda ikke valgt navn for websiden vår-->
+                <h1>Beredskap</h1>
+
+                <p>Krisehåndtering når det gjelder.</p>
+            </div>
+
+            <div class="intro-message">
+                <span>VELG DIN BRUKERINNGANG</span>
+
+                <h2>To innganger. En felles løsning.</h2>
+            </div>
+
+        </section>
+
+
+        <!-- Høyre panel med brukerinnganger -->
+        <main class="entry-content">
+
+            <div class="entry-card">
+
+                <a asp-controller="Home"
+                   asp-action="Register"
+                   class="create-account">
+                    Opprett konto →
+                </a>
+
+                <hr />
+
+                <h2>Velg inngang</h2>
+
+                <div class="user-options">
+
+                    <!-- Ressursleverandør -->
+                    <section class="user-option">
+
+                        <h3>Ressursleverandør</h3>
+
+                        <p>
+                            Meg selv eller bedrift/organisasjon.
+                        </p>
+
+                        <a href="/Home/Login?role=provider"
+                           class="entry-button">
+                            Fortsett som ressursleverandør
+                        </a>
+
+                    </section>
+
+
+                    <!-- Offentlig beredskapsaktør -->
+                    <section class="user-option">
+
+                        <h3>Offentlig beredskapsaktør</h3>
+
+                        <p>Offentlig aktør.</p>
+
+                        <a href="/Home/Login?role=public"
+                           class="entry-button">
+                            Fortsett som offentlig aktør
+                        </a>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </main>
+
     </div>
-</div> 
+
+</body>
+</html>

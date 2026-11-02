@@ -11,10 +11,10 @@
         </p>
     </div>
 
-    @* Sender Ressursnavnet og koordinatene til Register-metoden i HomeController via POST *@
-    <form asp-controller="Home"
-          asp-action="Register"
-          method="post">
+   @* Sender ressursnavnet og koordinatene til RegisterResource-metoden i HomeController via POST *@
+<form asp-controller="Home"
+      asp-action="RegisterResource"
+      method="post">
 
         @Html.AntiForgeryToken()
 
