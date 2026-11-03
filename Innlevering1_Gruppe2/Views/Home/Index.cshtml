@@ -1,22 +1,71 @@
-﻿<div class="text-center py-5">
-    <h1 class="display-5">Brannressurser</h1>
+﻿@{
+    ViewData["Title"] = "Hjem";
+}
 
-    <p class="lead">
-        Registrer og finn tilgjengelige ressurser.
-    </p>
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="eyebrow">BRANNRESSURSER</p>
+        <h1>Finn og del ressurser når det gjelder.</h1>
+        <p class="hero-lead">
+            Registrer tilgjengelige ressurser, se dem på kartet og gjør informasjonen
+            lett tilgjengelig for personer som trenger den.
+        </p>
 
-    <!-- Åpner skjemaet for å registrere en ny ressurs. -->
-    <div class="mt-4">
-        <a asp-controller="Home"
-           asp-action="Register"
-           class="btn btn-primary me-2">
-            Registrer ressurs
-        </a>
-        <!-- Åpner skjemaet for å kartet -->
-        <a asp-controller="Home"
-           asp-action="Map"
-           class="btn btn-outline-secondary">
-            Se kart
-        </a>
+        <div class="hero-actions" aria-label="Hovedhandlinger">
+            <a asp-controller="Home"
+               asp-action="Register"
+               class="btn btn-primary btn-lg hero-action-primary">
+                Registrer ressurs
+                <span aria-hidden="true">→</span>
+            </a>
+            <a asp-controller="Home"
+               asp-action="Map"
+               class="btn btn-light btn-lg hero-action-secondary">
+                Se kartet
+            </a>
+        </div>
+
+        <p class="hero-note">
+            Velg en posisjon på kartet. Du kan endre eller slette dine egne ressurser senere.
+        </p>
     </div>
-</div> 
+
+    <div class="hero-visual" aria-hidden="true">
+        <div class="hero-map-preview">
+            <span class="map-grid-line map-grid-line-one"></span>
+            <span class="map-grid-line map-grid-line-two"></span>
+            <span class="map-pin map-pin-one"><i class="fa-solid fa-tractor"></i></span>
+            <span class="map-pin map-pin-two"><i class="fa-solid fa-truck"></i></span>
+            <span class="map-pin map-pin-three"><i class="fa-solid fa-people-group"></i></span>
+            <div class="map-preview-label">
+                <span class="map-preview-dot"></span>
+                Ressurser i nærheten
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works" aria-labelledby="how-it-works-title">
+    <div class="section-heading">
+        <p class="eyebrow">SLIK FUNGERER DET</p>
+        <h2 id="how-it-works-title">Tre enkle steg</h2>
+    </div>
+
+    <div class="step-grid">
+        <article class="step-card">
+            <span class="step-number">01</span>
+            <h3>Registrer</h3>
+            <p>Legg inn ressursen og velg nøyaktig plassering på kartet.</p>
+        </article>
+        <article class="step-card">
+            <span class="step-number">02</span>
+            <h3>Finn på kartet</h3>
+            <p>Se alle registrerte ressurser samlet i én oversikt.</p>
+        </article>
+        <article class="step-card">
+            <span class="step-number">03</span>
+            <h3>Hold oppdatert</h3>
+            <p>Endre eller fjern dine egne ressurser når informasjonen endrer seg.</p>
+        </article>
+    </div>
+</section>

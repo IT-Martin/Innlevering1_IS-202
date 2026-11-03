@@ -6,8 +6,9 @@
     public class RessursViewModel
     {
         //Gir nye ressursobjekter en unik ID som brukes til å finne lagde objekter.
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
         public string RessursNavn { get; set; } = string.Empty;
+        public string TypeIcon { get; set; } = "fa-solid fa-location-dot";
 
         public double Latitude { get; set; }
 

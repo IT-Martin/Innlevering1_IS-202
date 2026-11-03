@@ -1,24 +1,25 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="no">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Brannressurser</title>
+    <title>@ViewData["Title"] - Felles Ressurs</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Innlevering1_Gruppe2.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm"> 
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
-
-                <a class="navbar-brand fw-bold"
-                   asp-controller="Home"
-                   asp-action="Index">
-                    🔥 Brannressurser
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark" aria-hidden="true">
+                        <i class="fa-solid fa-people-group"></i>
+                    </span>
+                    <span>Felles Ressurs</span>
                 </a>
 
                 <button class="navbar-toggler"
@@ -32,64 +33,66 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="mainNavigation">
-                    <ul class="navbar-nav ms-auto">
-
-                        <!-- Felles navigasjon -->
-
+                    <ul class="navbar-nav main-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Home"
-                               asp-action="Index">
-                                Hjem
-                            </a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Hjem</a>
                         </li>
-
-                        <!-- Åpner skjemaet for å registrere en ny ressurs. -->
                         <li class="nav-item">
-                            <a class="nav-link"
-                                asp-controller="Home"
-                                asp-action="Register">
-                                Registrer Ressurs
-                            </a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Map">Kartet</a>
                         </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Register">Legg til ressurs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="MyResources">Mine ressurser</a>
+                            </li>
+                        }
+                    </ul>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"> <!--Midlertidig-->
-                                Ressurser
-                            </a>
-                        </li>
-
-                        <!-- Åpner skjemaet for kartet -->
-                        <li class="nav-item">
-                            <a class="nav-link" 
-                               asp-controller="Home"
-                               asp-action="Map">
-                                Kartet
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link login-link" href="#">
+                    <div class="account-nav">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <span class="account-email" title="Innlogget konto">
+                                <span class="account-dot" aria-hidden="true"></span>
+                                @User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value
+                            </span>
+                            <form asp-controller="Login" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-link logout-button">Logg ut</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="account-action account-login" asp-controller="Login" asp-action="Index">
+                                <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
                                 Logg inn
                             </a>
-                        </li>
-                    </ul>
+                            <a class="account-action account-register" asp-controller="Login" asp-action="Register">
+                                <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                                Opprett bruker
+                            </a>
+                        }
+                    </div>
                 </div>
-
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-5">
-        <div class="container py-3 text-center">
-            &copy; 2026 - Brannressurser - Gruppe 2
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; 2026 Felles Ressurs</span>
+            <span>Enklere deling av viktige ressurser</span>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

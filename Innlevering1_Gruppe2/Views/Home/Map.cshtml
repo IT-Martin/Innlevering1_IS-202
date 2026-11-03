@@ -8,47 +8,65 @@
 }
 
 <div class="map-page">
-    <h1>Kart over registrerte ressurser</h1>
+    <div class="map-page-header">
+        <div>
+            <p class="eyebrow">OVERSIKT</p>
+            <h1>Kart over registrerte ressurser</h1>
+            <p class="text-muted mb-0">Klikk på en markør for å se navn og koordinater.</p>
+        </div>
+        <a class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Register">
+            Registrer ressurs <span aria-hidden="true">→</span>
+        </a>
+    </div>
 
     @if (Model.Count == 0)
     {
-        <div class="alert alert-info">
-            Ingen ressurser er registrert i denne brukerøkten.
+        <div class="map-empty-state">
+            <strong>Ingen ressurser er registrert ennå.</strong>
+            <span>Legg til den første ressursen for å bygge kartet.</span>
 
             <a asp-controller="Home"
                asp-action="Register">
-                Registrer en ressurs
+                Legg til ressurs
             </a>
         </div>
     }
     else
     {
-        <div class="alert alert-success">
-            Antall registrerte ressurser i denne brukerøkten:
-            <strong>@Model.Count</strong>
+        <div class="map-summary" role="status">
+            <span class="summary-dot" aria-hidden="true"></span>
+            <strong>@Model.Count</strong> registrerte ressurser
         </div>
     }
 
-    <div id="map"
-         aria-label="Kart over registrerte ressurser">
+    <div class="map-shell">
+        <div id="map" aria-label="Kart over registrerte ressurser">
+        </div>
     </div>
 
     @* Viser ressursene som lenker til resultatsiden.
        data-attributtene gjør navn og koordinater tilgjengelige for JavaScript
     *@
 
-    <ul id="resource-list" class="list-group mt-3">
+    <div class="resource-list-header">
+        <h2>Ressurser i kartet</h2>
+        <span>Velg en ressurs for mer informasjon</span>
+    </div>
+
+    <ul id="resource-list" class="resource-list">
         @foreach (var ressurs in Model)
         {
             // Razor HTML-koder navn og attributter. JavaScript leser dem via dataset.
             <li class="list-group-item"
                 data-latitude="@ressurs.Latitude.ToString(CultureInfo.InvariantCulture)"
                 data-longitude="@ressurs.Longitude.ToString(CultureInfo.InvariantCulture)"
-                data-resource-name="@ressurs.RessursNavn">
+                 data-resource-name="@ressurs.RessursNavn"
+                 data-type-icon="@ressurs.TypeIcon">
 
                 <a asp-controller="Home"
                    asp-action="Result"
                    asp-route-id="@ressurs.Id">
+                    <i class="@ressurs.TypeIcon resource-type-icon" aria-hidden="true"></i>
                     @ressurs.RessursNavn
                 </a>
             </li>
@@ -90,11 +108,38 @@
                 const position = [latitude, longitude];
                 positions.push(position);
 
-                //Bruker tekstContent slik at Ressursnavnet behandles som tekst og ikke som HTML
-                const popup = document.createElement("strong");
-                popup.textContent = element.dataset.resourceName;
+                //Bruker tekstContent slik at ressursdata behandles som tekst og ikke som HTML
+                const popup = document.createElement("div");
 
-                L.marker(position)
+                const resourceName = document.createElement("strong");
+                resourceName.textContent = element.dataset.resourceName;
+
+                const coordinates = document.createElement("div");
+                coordinates.textContent =
+                    `Latitude: ${latitude.toFixed(6)}, Longitude: ${longitude.toFixed(6)}`;
+
+                popup.append(resourceName, coordinates);
+
+                const markerContent = document.createElement("div");
+                markerContent.className = "resource-marker";
+
+                const markerGlyph = document.createElement("i");
+                markerGlyph.className = "resource-marker-glyph";
+                markerGlyph.setAttribute("aria-hidden", "true");
+                markerContent.append(markerGlyph);
+
+                const markerIconClass = element.dataset.typeIcon || "fa-solid fa-location-dot";
+                markerGlyph.className = `${markerIconClass} resource-marker-glyph`;
+
+                const markerIcon = L.divIcon({
+                    className: "resource-marker-container",
+                    html: markerContent.outerHTML,
+                    iconSize: [42, 48],
+                    iconAnchor: [21, 45],
+                    popupAnchor: [0, -42]
+                });
+
+                L.marker(position, { icon: markerIcon })
                     .addTo(map)
                     .bindPopup(popup);
             });
