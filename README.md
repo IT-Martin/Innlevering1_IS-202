@@ -131,3 +131,29 @@ Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøki
 ## Lennart
 Jeg har brukt Copilot som støtte i arbeidet for å få bedre oversikt, struktur og forståelse av hvordan prosjektet skulle bygges opp. Verktøyet hjalp med å organisere filer, forklare sammenhenger i MVC modellen og gi veiledning når jeg sto fast.
 
+
+
+
+
+### Eksempel på en prompt fra meg:
+
+Lage database og 4 tabellene
+
+Ta opp terminal på Docker Desktop. 
+
+Kopier følgende kommando: 
+
+docker run --name resourcedb -p 127.0.0.1:3306:3306 -v resourcedb-data:/var/lib/mysql -e MARIADB_ROOT_PASSWORD=Password -e MARIADB_DATABASE=resourcedb -d mariadb:latest
+
+Passordet er: Password (På engelsk)
+
+Sjekk om du kan gå inn i containern:
+ docker exec -it resourcedb mariadb -u root -p. Så skriv inn passordet
+
+Inne på Visual studio prosjekt, gå inn på: appsettings.json. Å legg til Connection stringen: "Server=127.0.0.1;Port=3307;Database=resourcedb;User=root;Password=Password;"
+
+127.0.0.1 brukes for å koble til databasen og legge til migration
+
+Når man starter webapplikasjonen, så kan det hende man må endre til Server=host.docker.internal.
+
+Gå inn på Package Manager Console: Skriv Update-Database. Dette lager 4 tabeller som er laget klar i visual studio kode. Som skal opprette resourcedb database med 4 tabeller.
