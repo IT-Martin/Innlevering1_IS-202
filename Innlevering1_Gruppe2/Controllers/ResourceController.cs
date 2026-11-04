@@ -1,63 +1,272 @@
-﻿
+﻿using System.Globalization;
+using System.Security.Claims;
+using Innlevering1_Gruppe2.DataAccess;
+using Innlevering1_Gruppe2.DataAccess.Repositories;
+using Innlevering1_Gruppe2.Models;
 using Innlevering1_Gruppe2.Models.Entities;
-using Innlevering1_Gruppe2.Models.ViewModels.Resource;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
-namespace Innlevering1_Gruppe2.Controllers
+namespace Innlevering1_Gruppe2.Controllers;
+
+public class ResourceController : Controller
 {
-    public class ResourceController : Controller
+    private readonly IResourceRepository resourceRepository;
+    private readonly ApplicationDbContext context;
+
+    public ResourceController(
+        IResourceRepository resourceRepository,
+        ApplicationDbContext context)
     {
-        private readonly Innlevering1_Gruppe2.DataAccess.Repositories.IResourceRepository _repo;
-        
-        public ResourceController(Innlevering1_Gruppe2.DataAccess.Repositories.IResourceRepository repo)
+        this.resourceRepository = resourceRepository;
+        this.context = context;
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Map()
+    {
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
         {
-            _repo = repo;
+            return Challenge();
         }
 
-        [HttpGet]
-        public IActionResult ResourceForm()
+        var resources = await resourceRepository.GetByAccountIdAsync(accountId.Value);
+        var viewModels = resources.Select(resource => new RessursViewModel
         {
-            var vm = new ResourceViewModel();
-            return View(vm);
+            Id = resource.resource_id,
+            RessursNavn = resource.resource_name,
+            TypeIcon = ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name),
+            Latitude = (double)resource.Location.latitude,
+            Longitude = (double)resource.Location.longitude
+        }).ToList();
+
+        return View(viewModels);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Register()
+    {
+        await LoadRegistrationOptionsAsync();
+        return View(new ResourceCreateViewModel());
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(ResourceCreateViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            await LoadRegistrationOptionsAsync();
+            return View(model);
         }
 
-
-        [Authorize]
-        [HttpPost]
-        public IActionResult ResourceOverview(ResourceViewModel resViewModel)
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
         {
-            if (!ModelState.IsValid)
+            return Challenge();
+        }
+
+        var validResourceType = await context.ResourceTypes
+            .AnyAsync(type => type.resource_type_id == model.ResourceTypeId!.Value);
+        if (!validResourceType)
+        {
+            ModelState.AddModelError(nameof(model.ResourceTypeId), "Ressurstypen finnes ikke.");
+            await LoadRegistrationOptionsAsync();
+            return View(model);
+        }
+
+        var account = await context.Accounts
+            .AsNoTracking()
+            .SingleOrDefaultAsync(account => account.account_id == accountId.Value);
+        if (account is null)
+        {
+            return Challenge();
+        }
+
+        var resource = new Resource
+        {
+            account_id = accountId.Value,
+            resource_name = model.Name.Trim(),
+            description = model.Description?.Trim() ?? string.Empty,
+            contact_details = $"Navn: {account.contact_name}, Telefon: {account.phone}",
+            verification_status = "Pending",
+            resource_type_id = model.ResourceTypeId.Value,
+            Location = new Location
             {
-                return View("ResourceForm", resViewModel);
+                address_or_area = FormatCoordinates(model.Latitude!.Value, model.Longitude!.Value),
+                latitude = (decimal)model.Latitude.Value,
+                longitude = (decimal)model.Longitude.Value
             }
+        };
 
-            var accountIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(accountIdValue, out var accountId))
-            {
-                return Challenge();
-            }
+        await resourceRepository.AddAsync(resource);
+        return RedirectToAction(nameof(Result), new { id = resource.resource_id });
+    }
 
-            var resource = new Resource
-            {
-                resource_name = resViewModel.Name ?? string.Empty,
-                description = resViewModel.Description ?? string.Empty,
-                contact_details = resViewModel.ContactDetails ?? string.Empty,
-                verification_status = "Pending",
-                account_id = accountId,
-                resource_type_id = resViewModel.ResourceTypeId,
-                location_id = resViewModel.LocationId
-            };
-
-
-            _repo.AddAsync(resource).GetAwaiter().GetResult();
-
-            return View(resViewModel);
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> MyResources()
+    {
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+        {
+            return Challenge();
         }
 
+        var resources = await resourceRepository.GetByAccountIdAsync(accountId.Value);
+        return View(resources);
+    }
 
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+        {
+            return Challenge();
+        }
 
+        var resource = await resourceRepository.GetByIdForAccountAsync(id, accountId.Value);
+        if (resource is null)
+        {
+            return NotFound();
+        }
 
+        await LoadRegistrationOptionsAsync();
+        return View(new ResourceEditViewModel
+        {
+            Id = resource.resource_id,
+            Name = resource.resource_name,
+            Description = resource.description,
+            ResourceTypeId = resource.resource_type_id,
+            Latitude = (double)resource.Location.latitude,
+            Longitude = (double)resource.Location.longitude
+        });
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(ResourceEditViewModel model)
+    {
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+        {
+            return Challenge();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            await LoadRegistrationOptionsAsync();
+            return View(model);
+        }
+
+        var validResourceType = await context.ResourceTypes
+            .AnyAsync(type => type.resource_type_id == model.ResourceTypeId!.Value);
+        if (!validResourceType)
+        {
+            ModelState.AddModelError(nameof(model.ResourceTypeId), "Ressurstypen finnes ikke.");
+            await LoadRegistrationOptionsAsync();
+            return View(model);
+        }
+
+        var resource = await resourceRepository.GetByIdForAccountAsync(model.Id, accountId.Value);
+        if (resource is null)
+        {
+            return NotFound();
+        }
+
+        var account = await context.Accounts
+            .AsNoTracking()
+            .SingleOrDefaultAsync(account => account.account_id == accountId.Value);
+        if (account is null)
+        {
+            return Challenge();
+        }
+
+        resource.resource_name = model.Name.Trim();
+        resource.description = model.Description?.Trim() ?? string.Empty;
+        resource.resource_type_id = model.ResourceTypeId.Value;
+        resource.contact_details = $"Navn: {account.contact_name}, Telefon: {account.phone}";
+        resource.Location.latitude = (decimal)model.Latitude!.Value;
+        resource.Location.longitude = (decimal)model.Longitude!.Value;
+        resource.Location.address_or_area = FormatCoordinates(model.Latitude.Value, model.Longitude.Value);
+
+        await resourceRepository.UpdateAsync(resource);
+        return RedirectToAction(nameof(MyResources));
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+        {
+            return Challenge();
+        }
+
+        await resourceRepository.DeleteAsync(id, accountId.Value);
+        return RedirectToAction(nameof(MyResources));
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Result(int? id)
+    {
+        if (id is null)
+        {
+            return RedirectToAction(nameof(Map));
+        }
+
+        var accountId = GetCurrentAccountId();
+        if (accountId is null)
+        {
+            return Challenge();
+        }
+
+        var resource = await resourceRepository.GetByIdForAccountAsync(id.Value, accountId.Value);
+        if (resource is null)
+        {
+            return RedirectToAction(nameof(Map));
+        }
+
+        return View(new RessursViewModel
+        {
+            Id = resource.resource_id,
+            RessursNavn = resource.resource_name,
+            Latitude = (double)resource.Location.latitude,
+            Longitude = (double)resource.Location.longitude
+        });
+    }
+
+    private async Task LoadRegistrationOptionsAsync()
+    {
+        ViewBag.ResourceTypes = await context.ResourceTypes
+            .AsNoTracking()
+            .OrderBy(type => type.category_name)
+            .ToListAsync();
+    }
+
+    private int? GetCurrentAccountId()
+    {
+        var accountIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return int.TryParse(accountIdValue, out var accountId) ? accountId : null;
+    }
+
+    private static string FormatCoordinates(double latitude, double longitude)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "Koordinater: {0:F6}, {1:F6}",
+            latitude,
+            longitude);
     }
 }
