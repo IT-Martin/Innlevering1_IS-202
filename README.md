@@ -137,8 +137,6 @@ Jeg har brukt Copilot som støtte i arbeidet for å få bedre oversikt, struktur
 
 ### Lage tabell og database i docker desktop
 
-Lage database og 4 tabellene
-
 Ta opp terminal på Docker Desktop. 
 
 Kopier følgende kommando: 
