@@ -135,7 +135,7 @@ Jeg har brukt Copilot som støtte i arbeidet for å få bedre oversikt, struktur
 
 
 
-### Eksempel på en prompt fra meg:
+### Lage tabell og database i docker desktop
 
 Lage database og 4 tabellene
 
