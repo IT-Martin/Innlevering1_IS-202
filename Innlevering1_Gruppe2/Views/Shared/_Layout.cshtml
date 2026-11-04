@@ -38,15 +38,15 @@
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Hjem</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Map">Kartet</a>
+                            <a class="nav-link" asp-controller="Resource" asp-action="Map">Kartet</a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="Register">Legg til ressurs</a>
+                                <a class="nav-link" asp-controller="Resource" asp-action="Register">Legg til ressurs</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="MyResources">Mine ressurser</a>
+                                <a class="nav-link" asp-controller="Resource" asp-action="MyResources">Mine ressurser</a>
                             </li>
                         }
                     </ul>

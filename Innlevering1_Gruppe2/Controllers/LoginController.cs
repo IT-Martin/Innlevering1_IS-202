@@ -74,7 +74,7 @@ public class LoginController : Controller
             CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(identity));
 
-        return RedirectToAction("Map", "Home");
+        return RedirectToAction("Map", "Resource");
     }
 
     [HttpGet]

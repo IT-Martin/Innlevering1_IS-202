@@ -1,4 +1,4 @@
-﻿@* Mottar ressurslisten fra HomeController.Map().  *@
+﻿@* Mottar ressurslisten fra ResourceController.Map().  *@
 
 @model List<RessursViewModel>
 @using System.Globalization
@@ -14,7 +14,7 @@
             <h1>Kart over registrerte ressurser</h1>
             <p class="text-muted mb-0">Klikk på en markør for å se navn og koordinater.</p>
         </div>
-        <a class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Register">
+        <a class="btn btn-primary btn-lg" asp-action="Register">
             Registrer ressurs <span aria-hidden="true">→</span>
         </a>
     </div>
@@ -25,8 +25,7 @@
             <strong>Ingen ressurser er registrert ennå.</strong>
             <span>Legg til den første ressursen for å bygge kartet.</span>
 
-            <a asp-controller="Home"
-               asp-action="Register">
+            <a asp-action="Register">
                 Legg til ressurs
             </a>
         </div>
@@ -63,8 +62,7 @@
                  data-resource-name="@ressurs.RessursNavn"
                  data-type-icon="@ressurs.TypeIcon">
 
-                <a asp-controller="Home"
-                   asp-action="Result"
+                <a asp-action="Result"
                    asp-route-id="@ressurs.Id">
                     <i class="@ressurs.TypeIcon resource-type-icon" aria-hidden="true"></i>
                     @ressurs.RessursNavn
