@@ -154,6 +154,16 @@ macOS/Linux:
 ```bash
 ./run-enhetstester
 ```
+Resultatet av ./run-enhetstester er per nå:
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.4+50e68bbb8b (64-bit .NET 10.0.12)
+[xUnit.net 00:00:00.03]   Discovering: Innlevering1_Gruppe2.Tests
+[xUnit.net 00:00:00.06]   Discovered:  Innlevering1_Gruppe2.Tests
+[xUnit.net 00:00:00.07]   Starting:    Innlevering1_Gruppe2.Tests
+[xUnit.net 00:00:00.51]   Finished:    Innlevering1_Gruppe2.Tests
+Innlevering1_Gruppe2.Tests test net10.0 succeeded (0,9s)
+
+Test summary: total: 46, failed: 0, succeeded: 46, skipped: 0, duration: 0,9s
+Build succeeded with 9 warning(s) in 2,8s
 
 Windows (PowerShell eller Ledetekst):
 ```bat
@@ -233,8 +243,11 @@ Eksempler på prompts som eg har brukt er:
 KI-verktøy har blitt brukt som et støtteverktøy gjennom arbeidet med oppgaven. Det har hovedsakelig blitt brukt til å få hjelp med forståelse av oppgaveteksten og relevante fagbegreper. KI har også blitt brukt til å diskutere mulige løsninger knyttet til modeller og systemstruktur.
 
 ## Kornelius
-Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøking i kode og drøfting rundt koden. Til feilsøking er prompts jeg bruker hovedsakelig å lime inn konsollens feilmelding og output eller screenshots av relevant info, så skriver jeg hva jeg sliter med, hva jeg tror feilen er, eller forklare hva som prøves å oppnås. 
-Hadde problemer med å få programmet til å kjøre lokalt, og fikk hjelp av Github Copilot til å finne ut av problemet. Det viste seg at docker porten var feil, og fikk hjelp til å endre porten lokalt i docker og JetBrains Rider.
+Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøking i kode og drøfting rundt koden. 
+Til feilsøking er prompts jeg bruker hovedsakelig å lime inn konsollens feilmelding og output eller screenshots av relevant info, 
+så skriver jeg hva jeg sliter med, hva jeg tror feilen er, eller forklare hva som prøves å oppnås. 
+Hadde problemer med å få programmet til å kjøre lokalt, og fikk hjelp av Github Copilot til å finne ut av problemet. 
+Det viste seg at docker porten var feil, og fikk hjelp til å endre porten lokalt i docker og JetBrains Rider.
 Prompts jeg har brukt er hodesakelig "Jeg får denne feilmeldingen i konsollen, hva kan være problemet?"
 
 ## Lennart
