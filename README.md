@@ -135,15 +135,18 @@ Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`,
 
 ## 4. Testing
 
+# Testresultater
+
 | ID | Testscenario | Forventet resultat | Faktisk resultat | Status |
-|---|---|---|---|---|
-| T1 | Skriv inn “Traktor”, velg en kartposisjon og klikk på “Registrer ressurs”. | Riktig navn og koordinater vises. | Riktig navn og koordinater ble vist. | Bestått |
-| T2 | Forsøk å sende skjemaet med tomt ressursnavn. | Innsendingen stoppes, og brukeren får beskjed om at navnet må fylles ut. | Resultatet viser at brukeren får beskjed “Vennligst fyll ut dette feltet”. | Bestått. |
-| T3 | Skriv inn navn uten å velge kartposisjon | Registreringsknappen er deaktivert. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T4 | Registrer to ressurser på forskjellige posisjoner | Begge vises i listen og som markører på kartet. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T5 | Oppdater resultatsiden etter registrering | Ressursnavn og koordinater forblir uendret, og ingen ekstra ressurser opprettes. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T6 | Klikk på en posisjon i registreringsskartet, og klikk deretter et annet sted. | Den gamle markøren fjernes. En markør vises på den nye posisjonen, og koordinatene oppdateres. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T7 | Registrerer “Traktor”, trykk “Se alle ressursene på kartet” og se om markøren kommer med navnet “Traktor”. | En popup viser ressursnavnet ‘Traktor’. Etter registreringen. | Kartet ble sentrert på ressursen. Da jeg klikket på markøren, viste popupen navnet “Traktor” | Ikke bestått. |
+| --- | --- | --- | --- | --- |
+| T1 | Logg inn med riktig e-postadresse og passord. | Brukeren blir logget inn og sendt videre til kart- eller ressurssiden. | Brukeren ble logget inn og sendt videre til kartet. | Bestått |
+| T2 | Logg inn med riktig e-postadresse, men feil passord. | Innloggingen stoppes, og meldingen «Feil e-post eller passord» vises. | Innloggingen ble stoppet, og riktig feilmelding ble vist. | Bestått |
+| T3 | Registrer en konto med en e-postadresse som allerede finnes. | Kontoen opprettes ikke, og brukeren får beskjed om at e-postadressen allerede er i bruk. | Kontoen ble ikke opprettet, og feilmeldingen ble vist. | Bestått |
+| T4 | Registrer en ressurs, åpne «Mine ressurser» og rediger navn og beskrivelse. | De oppdaterte verdiene lagres og vises korrekt etter redigering. | Ressursen ble oppdatert, og de nye verdiene ble vist. | Bestått |
+| T5 | Registrer en ressurs og slett den fra «Mine ressurser». | Ressursen fjernes fra listen og vises ikke lenger på kartet. | Ressursen ble fjernet fra både listen og kartet. | Bestått |
+| T6 | Logg inn med én konto og forsøk å åpne eller redigere en ressurs som tilhører en annen konto. | Brukeren får ikke tilgang til den andre brukerens ressurs. | Tilgang til ressursen ble nektet. | Bestått |
+| T7 | Logg inn, logg ut, og prøv deretter å åpne kartet eller «Mine ressurser» direkte. | Brukeren blir sendt til innloggingssiden og får ikke tilgang til beskyttede sider. | Brukeren ble sendt til innloggingssiden, og sidene var ikke tilgjengelige. | Bestått |
+
 
 ## Enhetstesting:
 
