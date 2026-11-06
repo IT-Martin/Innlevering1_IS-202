@@ -147,10 +147,16 @@ Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`,
 
 ## Enhetstesting:
 
-Enhetstestene ligger i `tests/Innlevering1_Gruppe2.Tests`. Fra rotmappen kjører du dem med:
+Enhetstestene ligger i `tests/Innlevering1_Gruppe2.Tests`. Krever .NET 10 SDK. Fra rotmappen kjører du dem slik:
 
+macOS/Linux:
 ```bash
 ./run-enhetstester
+```
+
+Windows (PowerShell eller Ledetekst):
+```bat
+.\run-enhetstester.bat
 ```
 
 Testene dekker validering av registrerings-, innloggings- og ressursmodeller, ikonvalg for ressurstyper, innlogging med ukjent e-post eller feil passord, ressursregistrering og redigering, tilgang til egne ressurser og repository-operasjoner. Databasetestene bruker en isolert EF Core-database i minnet og krever ikke en kjørende MariaDB-instans. Skriptet bruker den vanlige oppsummeringen fra `dotnet test`.
