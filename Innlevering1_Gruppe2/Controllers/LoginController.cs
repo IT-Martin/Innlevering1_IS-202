@@ -112,7 +112,7 @@ public class LoginController : Controller
             phone = model.Phone.Trim()
         };
 
-        account.password_hash = passwordHasher.HashPassword(
+        account.password_hash = passwordHasher.HashPassword( //
             account,
             model.Password);
 
