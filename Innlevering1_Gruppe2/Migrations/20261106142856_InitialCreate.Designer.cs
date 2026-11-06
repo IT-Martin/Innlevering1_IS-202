@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Innlevering1_Gruppe2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261031154113_InitialCreate")]
+    [Migration("20261106142856_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,6 +37,13 @@ namespace Innlevering1_Gruppe2.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("contact_name")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasDefaultValue("");
+
                     b.Property<string>("email")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -46,6 +53,13 @@ namespace Innlevering1_Gruppe2.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("phone")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasDefaultValue("");
 
                     b.HasKey("account_id");
 

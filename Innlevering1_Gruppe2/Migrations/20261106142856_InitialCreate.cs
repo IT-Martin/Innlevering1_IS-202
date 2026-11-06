@@ -26,6 +26,10 @@ namespace Innlevering1_Gruppe2.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     email = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    contact_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false, defaultValue: "")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    phone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     password_hash = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },

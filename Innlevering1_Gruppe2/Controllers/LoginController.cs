@@ -120,7 +120,7 @@ public class LoginController : Controller
         await context.SaveChangesAsync();
 
         await SignInAsync(account);
-        return RedirectToAction("Map", "Home");
+        return RedirectToAction("Map", "Resource");
     }
 
     [HttpPost]
@@ -157,3 +157,4 @@ public class LoginController : Controller
             new ClaimsPrincipal(identity));
     }
 }
+
