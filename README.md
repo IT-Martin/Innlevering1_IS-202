@@ -4,23 +4,26 @@ Gruppe 2 holde på å utvikle en ASP.NET Core MVC-applikasjon for å registrere 
 
 Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ressursen. Navn og koordinater vises deretter på en egen resultatside. Registrerte ressurser kan også vises samlet på kartet.
 
-## 1. Drift
+## Drift og oppstart
 
-For å kjøre prosjektet gjennom Visual Studio trenger du:
+For å kjøre prosjektet trenger du:
 
-- Visual Studio med støtte for .NET 10, ASP.NET.
-- Docker Desktop installert på maskinen.
-- Internettilgang for å hente nødvendige pakker som Leaflet.
+- Visual Studio med støtte for .NET 10 og ASP.NET Core
+- Docker Desktop
+- En tilgjengelig MySQL/MariaDB-database
+- Internettilgang for eksterne ressurser som Leaflet og OpenStreetMap
+
+
 
 ## 2. Starte applikasjonen
 
-1. Klon GitHub-repositoriet, eller last ned og pakk ut prosjektet.
+1. Klon GitHub-repositoriet eller last ned prosjektet.
 2. Start Docker Desktop.
-3. Åpne "Innlevering1.slnx" i Visual Studio.
-4. Kontroller at "Innlevering1_Gruppe2" er oppstartsprosjektet.
-5. Velg kjøreprofilen 'Container (Dockerfile)'.
-6. Start prosjektet med den grønne startknappen.
-7. Når applikasjonen har startet, åpner Visual Studio nettleseren.
+3. Åpne `Innlevering1.slnx` i Visual Studio.
+4. Kontroller at `Innlevering1_Gruppe2` er oppstartsprosjektet.
+5. Kontroller at databaseforbindelsen i `DefaultConnection` er riktig konfigurert.
+6. Velg `Container (Dockerfile)`
+7. Start prosjektet med den grønne startknappen.
 
 > Første oppstart "kan ta litt tid", vent ca. 1 min for å se om applikasjonen starter.
 
@@ -28,39 +31,43 @@ For å kjøre prosjektet gjennom Visual Studio trenger du:
 
 Stopp kjøringen i Visual Studio ved å trykke på "Stop Debugging" oppe til høyre.
 
-## 3. SystemArkitektur
+## Systemarkitektur
 
-Applikasjonen bruker ASP.NET Core MVC (Model, View and Controller). 
+Applikasjonen følger Model-View-Controller-arkitekturen:
 
-**Model:** I prosjektet brukes 'RessursViewModel' til å represen en ressurs med ID, navn og koordinater. Controller oppretter og bruker ressursobjektene og sender dem til viewet for visning.
+- **Model:** Inneholder entiteter som representerer dataene i databasen, blant annet kontoer, ressurser, ressurstyper og lokasjoner. ViewModel-klasser brukes til å motta, validere og sende data mellom skjemaene, controllerne og visningene.
+- **View:** Razor Views, HTML, CSS og JavaScript viser skjemaer, detaljer, navigasjon og kartet.
+- **Controller:** Mottar HTTP GET- og POST-forespørsler og styrer applikasjonens flyt. Controllerne validerer brukerinput, håndterer innlogging og autorisering, og koordinerer med ApplicationDbContext og ResourceRepository for å hente og lagre data. De sender deretter riktige modeller eller ViewModels til Razor Views.
 
-**View:** Hva slags innhold som skal vises til brukeren. Her brukes det Razor, HTML, CSS og JavaScript til blant annet registreringsskjemaet, resultatsiden og kartet.
-
-**Controller:** Håndterer GET og POST request fra View. Ved POST mottar controlleren ressursnavn og koordinater fra skjemaet. Den kontrollerer verdier som er mottat og lagrer ressursen i Session.
-                  Ved GET, for eksempel når brukeren åpner kartet, henter controlleren ressurslisten og sender den til riktig view. 
 
 | Komponent | Ansvar |
-|---|---|
-| HomeController.cs | Håndterer GET og POST, kontrollerer innsendte data, leser og lagrer nye ressurser i ressurslisten |
-| RessursViewModel.cs | Gir mulighet til å lage en ressurs med verdier: ID, navn og kart koordinatene |
-| Register.cshtml | Viser skjemaet og kartet for valg av ressursens posisjon. |
-| Result.cshtml | Viser navn og koordinater for ressursen controlleren har hentet. |
-| Map.cshtml | Viser ressurslisten og oppretter kartmarkører ved hjelp av JavaScript |
-| _Layout.cshtml | Inneholder felles navigasjon for nettsiden
-| Program.cs | MVC, Session og ruting |
-| Dockerfile | Beskriver hvordan applikasjon bygges og kjøres i en Docker-container. |
+| --- | --- |
+| `Controllers/LoginController.cs` | Håndterer registrering, innlogging, utlogging og tilgangsavvisning. Validerer brukerdata, hasher og verifiserer passord, oppretter autentiserings-cookie og claims. |
+| `Controllers/ResourceController.cs` | Håndterer kartvisning, registrering, redigering, sletting og visning av brukerens egne ressurser. Krever innlogging og kontrollerer at brukeren eier ressursen før redigering eller sletting. |
+| `Controllers/HomeController.cs` | Viser forsiden, personvernsiden og feilsiden. |
+| `DataAccess/ApplicationDbContext.cs` | Kobler applikasjonen til databasen gjennom Entity Framework Core. Definerer entiteter, relasjoner, nøkler, valideringsregler, indekser og standardtyper for ressurser. |
+| `DataAccess/Repositories/IResourceRepository.cs` | Definerer operasjonene repository-laget må støtte for å hente, opprette, oppdatere og slette ressurser. |
+| `DataAccess/Repositories/ResourceRepository.cs` | Implementerer databaseoperasjoner for ressurser ved hjelp av Entity Framework Core. Håndterer også henting av eier, lokasjon og ressurstype. |
+| `Models/Entities/Account.cs` | Representerer en brukerkonto med e-post, kontaktinformasjon, passordhash, kontotype og eide ressurser. |
+| `Models/Entities/Resource.cs` | Representerer en ressurs med navn, beskrivelse, eier, ressurstype, lokasjon og kontaktinformasjon. |
+| `Models/Entities/Location.cs` | Lagrer adresseinformasjon og geografiske koordinater for en ressurs. |
+| `Models/Entities/ResourceType.cs` | Representerer kategorier som kan brukes til å klassifisere ressurser. |
+| `Models/Entities/ProviderAccount.cs` | Representerer leverandør- eller organisasjonsinformasjon. Entiteten er konfigurert i databasen, men brukes ikke aktivt i hovedflyten ennå. |
+| `Models/AccountRegistrationViewModel.cs` | Inputmodell for brukerregistrering med validering av navn, telefon, e-post og passord. |
+| `Models/LoginViewModel.cs` | Inputmodell for innlogging med validering av e-post og passord. |
+| `Models/ResourceCreateViewModel.cs` | Inputmodell for registrering av ressurs, inkludert navn, beskrivelse, kategori og koordinater. |
+| `Models/ResourceEditViewModel.cs` | Inputmodell for redigering av en eksisterende ressurs. |
+| `Models/RessursViewModel.cs` | Presentasjonsmodell som brukes til å vise ressurser, ikoner og koordinater på kartet og resultatsiden. |
+| `Models/ResourceTypeIcon.cs` | Kobler ressurstyper og ressursnavn til passende Font Awesome-ikoner. |
 
 
 
 ### Lagring av data
 
-Ressursene lagres midlertidlig i brukerens Session. Ressurslisten gjøres om til JSON og oppbevares i applikasjonens minne.
+Ressursene lagres permanent i en MySQL-database gjennom Entity Framework Core. Datamodellen inneholder blant annet tabeller for Account, Location, ProviderAccount, Resource og ResourceType.
 
-Det betyr at:
+Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`, og migreringer kjøres automatisk når applikasjonen starter.
 
-- Ressursene tilhører den aktuelle brukerøkten.
-- Data kan forsvinne når økten utløper eller applikasjonen starter på nytt.
-- Denne versjonen bruker ikke database.
 
 ## 4. Testing
 
