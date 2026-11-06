@@ -81,6 +81,18 @@ Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`,
 | T6 | Klikk på en posisjon i registreringsskartet, og klikk deretter et annet sted. | Den gamle markøren fjernes. En markør vises på den nye posisjonen, og koordinatene oppdateres. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
 | T7 | Registrerer “Traktor”, trykk “Se alle ressursene på kartet” og se om markøren kommer med navnet “Traktor”. | En popup viser ressursnavnet ‘Traktor’. Etter registreringen. | Kartet ble sentrert på ressursen. Da jeg klikket på markøren, viste popupen navnet “Traktor” | Ikke bestått. |
 
+## Enhetstesting:
+
+## Systemstesting
+
+## Sikkerhetstesting 
+
+## Brukervennlighetstesting
+
+
+
+
+
 ## Vår bruk av AI:
 Dokumentasjon på vårres bruk a KI i prosjektet fra ide til koding i Github (bruksområder, verktøy, prompt kommandoer)
 
