@@ -31,7 +31,7 @@ body {
 }
 
 /* =========================
-   Brannressurser - Shared Layout
+   ressurskart - Shared Layout
    ========================= */
 
 /* Navbar */
@@ -475,7 +475,13 @@ body { background: var(--surface-soft); color: var(--ink); }
     .hero-section { padding: 3rem; }
 }
 
+/* Mobile-first adjustments for smaller screens */
+
 @media (max-width: 700px) {
+    .navbar-toggler { min-width: 44px; min-height: 44px; }
+    .account-nav .account-action { min-height: 44px; }
+    .form-control, .form-select { font-size: 16px; }
+    .hero-actions { flex-direction: column; }
     .hero-section { display: block; margin-top: 1.5rem; padding: 2rem 1.25rem; }
     .hero-section h1 { font-size: 2.65rem; }
     .hero-visual { margin-top: 2rem; }
@@ -484,6 +490,6 @@ body { background: var(--surface-soft); color: var(--ink); }
     .step-grid { grid-template-columns: 1fr; }
     .map-page-header, .resource-list-header { align-items: flex-start; flex-direction: column; }
     .map-page-header .btn { width: 100%; }
-    .map-shell #map { height: 62vh; min-height: 440px; }
+    .map-shell #map { height: clamp(18rem, 62vh, 32rem); }
     .site-footer .container { flex-direction: column; gap: .35rem; }
 }
