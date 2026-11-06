@@ -89,6 +89,7 @@ Når førstegangsoppsettet er fullført:
 7. Klikk på den **grønne startknappen**.
 
 > Første oppstart kan ta litt tid fordi Docker må bygge applikasjonscontaineren. Følg fremdriften i **Output**-vinduet i Visual Studio.
+> Hvis du tidligere har startet containeren med HTTPS, stopp den og bygg/start containeren på nytt slik at den bruker HTTP på port 8080.
 
 
 ### Stoppe applikasjonen
@@ -228,11 +229,13 @@ Eksempler på prompts som eg har brukt er:
 * «Hvorfor fungerer ikke dette?»
 
 
-## Fredrik
+## Fredrik --ikke lenger medlem av gruppen--
 KI-verktøy har blitt brukt som et støtteverktøy gjennom arbeidet med oppgaven. Det har hovedsakelig blitt brukt til å få hjelp med forståelse av oppgaveteksten og relevante fagbegreper. KI har også blitt brukt til å diskutere mulige løsninger knyttet til modeller og systemstruktur.
 
 ## Kornelius
-Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøking i kode og drøfting rundt koden. Til feilsøking er prompts jeg bruker hovedsakelig å lime inn konsollens feilmelding og output eller screenshots av relevant info, så skriver jeg hva jeg sliter med, hva jeg tror feilen er, eller forklare hva som prøves å oppnås.
+Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøking i kode og drøfting rundt koden. Til feilsøking er prompts jeg bruker hovedsakelig å lime inn konsollens feilmelding og output eller screenshots av relevant info, så skriver jeg hva jeg sliter med, hva jeg tror feilen er, eller forklare hva som prøves å oppnås. 
+Hadde problemer med å få programmet til å kjøre lokalt, og fikk hjelp av Github Copilot til å finne ut av problemet. Det viste seg at docker porten var feil, og fikk hjelp til å endre porten lokalt i docker og JetBrains Rider.
+Prompts jeg har brukt er hodesakelig "Jeg får denne feilmeldingen i konsollen, hva kan være problemet?"
 
 ## Lennart
 Jeg har brukt Copilot som støtte i arbeidet for å få bedre oversikt, struktur og forståelse av hvordan prosjektet skulle bygges opp. Verktøyet hjalp med å organisere filer, forklare sammenhenger i MVC modellen og gi veiledning når jeg sto fast.
