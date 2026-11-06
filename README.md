@@ -128,7 +128,7 @@ Applikasjonen følger Model-View-Controller-arkitekturen:
 
 ### Lagring av data
 
-Ressursene lagres permanent i en MySQL-database gjennom Entity Framework Core. Datamodellen inneholder blant annet tabeller for Account, Location, ProviderAccount, Resource og ResourceType.
+Ressursene lagres permanent i en MySQL-database gjennom Entity Framework Core til MariaDB i docker. Datamodellen inneholder blant annet tabeller for Account, Location, ProviderAccount, Resource og ResourceType.
 
 Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`, og migreringer kjøres automatisk når applikasjonen starter.
 
