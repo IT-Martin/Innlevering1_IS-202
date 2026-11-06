@@ -1,0 +1,101 @@
+@model IReadOnlyList<Reachout.Models.Entities.Resource>
+
+@{
+    ViewData["Title"] = "Mine bidrag";
+}
+
+<div class="management-page">
+    <div class="management-header">
+        <div>
+            <p class="eyebrow">MIN KONTO</p>
+            <h1>Mine bidrag</h1>
+            <p class="text-muted mb-0">Ressursene du deler, med tilgjengelighet og oppfølging på ett sted.</p>
+        </div>
+        <a class="btn btn-primary" asp-action="Register">
+            <i class="fa-solid fa-box-open" aria-hidden="true"></i> Registrer ressurs
+        </a>
+    </div>
+
+    <div class="resource-actions mb-4"><a href="/Resources/MyContributions?archived=@(!(ViewBag.Archived is true))">@(ViewBag.Archived is true ? "Aktive ressurser" : "Mitt ressursarkiv")</a></div>
+    <section class="card mb-4"><div class="card-body">
+        <h2 class="h4">Vil du også bidra som frivillig?</h2>
+        <p>Du velger selv om du vil bidra med tid og kompetanse. Ressursdeling krever ingen frivilligprofil.</p>
+        <div class="resource-actions"><a href="/Needs">Finn et hjelpebehov</a><a href="/Volunteers/Edit">@(ViewBag.HasVolunteerProfile is true ? "Min frivilligprofil" : "Opprett frivilligprofil")</a><a href="/Interests?status=Alle">Mine påmeldinger</a></div>
+    </div></section>
+    <partial name="_PendingTasks" />
+    <section data-collection>
+    @if (Model.Count > 0)
+    {
+        <partial name="_ListTools" />
+    }
+    @if (Model.Count == 0)
+    {
+        <div class="empty-state card">
+            <div class="card-body text-center">
+                <div class="empty-state-icon" aria-hidden="true">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+                <h2>@(ViewBag.Archived is true ? "Ingen arkiverte ressurser" : "Du har ingen ressurser ennå")</h2>
+                <p class="text-muted">Du velger selv om du vil dele ressurser, bidra som frivillig eller begge deler.</p>
+                <a class="btn btn-primary" asp-action="Register">Registrer første ressurs</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="resource-grid" data-items>
+            @foreach (var resource in Model)
+            {
+                <article class="resource-card card" data-item data-name="@resource.resource_name" data-category="@resource.ResourceType.category_name" data-place="@resource.Location.address_or_area">
+                    <div class="card-body">
+                        <div class="resource-card-heading">
+                            <div>
+                                <span class="status-pill">@(resource.archived ? "Arkivert" : resource.availability_status)</span>
+                                <h2>
+                                    <a href="/Resources/Details/@resource.resource_id">@resource.resource_name</a>
+                                </h2>
+                            </div>
+                            <span class="resource-type">
+                                <i class="@Reachout.Models.ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name)" aria-hidden="true"></i>
+                                @resource.ResourceType.category_name
+                            </span>
+                        </div>
+
+                        <p class="resource-description">
+                            @(string.IsNullOrWhiteSpace(resource.description) ? "Ingen beskrivelse lagt til." : resource.description)
+                        </p>
+
+                        <div class="resource-meta">
+                            <span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> @resource.Location.address_or_area</span>
+                        </div>
+
+                        <div class="resource-actions">
+                            <a href="/Resources/Details/@resource.resource_id" class="btn btn-outline-primary">Se detaljer</a>
+                            @if (!resource.archived)
+                            {
+                                <a class="btn btn-light" asp-action="Edit" asp-route-id="@resource.resource_id">Endre</a>
+                                <a href="/Availability/Index/@resource.resource_id" class="btn btn-light">Tilgjengelighet</a>
+                            }
+                        </div>
+                        <details class="resource-more">
+                            <summary>Flere valg</summary>
+                            <p class="field-help">Arkivering bevarer historikken. Ressurser med forespørselshistorikk kan ikke slettes.</p>
+                            <div class="resource-actions">
+                                <form asp-controller="Resources" asp-action="Archive" method="post">
+                                    <input name="id" type="hidden" value="@resource.resource_id" />
+                                    <input name="restore" value="@resource.archived.ToString().ToLowerInvariant()" type="hidden" />
+                                    <button class="btn btn-outline-secondary">@(resource.archived ? "Gjenopprett" : "Arkiver")</button>
+                                </form>
+                                <form asp-action="Delete" asp-route-id="@resource.resource_id" method="post" onsubmit="return confirm('Vil du slette denne ressursen? Dette kan ikke angres.');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger">Slett ressurs</button>
+                                </form>
+                            </div>
+                        </details>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    </section>
+</div>
