@@ -4,7 +4,7 @@ Gruppe 2 holde på å utvikle en ASP.NET Core MVC-applikasjon for å registrere 
 
 Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ressursen. Navn og koordinater vises deretter på en egen resultatside. Registrerte ressurser kan også vises samlet på kartet.
 
-## Drift og oppstart
+## 1. Drift og oppstart
 
 For å kjøre prosjektet trenger du:
 
@@ -12,6 +12,17 @@ For å kjøre prosjektet trenger du:
 - Docker Desktop
 - En tilgjengelig MySQL/MariaDB-database
 - Internettilgang for eksterne ressurser som Leaflet og OpenStreetMap
+- Database kobling med
+
+
+### Konfigurere databaseforbindelsen
+
+Åpne `appsettings.json` i prosjektet og oppdater `ConnectionStrings` med tilkoblingsinformasjonen til databasen:
+
+json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=host.docker.internal;Port=3307;Database=resourcedb;User=root;Password=Password;"
+}
 
 
 
@@ -85,7 +96,18 @@ Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`,
 
 ## Systemstesting
 
-## Sikkerhetstesting 
+## Sikkerhetstesting
+
+| ID | Test | Gjennomføring | Resultat | Vurdering |
+| --- | --- | --- | --- | --- |
+| S1 | SQL injection | Innloggingsskjemaet ble testet med ugyldig e-postadresse. Deretter ble en gyldig e-postadresse brukt sammen med `' or 1=1 --` i passordfeltet. | Ugyldig e-postadresse ble avvist av valideringen. Med gyldig e-postadresse og SQL-payload i passordfeltet ble meldingen «Feil e-post eller passord» vist. | Ingen innloggingsomgåelse ble påvist med dette forsøket. |
+| S2 | Cross-Site Scripting (XSS) | Payloaden `<script>alert('XSS attack')</script>` ble testet i URL-en og ved registrering av en ny ressurs. | Ingen dialogboks ble vist under forsøkene. | Ingen XSS ble påvist med denne payloaden på de testede stedene. |
+| S3 | Lagring av passord | Passordverdien som var lagret i databasen, ble undersøkt. | Passordet var lagret som en hash og ikke som lesbar klartekst. | Lagring som hash er observert. Hashalgoritme og innstillinger er ikke vurdert i denne testen. |
+| S4 | Kryptering under overføring | Wireshark ble brukt til å undersøke trafikken mellom applikasjonen og databasen på port 3307. | Opptaket viste TLS 1.3-forhandling og etterfølgende kryptert trafikk. Ingen passord ble observert i klartekst. | TLS-kryptering ble bekreftet for de undersøkte databaseforbindelsene. |
+
+Testene viser resultatene av de konkrete forsøkene. De dokumenterer ikke alene at applikasjonen er fri for SQL injection eller XSS.
+
+
 
 ## Brukervennlighetstesting
 
