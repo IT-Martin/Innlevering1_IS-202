@@ -1,42 +1,95 @@
-# Innlevering1
+<h1 align="center">Innlevering1</h1>
 
-Gruppe 2 holde på å utvikle en ASP.NET Core MVC-applikasjon for å registrere med visning av ressurser på et kart.
+> Gruppe 2 holde på å utvikle en **ASP.NET Core MVC-applikasjon** for å registrere med visning av ressurser på et kart.
 
 Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ressursen. Navn og koordinater vises deretter på en egen resultatside. Registrerte ressurser kan også vises samlet på kartet.
+
+---
 
 ## 1. Drift og oppstart
 
 For å kjøre prosjektet trenger du:
 
-- Visual Studio med støtte for .NET 10 og ASP.NET Core
-- Docker Desktop
-- En tilgjengelig MySQL/MariaDB-database
-- Internettilgang for eksterne ressurser som Leaflet og OpenStreetMap
+- **Visual Studio** med støtte for **.NET 10** og **ASP.NET Core**
+- **Docker Desktop**
+- En tilgjengelig **MySQL/MariaDB-database**
+- Internettilgang for eksterne ressurser som **Leaflet** og **OpenStreetMap**
 - Database kobling med
 
+---
 
-### Konfigurere databaseforbindelsen
+## 1. Førstegangsoppsett
 
-Åpne `appsettings.json` i prosjektet og oppdater `ConnectionStrings` med tilkoblingsinformasjonen til databasen:
+### Åpne prosjektet
 
-json
+1. Klon GitHub-repositoriet eller last ned prosjektet.
+2. Start **Docker Desktop**.
+3. Åpne `Innlevering1.slnx` i **Visual Studio**.
+4. Sett `Innlevering1_Gruppe2` som **oppstartsprosjekt**.
+
+### Opprett databasen i Docker
+
+Kjør følgende kommando i terminalen:
+
+```powershell
+docker run --name resourcedb -p 127.0.0.1:3307:3306 -v resourcedb-data:/var/lib/mysql -e MARIADB_ROOT_PASSWORD=Password -e MARIADB_DATABASE=resourcedb -d mariadb:latest
+```
+
+Kommandoen oppretter MariaDB-containeren `resourcedb` og en database med samme navn. Databasen er tilgjengelig på port `3307` på din PC.
+
+### Konfigurer tilkoblingen for migreringer
+
+Åpne `appsettings.json` og oppdater `ConnectionStrings`. Behold de øvrige innstillingene i filen.
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=127.0.0.1;Port=3307;Database=resourcedb;User=root;Password=Password;"
+}
+```
+
+> Adressen `127.0.0.1` brukes når du oppdaterer databasen med migreringer fra Visual Studio.
+
+### Opprett databasestrukturen
+
+Åpne **Tools → NuGet Package Manager → Package Manager Console** i Visual Studio og kjør:
+
+```powershell
+Update-Database
+```
+
+Kommandoen bruker prosjektets eksisterende migreringer til å opprette eller oppdatere tabeller og relasjoner i databasen.
+
+### Konfigurer tilkoblingen for applikasjonen
+
+Når migreringene er fullført, endrer du `Server` i tilkoblingsstrengen til `host.docker.internal`:
+
+```json
 "ConnectionStrings": {
   "DefaultConnection": "Server=host.docker.internal;Port=3307;Database=resourcedb;User=root;Password=Password;"
 }
+```
 
-
+---
 
 ## 2. Starte applikasjonen
 
-1. Klon GitHub-repositoriet eller last ned prosjektet.
-2. Start Docker Desktop.
-3. Åpne `Innlevering1.slnx` i Visual Studio.
-4. Kontroller at `Innlevering1_Gruppe2` er oppstartsprosjektet.
-5. Kontroller at databaseforbindelsen i `DefaultConnection` er riktig konfigurert.
-6. Velg `Container (Dockerfile)`
-7. Start prosjektet med den grønne startknappen.
+Når førstegangsoppsettet er fullført:
 
-> Første oppstart "kan ta litt tid", vent ca. 1 min for å se om applikasjonen starter.
+1. Start **Docker Desktop**.
+2. Start databasecontaineren fra **Docker Desktop**, eller kjør:
+
+   ```powershell
+   docker start resourcedb
+   ```
+
+3. Åpne `Innlevering1.slnx` i **Visual Studio**.
+4. Kontroller at `Innlevering1_Gruppe2` er **oppstartsprosjektet**.
+5. Kontroller at `DefaultConnection` bruker `Server=host.docker.internal` og `Port=3307`.
+6. Velg **Container (Dockerfile)** som oppstartsprofil.
+7. Klikk på den **grønne startknappen**.
+
+> Første oppstart kan ta litt tid fordi Docker må bygge applikasjonscontaineren. Følg fremdriften i **Output**-vinduet i Visual Studio.
+
 
 ### Stoppe applikasjonen
 
@@ -169,28 +222,3 @@ Har brukt ChatGPT og Github Copilot. Bruket har hovedsakelig vært til feilsøki
 
 ## Lennart
 Jeg har brukt Copilot som støtte i arbeidet for å få bedre oversikt, struktur og forståelse av hvordan prosjektet skulle bygges opp. Verktøyet hjalp med å organisere filer, forklare sammenhenger i MVC modellen og gi veiledning når jeg sto fast.
-
-
-
-
-
-### Lage tabell og database i docker desktop
-
-Ta opp terminal på Docker Desktop. 
-
-Kopier følgende kommando: 
-
-docker run --name resourcedb -p 127.0.0.1:3306:3306 -v resourcedb-data:/var/lib/mysql -e MARIADB_ROOT_PASSWORD=Password -e MARIADB_DATABASE=resourcedb -d mariadb:latest
-
-Passordet er: Password (På engelsk)
-
-Sjekk om du kan gå inn i containern:
- docker exec -it resourcedb mariadb -u root -p. Så skriv inn passordet
-
-Inne på Visual studio prosjekt, gå inn på: appsettings.json. Å legg til Connection stringen: "Server=127.0.0.1;Port=3307;Database=resourcedb;User=root;Password=Password;"
-
-127.0.0.1 brukes for å koble til databasen og legge til migration
-
-Når man starter webapplikasjonen, så kan det hende man må endre til Server=host.docker.internal.
-
-Gå inn på Package Manager Console: Skriv Update-Database. Dette lager 4 tabeller som er laget klar i visual studio kode. Som skal opprette resourcedb database med 4 tabeller.
