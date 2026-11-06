@@ -105,8 +105,6 @@ Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`,
 | S3 | Lagring av passord | Passordverdien som var lagret i databasen, ble undersøkt. | Passordet var lagret som en hash og ikke som lesbar klartekst. | Lagring som hash er observert. Hashalgoritme og innstillinger er ikke vurdert i denne testen. |
 | S4 | Kryptering under overføring | Wireshark ble brukt til å undersøke trafikken mellom applikasjonen og databasen på port 3307. | Opptaket viste TLS 1.3-forhandling og etterfølgende kryptert trafikk. Ingen passord ble observert i klartekst. | TLS-kryptering ble bekreftet for de undersøkte databaseforbindelsene. |
 
-Testene viser resultatene av de konkrete forsøkene. De dokumenterer ikke alene at applikasjonen er fri for SQL injection eller XSS.
-
 
 
 ## Brukervennlighetstesting
