@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Innlevering1_Gruppe2.Controllers;
 
-public class LoginController : Controller
+public class LoginController : Controller //Kopi
 {
     private readonly ApplicationDbContext context;
     private readonly PasswordHasher<Account> passwordHasher = new();
