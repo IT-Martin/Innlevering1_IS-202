@@ -1,0 +1,35 @@
+@model Reservation
+<article class="card mb-3">
+    <div class="card-body">
+        <span class="status-pill">@Model.reservation_status</span>
+        <h3 class="h5 mt-2">@Model.ResourceMatch.Resource.resource_name</h3>
+        <p>Behov: <a href="/Needs/Details/@Model.ResourceMatch.resource_need_id">@Model.ResourceMatch.ResourceNeed.title</a>
+        </p>
+        <p>@Model.requested_start.ToString("dd.MM.yyyy HH:mm") – @Model.requested_end.ToString("dd.MM.yyyy HH:mm")</p>
+        <p>@Model.message</p>
+        <p>@Model.ResourceMatch.Resource.contact_details</p>
+        <a href="/Resources/Details/@Model.ResourceMatch.resource_id">Se ressursen</a>
+        @if(User.FindFirst("Permission")?.Value != "Lesetilgang") {
+        <div class="resource-actions">
+            @if(User.IsInRole("Private") && Model.reservation_status == "Venter på svar") {
+            @foreach(var status in new[]{"Godtatt","Avslått"}){
+            <form asp-controller="Requests" asp-action="Respond" method="post">
+                <input name="id" type="hidden" value="@Model.reservation_id" />
+                <input name="status" type="hidden" value="@status" />
+                <button class="btn btn-outline-primary">@(status == "Godtatt" ? "Godta forespørsel" : "Avslå")</button>
+            </form>}}
+            @if(User.IsInRole("Public") && Model.reservation_status is "Venter på svar" or "Godtatt") {
+            @if(Model.reservation_status == "Godtatt"){
+            <form asp-controller="Requests" asp-action="Respond" method="post">
+                <input name="id" type="hidden" value="@Model.reservation_id" />
+                <input name="status" type="hidden" value="Fullført" />
+                <button class="btn btn-primary">Marker fullført</button>
+            </form>}
+            <form asp-controller="Requests" asp-action="Respond" method="post">
+                <input name="id" type="hidden" value="@Model.reservation_id" />
+                <input name="status" type="hidden" value="Avbrutt" />
+                <button class="btn btn-outline-danger">Avbryt forespørsel eller reservasjon</button>
+            </form>}
+        </div>}
+    </div>
+</article>
