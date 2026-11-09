@@ -1,0 +1,36 @@
+@model VolunteerProfileViewModel
+@{ ViewData["Title"] = "Min frivilligprofil"; }
+<div class="management-page">
+    <h1>Min frivilligprofil</h1>
+    @if(Model.Archived){
+    <div class="alert alert-warning">Du er ikke aktiv som frivillig. Profilen er skjult for offentlige aktører. Du kan aktivere den igjen senere.</div>}
+    <p>Frivillighet er valgfritt. Du kan dele ressurser uten å ha en frivilligprofil.</p>
+    <p>Profilen beskriver hva du kan bidra med. Du melder deg selv på et konkret hjelpebehov; å lagre profilen er ingen påmelding. Offentlige aktører kan se aktive profiler og kontaktopplysningene dine.</p>
+    <div class="resource-actions mb-3"><a href="/Needs">Finn et hjelpebehov</a><a href="/Interests">Mine påmeldinger</a><a href="/Resources/MyContributions">Mine bidrag</a></div>
+    <form method="post" class="resource-form card">
+        <div class="card-body">
+            <div asp-validation-summary="All" class="text-danger">
+            </div>
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="NeedId" type="hidden" />
+            <label class="form-label d-block">Rolle eller kompetanse<input asp-for="Role" class="form-control" />
+            </label>
+            <label class="form-label d-block">Område du kan bidra i<input asp-for="Area" class="form-control" />
+            </label>
+            <label class="form-label d-block">Ferdigheter, skilt med komma<input asp-for="Skills" class="form-control" placeholder="Førstehjelp, transport, logistikk" />
+            </label>
+            <label class="form-label d-block">Tilleggsopplysninger<textarea asp-for="Information" class="form-control"></textarea>
+            </label>
+            <button class="btn btn-primary">@(Model.NeedId.HasValue ? "Lagre og gå tilbake til behovet" : "Lagre frivilligprofil")</button>
+        </div>
+    </form>
+    @if(Model.Id > 0){
+    <div class="resource-actions">
+        <a class="btn btn-outline-primary" href="/Availability/Index/@Model.Id?volunteer=true">Mine tilgjengelige perioder</a>
+        <form asp-action="Archive" method="post" onsubmit="@(Model.Archived ? null : "return confirm('Vil du slutte som frivillig? Alle aktive påmeldinger trekkes, og profilen skjules. Historikken beholdes.');")">
+            <input asp-for="NeedId" type="hidden" />
+            <input name="restore" type="hidden" value="@Model.Archived.ToString().ToLowerInvariant()" />
+            <button class="btn btn-outline-secondary">@(Model.Archived ? "Bli aktiv som frivillig igjen" : "Jeg vil ikke være frivillig lenger")</button>
+        </form>
+    </div>}
+</div>

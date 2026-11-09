@@ -1,0 +1,64 @@
+@model IReadOnlyList<ResourceNeed>
+@{
+    var supplier = User.IsInRole("Private");
+    var canWrite = User.IsInRole("Public") && User.FindFirst("Permission")?.Value != "Lesetilgang";
+    ViewData["Title"] = supplier ? "Åpne hjelpebehov" : "Mine behov";
+}
+<div class="management-page">
+    <div class="management-header">
+        <div>
+            <p class="eyebrow">@(supplier ? "BIDRA DER DET TRENGS" : "DITT ARBEIDSOMRÅDE")</p>
+            <h1>@ViewData["Title"]</h1>
+            <p class="text-muted mb-0">@(supplier ? "Finn behov du kan bidra til å dekke." : "Dine registrerte behov, med forespørsler og oppfølging samlet.")</p>
+        </div>
+        @if (canWrite)
+        {
+            <a class="btn btn-primary" href="/Needs/Create"><i class="fa-solid fa-plus" aria-hidden="true"></i> Meld behov</a>
+        }
+    </div>
+    @if (!supplier)
+    {
+        <p><a href="/Needs?archived=@(!(ViewBag.Archived is true))">@(ViewBag.Archived is true ? "Tilbake til aktive behov" : "Vis arkiverte behov")</a></p>
+    }
+    <partial name="_PendingTasks" />
+    <section data-collection>
+        @if (Model.Count > 0)
+        {
+            <partial name="_ListTools" />
+        }
+        else
+        {
+            <div class="empty-state card"><div class="card-body">
+                <h2>@(supplier ? "Ingen åpne hjelpebehov akkurat nå" : ViewBag.Archived is true ? "Ingen arkiverte behov" : "Ingen behov registrert ennå")</h2>
+                @if (canWrite && ViewBag.Archived is not true)
+                {
+                    <p class="text-muted mb-0">Bruk «Meld behov» for å registrere hva du trenger hjelp til.</p>
+                }
+                else
+                {
+                    <p class="text-muted">Her vises behovene når de er tilgjengelige.</p>
+                    <a href="/Map">Åpne kart og ressurser</a>
+                }
+            </div></div>
+        }
+        <div class="resource-grid" data-items>
+            @foreach (var need in Model)
+            {
+                <article class="resource-card card" data-item data-name="@need.title" data-category="@need.ResourceType.category_name" data-place="@need.Location.address_or_area">
+                    <div class="card-body">
+                        <div class="resource-card-heading"><span class="category-icon category-need"><i class="@ResourceTypeIcon.For(need.ResourceType.category_name, need.title)" aria-hidden="true"></i></span><span class="status-pill">@(need.priority == "Haster" ? "Haster" : need.status)</span></div>
+                        <h2>@need.title</h2>
+                        <p class="resource-description">@need.ResourceType.category_name · @need.Location.address_or_area</p>
+                        <div class="resource-meta"><span><i class="fa-regular fa-calendar" aria-hidden="true"></i> @need.required_start.ToString("dd.MM.yyyy HH:mm") – @need.required_end.ToString("dd.MM.yyyy HH:mm")</span></div>
+                        <div class="resource-actions"><a class="btn btn-outline-primary" href="/Needs/Details/@need.resource_need_id">Se behov <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                        @if (need.archived && canWrite)
+                        {
+                            <form asp-action="Archive" method="post"><input name="id" value="@need.resource_need_id" type="hidden" /><input name="restore" value="true" type="hidden" /><button class="btn btn-outline-primary">Gjenopprett</button></form>
+                        }
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </section>
+</div>

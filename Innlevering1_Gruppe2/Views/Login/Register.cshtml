@@ -1,4 +1,4 @@
-@model Innlevering1_Gruppe2.Models.AccountRegistrationViewModel
+@model Reachout.Models.AccountRegistrationViewModel
 
 @{
     ViewData["Title"] = "Opprett konto";
@@ -6,10 +6,17 @@
 
 <div class="row justify-content-center">
     <div class="col-md-5">
-        <h1>Opprett konto</h1>
+        <h1>@(string.IsNullOrEmpty(Model.Invitation) ? "Opprett leverandørkonto" : "Aktiver invitert offentlig konto")</h1>
+        <p>@(string.IsNullOrEmpty(Model.Invitation) ? "For privatpersoner, bedrifter og organisasjoner som vil bidra." : "Du får tilgangen organisasjonens administrator har invitert deg til. Jobbadressen må bekreftes.")</p>
 
         <form asp-action="Register" method="post">
             @Html.AntiForgeryToken()
+            <input asp-for="Invitation" type="hidden" />
+            @if (string.IsNullOrEmpty(Model.Invitation))
+            {
+                <label class="form-label">Leverandørtype<select asp-for="ProviderType" class="form-select"><option>Privatperson</option><option>Bedrift</option><option>Organisasjon</option></select></label>
+                <label class="form-label">Bedrift eller organisasjon (valgfritt)<input asp-for="Organization" class="form-control" maxlength="200" /></label>
+            }
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">

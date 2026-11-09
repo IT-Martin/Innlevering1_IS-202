@@ -1,0 +1,28 @@
+@model VolunteerInterest
+<article class="card mb-3">
+    <div class="card-body">
+        <span class="status-pill">@(Model.interest_status == "Godtatt" ? "Ønsker kontakt" : Model.interest_status)</span>
+        <h3 class="h5 mt-2">@Model.ResourceNeed.title</h3>
+        <p>@Model.message</p>
+        <p>Frivillig: @Model.VolunteerProfile.ProviderAccount.Account.contact_name · @Model.VolunteerProfile.service_area</p>
+        @if(User.IsInRole("Public")){
+        <p>Kontakt: @Model.VolunteerProfile.ProviderAccount.Account.email · @Model.VolunteerProfile.ProviderAccount.Account.phone</p>}
+        <a href="/Needs/Details/@Model.resource_need_id">Se behovet</a>
+        @if(User.FindFirst("Permission")?.Value != "Lesetilgang") {
+        <div class="resource-actions">
+            @if(User.IsInRole("Private") && Model.interest_status is "Venter på svar" or "Godtatt") {
+            <form asp-controller="Interests" asp-action="Respond" method="post">
+                <input name="id" type="hidden" value="@Model.interest_id" />
+                <input name="status" type="hidden" value="Trukket" />
+                <button class="btn btn-outline-danger">Trekk påmelding</button>
+            </form>}
+            @if(User.IsInRole("Public") && Model.interest_status == "Venter på svar") {
+            @foreach(var status in new[]{"Godtatt","Avslått"}){
+            <form asp-controller="Interests" asp-action="Respond" method="post">
+                <input name="id" type="hidden" value="@Model.interest_id" />
+                <input name="status" type="hidden" value="@status" />
+                <button class="btn btn-outline-primary">@(status == "Godtatt" ? "Ønsker kontakt" : "Avslå")</button>
+            </form>}}
+        </div>}
+    </div>
+</article>
