@@ -1,10 +1,12 @@
-using Innlevering1_Gruppe2.Controllers;
-using Innlevering1_Gruppe2.Models.Entities;
-using Innlevering1_Gruppe2.Models.ViewModels;
+using Reachout.Controllers;
+using Reachout.Models;
+using Reachout.Models.Entities;
+using Reachout.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
-namespace Innlevering1_Gruppe2.Tests;
+namespace Reachout.Tests;
 
 public class LoginControllerTests
 /*
@@ -18,7 +20,7 @@ public class LoginControllerTests
     /* Test for å sikre at innlogging med en ukjent e-postadresse gir riktig feilmelding. */
     {
         await using var context = TestDatabase.CreateContext();
-        var controller = new LoginController(context);
+        var controller = new LoginController(context, CreateAccountService(context));
 
         var result = await controller.Index(new LoginViewModel
         {
@@ -43,7 +45,7 @@ public class LoginControllerTests
             .HashPassword(account, "correct-password");
         await context.SaveChangesAsync();
 
-        var controller = new LoginController(context);
+        var controller = new LoginController(context, CreateAccountService(context));
 
         var result = await controller.Index(new LoginViewModel
         {
@@ -54,5 +56,13 @@ public class LoginControllerTests
         Assert.IsType<ViewResult>(result);
         Assert.Contains(controller.ModelState[string.Empty]!.Errors,
             error => error.ErrorMessage == "Feil e-post eller passord.");
+    }
+
+    private static AccountService CreateAccountService(Reachout.DataAccess.ApplicationDbContext context)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["LocalPreview"] = "true" })
+            .Build();
+        return new AccountService(context, configuration);
     }
 }

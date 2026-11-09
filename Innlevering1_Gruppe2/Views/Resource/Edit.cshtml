@@ -1,9 +1,9 @@
-@model Innlevering1_Gruppe2.Models.ResourceEditViewModel
+@model Reachout.Models.ResourceEditViewModel
 
 @{
     ViewData["Title"] = "Endre ressurs";
-    var resourceTypes = ViewBag.ResourceTypes as IEnumerable<Innlevering1_Gruppe2.Models.Entities.ResourceType>
-        ?? Enumerable.Empty<Innlevering1_Gruppe2.Models.Entities.ResourceType>();
+    var resourceTypes = ViewBag.ResourceTypes as IEnumerable<Reachout.Models.Entities.ResourceType>
+        ?? Enumerable.Empty<Reachout.Models.Entities.ResourceType>();
 }
 
 <div class="form-page">

@@ -1,6 +1,6 @@
-using Innlevering1_Gruppe2.Models;
+using Reachout.Models;
 
-namespace Innlevering1_Gruppe2.Tests;
+namespace Reachout.Tests;
 
 /* Testklasse for testing av ResourceTypeIcon. Tester ulike ressurskategorier og deres tilhørende ikoner */
 public class ResourceTypeIconTests
