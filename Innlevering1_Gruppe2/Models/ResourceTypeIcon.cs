@@ -1,13 +1,19 @@
-namespace Innlevering1_Gruppe2.Models;
-
+namespace Reachout.Models;
 public static class ResourceTypeIcon
 {
+    public static string CategoryClass(string? categoryName) => categoryName?.Trim().ToLowerInvariant() switch
+    {
+        "vann" => "map-category-water",
+        "strøm" => "map-category-power",
+        "kjøretøy" or "kjoeretoy" or "bil" or "tilhenger" => "map-category-vehicle",
+        "utstyr" or "verktøy" or "verktoy" or "heisekran" or "kran" => "map-category-equipment",
+        "lokaler" => "map-category-building",
+        _ => "map-category-other"
+    };
+
     public static string For(string? categoryName, string? resourceName = null)
     {
-        var searchableText = $"{categoryName} {resourceName}"
-            .Trim()
-            .ToLowerInvariant();
-
+        var searchableText = $"{categoryName} {resourceName}".Trim().ToLowerInvariant();
         if (searchableText.Contains("drone"))
         {
             return "fa-solid fa-helicopter";
@@ -24,7 +30,10 @@ public static class ResourceTypeIcon
             "heisekran" or "kran" => "fa-solid fa-tower-observation",
             "frivillige" or "frivillig" => "fa-solid fa-people-group",
             "tilhenger" => "fa-solid fa-truck",
-            "verktøy" or "verktoy" => "fa-solid fa-toolbox",
+            "lokaler" => "fa-solid fa-building",
+            "strøm" => "fa-solid fa-bolt",
+            "vann" => "fa-solid fa-droplet",
+            "utstyr" or "verktøy" or "verktoy" => "fa-solid fa-toolbox",
             "førstehjelp" or "forstehjelp" => "fa-solid fa-kit-medical",
             _ => "fa-solid fa-location-dot"
         };
