@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Innlevering1_Gruppe2.Migrations
+namespace Reachout.Migrations
 {
     /// <inheritdoc />
     public partial class AddAccountContactDetails : Migration
