@@ -1,0 +1,42 @@
+name: reachout-team
+services:
+  db:
+    image: mariadb:11.8
+    environment:
+      MARIADB_DATABASE: reachout_database
+      MARIADB_USER: gruppe2_app
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Kjør database/setup.py først}
+      MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD:?Kjør database/setup.py først}
+    ports:
+      - "127.0.0.1:${REACHOUT_DB_PORT:-3316}:3306"
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+  app:
+    build:
+      context: .
+      dockerfile: Reachout/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=reachout_database;User ID=gruppe2_app;Password=${DB_PASSWORD};"
+      LocalPreview: true
+      SeedDemoData: false
+      InitialAdmin__Email: ${REACHOUT_ADMIN_EMAIL:?Kjør database/setup.py først}
+      InitialAdmin__Password: ${REACHOUT_ADMIN_PASSWORD:?Kjør database/setup.py først}
+      DataDirectory: /data
+      TZ: Europe/Oslo
+      ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "127.0.0.1:${REACHOUT_WEB_PORT:-5205}:8080"
+    volumes:
+      - app_keys:/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  database:
+  app_keys:
