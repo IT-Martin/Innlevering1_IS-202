@@ -1,0 +1,7 @@
+Kontrollert 4. november 2026 mot lokal MariaDB 11.8.9.
+Alle filene 00–21 ble kjørt i rekkefølge i en separat midlertidig testdatabase.
+20 tabeller opprettet. SHOW CREATE TABLE samsvarer med fungerende Reachout for alle 20 tabeller, bortsett fra løpende AUTO_INCREMENT-tellere.
+8 kategorier, 2 ferdigheter og 4 migrasjonsrader kontrollert.
+Kontrollspørringene 22 og lesespørringene 23 kjørte uten feil.
+Den midlertidige testdatabasen er fjernet etter kontrollen. Eksisterende Reachout-data er uendret.
+Dette tester skjemaopprettelse, ikke oppgradering av en eksisterende database eller alle applikasjonsfunksjoner.
