@@ -1,27 +1,25 @@
-@{ var fullMap = ViewData["FullMap"] is true; }
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="no">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Reachout</title>
-    <link rel="icon" type="image/svg+xml" href="~/reachout.svg" />
+    <title>@ViewData["Title"] - Felles Ressurs</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="~/Innlevering1_Gruppe2.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <a class="skip-link" href="#main-content">Hopp til innhold</a>
     <header class="site-header">
         <nav class="navbar navbar-expand-lg">
-            <div class="container app-container">
+            <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <span class="brand-mark" aria-hidden="true">
-                        <svg viewBox="0 0 32 32" fill="none" focusable="false"><path d="M9 22 23 9M9 10h14v13" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="23" r="4" fill="currentColor"/></svg>
+                        <i class="fa-solid fa-people-group"></i>
                     </span>
-                    <span>Reachout<span class="brand-caption">RESSURSER · BEREDSKAP</span></span>
+                    <span>Felles Ressurs</span>
                 </a>
 
                 <button class="navbar-toggler"
@@ -36,40 +34,19 @@
 
                 <div class="collapse navbar-collapse" id="mainNavigation">
                     <ul class="navbar-nav main-nav me-auto">
-                        @if (User.Identity?.IsAuthenticated != true)
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Hjem</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Resource" asp-action="Map">Kartet</a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item"><a class="nav-link" href="/">Hjem</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Login?role=Public">Offentlig aktør</a></li>
-                        }
-                        else if (User.IsInRole("Platform"))
-                        {
-                            <li class="nav-item"><a class="nav-link" href="/Organizations">Tilgangsadministrasjon</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Account/Profile">Min konto</a></li>
-                        }
-                        else
-                        {
-                            <li class="nav-item"><a class="nav-link" href="/Map">@(User.IsInRole("Private") ? "Mitt kart" : "Kart og ressurser")</a></li>
-                            <li class="nav-item"><a class="nav-link" href="@(User.IsInRole("Private") ? "/Resources/MyContributions" : "/Needs")">@(User.IsInRole("Private") ? "Mine bidrag" : "Mine behov")</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Requests">Forespørsler</a></li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mer</a>
-                                <ul class="dropdown-menu">
-                                    @if (User.IsInRole("Private"))
-                                    {
-                                        <li><a class="dropdown-item" href="/Needs">Åpne hjelpebehov</a></li>
-                                        <li><a class="dropdown-item" href="/Volunteers/Edit">Min frivilligprofil</a></li>
-                                    }
-                                    else
-                                    {
-                                        <li><a class="dropdown-item" href="/Volunteers">Frivillige</a></li>
-                                        @if (User.FindFirst("Permission")?.Value == "Organisasjonsadministrator")
-                                        { <li><a class="dropdown-item" href="/Organizations">Organisasjon og ansatte</a></li> }
-                                        @if (User.FindFirst("Permission")?.Value != "Lesetilgang")
-                                        { <li><a class="dropdown-item" href="/Exports">Last ned ressursliste (CSV)</a></li> }
-                                    }
-                                    <li><a class="dropdown-item" href="/Interests">@(User.IsInRole("Private") ? "Mine påmeldinger" : "Frivilligpåmeldinger")</a></li>
-                                    <li><a class="dropdown-item" href="/Account/Profile">Min konto</a></li>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Resource" asp-action="Register">Legg til ressurs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Resource" asp-action="MyResources">Mine ressurser</a>
                             </li>
                         }
                     </ul>
@@ -77,18 +54,14 @@
                     <div class="account-nav">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <span class="account-email" title="@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value">
-                                <i class="fa-regular fa-user" aria-hidden="true"></i>
-                                @(User.IsInRole("Platform") ? "Systemansvarlig" : User.IsInRole("Private") ? "Leverandør" : "Offentlig aktør")
+                            <span class="account-email" title="Innlogget konto">
+                                <span class="account-dot" aria-hidden="true"></span>
+                                @User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value
                             </span>
                             <form asp-controller="Login" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-link logout-button">Logg ut</button>
                             </form>
-                        }
-                        else if (ViewData["LandingPage"] is true)
-                        {
-                            <a class="account-action" asp-controller="Home" asp-action="About">Om Reachout</a>
                         }
                         else
                         {
@@ -107,25 +80,18 @@
         </nav>
     </header>
 
-    <div class="container app-container @(fullMap ? "full-map-container" : "")">
-        <main id="main-content" role="main">
-            @if (ViewData["IsHttpError"] is not true && TempData["Message"] is string message)
-            { <div class="alert alert-info mt-3" role="status">@message</div> }
-            @if (ViewData["IsHttpError"] is not true && TempData["LocalLink"] is string localLink)
-            { <div class="alert alert-warning mt-3"><strong>Lokal forhåndsvisning – ingen e-post er sendt.</strong> <a id="local-link" href="@localLink">Åpne personlig testlenke</a></div> }
+    <div class="container">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    @if (!fullMap)
-    {
     <footer class="site-footer">
-        <div class="container app-container">
-            <span>&copy; 2026 Reachout</span>
+        <div class="container">
+            <span>&copy; 2026 Felles Ressurs</span>
             <span>Enklere deling av viktige ressurser</span>
         </div>
     </footer>
-    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

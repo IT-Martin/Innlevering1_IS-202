@@ -1,30 +1,32 @@
-@{
+﻿@{
     ViewData["Title"] = "Hjem";
-    ViewData["LandingPage"] = true;
 }
 
 <section class="hero-section">
     <div class="hero-content">
-        <p class="eyebrow">REACHOUT</p>
+        <p class="eyebrow">BRANNRESSURSER</p>
         <h1>Finn og del ressurser når det gjelder.</h1>
         <p class="hero-lead">
             Registrer tilgjengelige ressurser, se dem på kartet og gjør informasjonen
-            tilgjengelig for offentlige beredskapsaktører. Andre leverandører ser bare sine egne ressurser.
+            lett tilgjengelig for personer som trenger den.
         </p>
 
         <div class="hero-actions" aria-label="Hovedhandlinger">
-            <a asp-controller="Login" asp-action="Index"
+            <a asp-controller="Resource"
+               asp-action="Register"
                class="btn btn-primary btn-lg hero-action-primary">
-                Logg inn <span aria-hidden="true">→</span>
+                Registrer ressurs
+                <span aria-hidden="true">→</span>
             </a>
-            <a asp-controller="Login" asp-action="Register"
+            <a asp-controller="Resource"
+               asp-action="Map"
                class="btn btn-light btn-lg hero-action-secondary">
-                Opprett konto
+                Se kartet
             </a>
         </div>
 
         <p class="hero-note">
-            Offentlig bruker? Velg «Offentlig aktør» ved innlogging. Nye offentlige brukere trenger en invitasjon fra organisasjonen.
+            Velg en posisjon på kartet. Du kan endre eller slette dine egne ressurser senere.
         </p>
     </div>
 
@@ -33,11 +35,11 @@
             <span class="map-grid-line map-grid-line-one"></span>
             <span class="map-grid-line map-grid-line-two"></span>
             <span class="map-pin map-pin-one"><i class="fa-solid fa-tractor"></i></span>
-            <span class="map-pin map-pin-two"><i class="fa-solid fa-droplet"></i></span>
-            <span class="map-pin map-pin-three"><i class="fa-solid fa-bolt"></i></span>
+            <span class="map-pin map-pin-two"><i class="fa-solid fa-truck"></i></span>
+            <span class="map-pin map-pin-three"><i class="fa-solid fa-people-group"></i></span>
             <div class="map-preview-label">
                 <span class="map-preview-dot"></span>
-                Ressurser og beredskap
+                Ressurser i nærheten
             </div>
         </div>
     </div>
@@ -58,7 +60,7 @@
         <article class="step-card">
             <span class="step-number">02</span>
             <h3>Finn på kartet</h3>
-            <p>Se egne bidrag eller finn ressurser som offentlig aktør.</p>
+            <p>Se alle registrerte ressurser samlet i én oversikt.</p>
         </article>
         <article class="step-card">
             <span class="step-number">03</span>

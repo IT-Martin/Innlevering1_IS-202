@@ -1,4 +1,0 @@
-<nav class="resource-actions mb-4" aria-label="Filtrer etter status">
-    @foreach(var status in new[]{"Venter på svar", "Godtatt", "Avsluttet", "Alle"}){
-    <a asp-action="Index" asp-route-status="@status" class="btn @(ViewBag.Status == status ? "btn-primary" : "btn-outline-primary")">@(status == "Godtatt" ? (ViewData["VolunteerFlow"] is true ? "Ønsker kontakt" : "Bekreftet") : status)</a>}
-</nav>
