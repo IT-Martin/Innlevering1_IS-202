@@ -8,11 +8,17 @@ namespace Reachout.Services;
 
 public static class InitialAdmin
 {
-    public static async Task InitializeAsync(ApplicationDbContext db, IConfiguration configuration)
+    public static async Task InitializeAsync(ApplicationDbContext db, IConfiguration configuration, IHostEnvironment environment)
     {
+        // Den delte demonstrasjonskontoen skal bare opprettes i utviklingsmiljøet.
+        if (!environment.IsDevelopment())
+        {
+            return;
+        }
+
         var email = configuration["InitialAdmin:Email"]?.Trim().ToLowerInvariant();
         var password = configuration["InitialAdmin:Password"];
-        if (!configuration.GetValue<bool>("LocalPreview") || (email is null && password is null))
+        if (email is null && password is null)
         {
             return;
         }
