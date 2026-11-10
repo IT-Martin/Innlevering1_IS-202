@@ -6,6 +6,18 @@ Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ress
 
 ---
 
+## Lokal demonstrasjonskonto
+
+Når applikasjonen starter med miljøet `Development`, opprettes en systemansvarlig i den tilkoblede databasen dersom databasen ikke allerede har en systemansvarlig:
+
+- E-post: `admin@test.no`
+- Passord: `adminadminadmin`
+- Velg **Systemansvarlig** på innloggingssiden.
+
+Hvert gruppemedlem får kontoen i sin egen lokale database. Rider-profilene `http` og `https` bruker `Development`. Ved Docker-kjøring må utviklingsmiljøet velges eksplisitt med `ASPNETCORE_ENVIRONMENT=Development`. Databaseforbindelsen må være konfigurert først.
+
+Eksisterende kontoer og passord endres ikke. Dersom e-postadressen allerede brukes av en annen rolle, stoppes oppstarten med en feilmelding fremfor å gi kontoen flere rettigheter. Innstillingene kan overstyres lokalt med `InitialAdmin:Email` og `InitialAdmin:Password`. Den delte innloggingen er kun for lokal demonstrasjon og skal ikke brukes i en publisert løsning. Automatisk opprettelse kjøres ikke utenfor `Development`; en allerede opprettet konto blir værende i databasen.
+
 ## 1. Drift og oppstart
 
 For å kjøre prosjektet trenger du:

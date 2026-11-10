@@ -44,7 +44,7 @@ using (var scope = app.Services.CreateScope())
     {
         var db = services.GetRequiredService<ApplicationDbContext>();
         db.Database.Migrate();
-        await InitialAdmin.InitializeAsync(db, builder.Configuration);
+        await InitialAdmin.InitializeAsync(db, builder.Configuration, app.Environment);
 
         await DemoData.InitializeAsync(db, builder.Configuration);
     }
