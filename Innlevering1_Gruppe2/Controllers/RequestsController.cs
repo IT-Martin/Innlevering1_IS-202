@@ -37,19 +37,6 @@ public class RequestsController : Controller
         return View(await query.OrderByDescending(reservation => reservation.reservation_id).ToListAsync());
     }
 
-    [Authorize(Roles = "Public"), HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(ReservationFormViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
-        var error = await workflow.RequestAsync(model.ResourceId, model.NeedId, AccountId, model.Start, model.End, model.Message ?? string.Empty);
-        TempData["Message"] = error ?? "Forespørselen er sendt. Ressursen er reservert først når leverandøren godtar.";
-        return RedirectToAction("Details", "Resources", new { id = model.ResourceId });
-    }
-
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Respond(int id, string status)
     {

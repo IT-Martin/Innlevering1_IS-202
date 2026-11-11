@@ -21,15 +21,15 @@ public class NeedFormViewModel
     public string Address { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Velg en plassering på kartet.")]
-    [Range(-90, 90, ErrorMessage = "Velg en gyldig breddegrad på kartet.")]
+    [Range(-90d, 90d, ErrorMessage = "Velg en gyldig breddegrad på kartet.")]
     public double? Latitude { get; set; }
 
     [Required(ErrorMessage = "Velg en plassering på kartet.")]
-    [Range(-180, 180, ErrorMessage = "Velg en gyldig lengdegrad på kartet.")]
+    [Range(-180d, 180d, ErrorMessage = "Velg en gyldig lengdegrad på kartet.")]
     public double? Longitude { get; set; }
     public string Priority { get; set; } = "Normal";
-    public DateTime Start { get; set; } = DateTime.Today.AddDays(1);
-    public DateTime End { get; set; } = DateTime.Today.AddDays(2);
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
     public DateTime? Deadline { get; set; }
     public List<ResourceType> Types { get; set; } = new();
 }

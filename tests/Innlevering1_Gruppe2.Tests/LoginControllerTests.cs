@@ -30,7 +30,7 @@ public class LoginControllerTests
 
         Assert.IsType<ViewResult>(result);
         Assert.Contains(controller.ModelState[string.Empty]!.Errors,
-            error => error.ErrorMessage == "Feil e-post eller passord.");
+            error => error.ErrorMessage == "Kunne ikke logge inn. Kontroller e-post og passord, eller prøv igjen om noen minutter.");
     }
 
     [Fact]

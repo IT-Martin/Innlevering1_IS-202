@@ -25,7 +25,39 @@ public class ResourcesController : Controller
 
     private int AccountId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-    public async Task<IActionResult> Details(int id)
+    [HttpGet]
+    public Task<IActionResult> Details(int id) => ShowDetailsAsync(id);
+
+    [Authorize(Roles = "Public"), HttpPost("/Requests/Create"), ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateRequest([Bind(Prefix = "Request")] ReservationFormViewModel request)
+    {
+        if (User.FindFirstValue("Permission") == "Lesetilgang")
+        {
+            return Forbid();
+        }
+
+        if (request.Start.HasValue && request.End.HasValue && request.End <= request.Start)
+        {
+            ModelState.AddModelError("Request.End", "Sluttiden må være etter starttiden.");
+        }
+
+        if (ModelState.IsValid)
+        {
+            var error = await workflow.RequestAsync(request.ResourceId, request.NeedId, AccountId,
+                request.Start!.Value, request.End!.Value, request.Message ?? string.Empty);
+            if (error is null)
+            {
+                TempData["Message"] = "Forespørselen er sendt. Ressursen er reservert først når leverandøren godtar.";
+                return RedirectToAction(nameof(Details), new { id = request.ResourceId });
+            }
+
+            ModelState.AddModelError(string.Empty, error);
+        }
+
+        return await ShowDetailsAsync(request.ResourceId, request);
+    }
+
+    private async Task<IActionResult> ShowDetailsAsync(int id, ReservationFormViewModel? request = null)
     {
         var resource = await context.Resources.Include(resource => resource.Location).Include(resource => resource.ResourceType).Include(resource => resource.ProviderAccount).ThenInclude(provider => provider.Account).AsNoTracking().SingleOrDefaultAsync(resource => resource.resource_id == id);
         if (resource == null || User.IsInRole("Private") && resource.account_id != AccountId)
@@ -38,7 +70,7 @@ public class ResourcesController : Controller
             return NotFound();
         }
 
-        return View(new ResourceDetailsViewModel { Resource = resource, CanEdit = User.IsInRole("Private") && !resource.archived, Periods = await context.AvailabilityPeriods.AsNoTracking().Where(period => period.resource_id == id).OrderBy(period => period.available_from).ToListAsync(), Needs = User.IsInRole("Public") ? await context.ResourceNeeds.AsNoTracking().Where(need => need.public_actor_account_id == AccountId && !need.archived && need.status != "Løst" && need.resource_type_id == resource.resource_type_id && need.required_end > DateTime.Now && (!need.deadline.HasValue || need.deadline >= DateTime.Now) && !context.ResourceMatches.Any(match => match.resource_need_id == need.resource_need_id)).ToListAsync() : new() });
+        return View(nameof(Details), new ResourceDetailsViewModel { Request = request ?? new ReservationFormViewModel { ResourceId = id }, Resource = resource, CanEdit = User.IsInRole("Private") && !resource.archived, Periods = await context.AvailabilityPeriods.AsNoTracking().Where(period => period.resource_id == id).OrderBy(period => period.available_from).ToListAsync(), Needs = User.IsInRole("Public") ? await context.ResourceNeeds.AsNoTracking().Where(need => need.public_actor_account_id == AccountId && !need.archived && need.status != "Løst" && need.resource_type_id == resource.resource_type_id && need.required_end > DateTime.Now && (!need.deadline.HasValue || need.deadline >= DateTime.Now) && !context.ResourceMatches.Any(match => match.resource_need_id == need.resource_need_id)).ToListAsync() : new() });
     }
 
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]

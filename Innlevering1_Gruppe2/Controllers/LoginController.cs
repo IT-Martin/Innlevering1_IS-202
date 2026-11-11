@@ -29,6 +29,11 @@ public class LoginController : Controller
     [HttpGet]
     public IActionResult Index(string role = "Private")
     {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         return View(new LoginViewModel { Role = role is "Public" or "Platform" ? role : "Private" });
     }
 

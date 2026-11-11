@@ -35,13 +35,15 @@ public class OrganizationsController : Controller
             return View(model);
         }
 
-        var domain = model.Domain.Trim().ToLowerInvariant();
-        if (!System.Text.RegularExpressions.Regex.IsMatch(domain, @"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\.[a-z]{2,}$") || !model.Email.Trim().EndsWith("@" + domain, StringComparison.OrdinalIgnoreCase))
+        var email = model.Email.Trim().ToLowerInvariant();
+        var domain = email[(email.LastIndexOf('@') + 1)..];
+        if (domain.Length > 200 || !System.Text.RegularExpressions.Regex.IsMatch(domain, @"^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\.[a-z]{2,}$"))
         {
-            ModelState.AddModelError("Domain", "Bruk et gyldig jobbdomene og en kontaktadresse på dette domenet.");
+            ModelState.AddModelError(nameof(model.Email), "Oppgi en jobb-e-post med et gyldig domene.");
         }
 
-        if (await context.PublicOrganizations.AnyAsync(org => org.organization_number == model.Number))
+        var number = model.NormalizedNumber;
+        if (await context.PublicOrganizations.AnyAsync(org => org.organization_number == number))
         {
             ModelState.AddModelError("Number", "Organisasjonen har allerede en søknad. Kontakt systemansvarlig.");
         }
@@ -51,10 +53,18 @@ public class OrganizationsController : Controller
             return View(model);
         }
 
-        context.PublicOrganizations.Add(new PublicOrganization { organization_name = model.Name.Trim(), organization_type = model.Type.Trim(), organization_number = model.Number, email_domain = domain, contact_email = model.Email.Trim().ToLowerInvariant(), contact_name = model.Contact.Trim(), phone = model.Phone ?? string.Empty });
+        context.PublicOrganizations.Add(new PublicOrganization { organization_name = model.Name.Trim(), organization_type = model.Type.Trim(), organization_number = number, email_domain = domain, contact_email = email, contact_name = model.Contact.Trim(), phone = model.Phone ?? string.Empty });
         await context.SaveChangesAsync();
-        TempData["Message"] = "Søknaden er mottatt. Systemansvarlig må kontrollere organisasjonen før ansatte kan inviteres.";
-        return RedirectToAction("Index", "Login", new { role = "Public" });
+        TempData["OrganizationApplicationReceived"] = true;
+        return RedirectToAction(nameof(ApplicationReceived));
+    }
+
+    [AllowAnonymous, HttpGet]
+    public IActionResult ApplicationReceived()
+    {
+        return TempData["OrganizationApplicationReceived"] is true
+            ? View()
+            : RedirectToAction(nameof(Apply));
     }
 
     [Authorize(Roles = "Platform,Public"), HttpGet]

@@ -37,7 +37,7 @@ main { min-width:0; min-height:calc(100vh - 156px); }
 .navbar-brand { display:inline-flex; gap:11px; align-items:center; color:var(--ink); font-size:1.35rem; font-weight:750; letter-spacing:-.04em; line-height:1.1; margin-right:28px; }
 .navbar-brand:hover { color:var(--ink); }
 .brand-mark { width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; background:var(--brand); color:white; border-radius:12px; flex-shrink:0; }
-.brand-mark svg { width:27px; height:27px; }
+img.brand-mark { object-fit:contain; filter:brightness(1.04) saturate(1.16); }
 .brand-caption { display:block; margin-top:7px; color:var(--muted); font-size:.49rem; letter-spacing:.14em; font-weight:650; }
 .main-nav { gap:4px; }
 .site-header .nav-link { min-height:44px; color:#64706b; font-size:.86rem; font-weight:600; padding:10px 12px!important; border-radius:8px; white-space:nowrap; }

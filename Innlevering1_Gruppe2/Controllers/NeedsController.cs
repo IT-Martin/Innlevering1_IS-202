@@ -53,7 +53,14 @@ public class NeedsController : Controller
     [Authorize(Roles = "Public"), HttpGet]
     public async Task<IActionResult> Create()
     {
-        return View("Form", new NeedFormViewModel { Types = await context.ResourceTypes.AsNoTracking().ToListAsync() });
+        var now = DateTime.Now;
+        var start = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
+        return View("Form", new NeedFormViewModel
+        {
+            Start = start,
+            End = start.AddDays(1),
+            Types = await context.ResourceTypes.AsNoTracking().ToListAsync()
+        });
     }
 
     [Authorize(Roles = "Public"), HttpGet]

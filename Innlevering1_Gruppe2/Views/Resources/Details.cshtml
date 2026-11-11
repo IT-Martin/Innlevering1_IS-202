@@ -32,6 +32,7 @@
             </div>}
         </div>
     </section>
+    <div asp-validation-summary="All" class="text-danger"></div>
     @if(canRequest && resource.availability_status != "Ikke tilgjengelig" && Model.Periods.Any(period => period.available_to > DateTime.Now)){
     <section class="card mt-4">
         <div class="card-body">
@@ -40,21 +41,25 @@
             <p>Du har ingen åpne behov i denne ressursens kategori som kan kobles til en ny forespørsel.</p>
             <a href="/Needs/Create">Meld behov</a>}
             else {
-            <form asp-controller="Requests" asp-action="Create" method="post">
-                <input name="ResourceId" type="hidden" value="@resource.resource_id" />
+            <form asp-controller="Resources" asp-action="CreateRequest" method="post">
+                <input asp-for="Request.ResourceId" type="hidden" />
                 <div class="form-grid">
-                    <label class="form-label">Mitt behov<select name="NeedId" class="form-select" required>
+                    <label class="form-label">Mitt behov<select asp-for="Request.NeedId" class="form-select" required>
                             <option value="">Velg et åpent behov</option>
                             @foreach(var need in Model.Needs){
                             <option value="@need.resource_need_id">@need.title</option>}
                         </select>
+                        <span asp-validation-for="Request.NeedId" class="text-danger"></span>
                     </label>
-                    <label class="form-label">Fra<input name="Start" type="datetime-local" required class="form-control" />
+                    <label class="form-label">Fra<input asp-for="Request.Start" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" required class="form-control" />
+                        <span asp-validation-for="Request.Start" class="text-danger"></span>
                     </label>
-                    <label class="form-label">Til<input name="End" type="datetime-local" required class="form-control" />
+                    <label class="form-label">Til<input asp-for="Request.End" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" required class="form-control" />
+                        <span asp-validation-for="Request.End" class="text-danger"></span>
                     </label>
                 </div>
-                <label class="form-label d-block">Melding<textarea name="Message" maxlength="2000" class="form-control"></textarea>
+                <label class="form-label d-block">Melding<textarea asp-for="Request.Message" maxlength="2000" class="form-control"></textarea>
+                    <span asp-validation-for="Request.Message" class="text-danger"></span>
                 </label>
                 <button class="btn btn-primary">Send forespørsel</button>
             </form>

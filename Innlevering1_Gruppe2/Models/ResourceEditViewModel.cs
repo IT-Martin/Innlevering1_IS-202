@@ -25,10 +25,10 @@ public class ResourceEditViewModel
     public int? ResourceTypeId { get; set; }
 
     [Required(ErrorMessage = "Velg en posisjon på kartet.")]
-    [Range(-90, 90, ErrorMessage = "Breddegrad må være mellom -90 og 90.")]
+    [Range(-90d, 90d, ErrorMessage = "Breddegrad må være mellom -90 og 90.")]
     public double? Latitude { get; set; }
 
     [Required(ErrorMessage = "Velg en posisjon på kartet.")]
-    [Range(-180, 180, ErrorMessage = "Lengdegrad må være mellom -180 og 180.")]
+    [Range(-180d, 180d, ErrorMessage = "Lengdegrad må være mellom -180 og 180.")]
     public double? Longitude { get; set; }
 }
