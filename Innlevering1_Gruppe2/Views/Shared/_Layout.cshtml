@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Reachout</title>
-    <link rel="icon" type="image/svg+xml" href="~/reachout.svg" />
+    <title>@ViewData["Title"] - Beredskapssentralen</title>
+    <link rel="icon" type="image/png" href="~/beredskapssentralen.png" asp-append-version="true" />
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
@@ -18,10 +18,8 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container app-container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <span class="brand-mark" aria-hidden="true">
-                        <svg viewBox="0 0 32 32" fill="none" focusable="false"><path d="M9 22 23 9M9 10h14v13" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="23" r="4" fill="currentColor"/></svg>
-                    </span>
-                    <span>Reachout<span class="brand-caption">RESSURSER · BEREDSKAP</span></span>
+                    <img class="brand-mark bg-transparent" src="~/beredskapssentralen.png" asp-append-version="true" alt="" />
+                    <span>Beredskapssentralen<span class="brand-caption">RESSURSER · BEREDSKAP</span></span>
                 </a>
 
                 <button class="navbar-toggler"
@@ -39,7 +37,7 @@
                         @if (User.Identity?.IsAuthenticated != true)
                         {
                             <li class="nav-item"><a class="nav-link" href="/">Hjem</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Login?role=Public">Offentlig aktør</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organizations" asp-action="Apply">Søk om offentlig tilgang</a></li>
                         }
                         else if (User.IsInRole("Platform"))
                         {
@@ -88,7 +86,7 @@
                         }
                         else if (ViewData["LandingPage"] is true)
                         {
-                            <a class="account-action" asp-controller="Home" asp-action="About">Om Reachout</a>
+                            <a class="account-action" asp-controller="Home" asp-action="About">Om Beredskapssentralen</a>
                         }
                         else
                         {
@@ -121,7 +119,7 @@
     {
     <footer class="site-footer">
         <div class="container app-container">
-            <span>&copy; 2026 Reachout</span>
+            <span>&copy; 2026 Beredskapssentralen</span>
             <span>Enklere deling av viktige ressurser</span>
         </div>
     </footer>

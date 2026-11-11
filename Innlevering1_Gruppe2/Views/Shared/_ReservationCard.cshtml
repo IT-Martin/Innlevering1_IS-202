@@ -1,7 +1,7 @@
 @model Reservation
 <article class="card mb-3">
     <div class="card-body">
-        <span class="status-pill">@Model.reservation_status</span>
+        <span class="status-pill">@(Model.reservation_status == "Godtatt" ? "Bekreftet" : Model.reservation_status)</span>
         <h3 class="h5 mt-2">@Model.ResourceMatch.Resource.resource_name</h3>
         <p>Behov: <a href="/Needs/Details/@Model.ResourceMatch.resource_need_id">@Model.ResourceMatch.ResourceNeed.title</a>
         </p>

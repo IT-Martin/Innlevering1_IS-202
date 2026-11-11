@@ -4,6 +4,7 @@
     ViewData["Title"] = "Kart og ressurser";
     ViewData["FullMap"] = true;
     var supplier = User.IsInRole("Private");
+    var canCreate = supplier || User.FindFirst("Permission")?.Value != "Lesetilgang";
     var legendIcons = Model.Select(item => new
     {
         Icon = item.TypeIcon,
@@ -15,6 +16,10 @@
 <div class="map-page">
     <h1 class="visually-hidden">@(supplier ? "Mitt kart" : "Kart og ressurser")</h1>
     <section class="map-workspace" data-collection aria-label="Kart med søk og treff">
+        @if (canCreate)
+        {
+            <a class="btn btn-primary map-mobile-action" href="@(supplier ? "/Resources/Register" : "/Needs/Create")"><i class="fa-solid fa-plus" aria-hidden="true"></i> @(supplier ? "Registrer ressurs" : "Meld behov")</a>
+        }
         <details class="map-sidebar" open>
             <summary class="map-panel-toggle"><span><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Søk og treff</span><span data-count role="status"></span><i class="fa-solid fa-chevron-down panel-chevron" aria-hidden="true"></i></summary>
             <div class="map-panel-body">
@@ -26,11 +31,11 @@
         </div>
         @if (supplier)
         {
-            <a class="btn btn-primary" href="/Resources/Register"><i class="fa-solid fa-plus" aria-hidden="true"></i> Registrer ressurs</a>
+            <a class="btn btn-primary map-panel-action" href="/Resources/Register"><i class="fa-solid fa-plus" aria-hidden="true"></i> Registrer ressurs</a>
         }
         else if (User.FindFirst("Permission")?.Value != "Lesetilgang")
         {
-            <a class="btn btn-primary" href="/Needs/Create"><i class="fa-solid fa-plus" aria-hidden="true"></i> Meld behov</a>
+            <a class="btn btn-primary map-panel-action" href="/Needs/Create"><i class="fa-solid fa-plus" aria-hidden="true"></i> Meld behov</a>
         }
     </div>
 
@@ -53,7 +58,7 @@
                 <label class="visually-hidden" for="map-sort">Sorter treff</label>
                 <select id="map-sort" data-sort class="sort-select"><option value="name">Navn A–Å</option><option value="name-desc">Navn Å–A</option><option value="category">Kategori</option></select>
             </div>
-            <p data-empty hidden class="map-no-results">Ingen treff. Prøv et annet søk eller velg Alle kategorier.</p>
+            <p data-empty data-empty-initial="@(supplier ? "Du har ingen ressurser i kartet, og det finnes ingen åpne hjelpebehov ennå. Registrer en ressurs for å komme i gang." : canCreate ? "Ingen ressurser eller åpne hjelpebehov er registrert i kartet ennå. Du kan melde et behov fra denne siden." : "Ingen ressurser eller åpne hjelpebehov er registrert i kartet ennå.")" hidden class="map-no-results">Ingen treff med disse filtrene. Endre søket eller nullstill filtrene.</p>
             <ul id="resource-list" class="resource-list map-results" data-items>
                 @foreach (var resource in Model)
                 {
@@ -76,7 +81,7 @@
         </details>
         <div class="map-canvas">
             <div id="map" role="region" aria-label="Kart over ressurser og behov"></div>
-            <details class="map-legend" open>
+            <details class="map-legend @(canCreate ? "map-legend-with-action" : "")" open>
                 <summary>Tegnforklaring</summary>
                 <div class="map-legend-body">
                     <div class="map-legend-types">

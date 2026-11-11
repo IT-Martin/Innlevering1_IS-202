@@ -1,5 +1,8 @@
 @model OrganizationAdminViewModel
-@{ ViewData["Title"] = Model.Platform ? "Tilgangsadministrasjon" : "Organisasjon og ansatte"; }
+@{
+    ViewData["Title"] = Model.Platform ? "Tilgangsadministrasjon" : "Organisasjon og ansatte";
+    var ownAccountId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
 <div class="management-page">
     <h1>@ViewData["Title"]</h1>
     <p>@(Model.Platform ? "Kontroller organisasjonen gjennom en uavhengig kanal før du godkjenner og inviterer første administrator." : "Inviter ansatte til egen organisasjon og gi bare tilgangen de trenger.")</p>
@@ -11,16 +14,22 @@
             <p>Kontakt: @org.contact_name · @org.contact_email · @org.phone</p>
             <p>@org.verification</p>
             @if(Model.Platform){
+            <p class="field-help">Gjeldende status: <strong>@org.approval_status</strong>. En ny vurdering erstatter den lagrede vurderingen.</p>
             <form asp-action="Review" method="post">
                 <input name="id" type="hidden" value="@org.public_organization_id" />
                 <div class="form-grid">
-                    <label class="form-label">Status<select name="status" class="form-select">
-                            <option>Godkjent</option>
-                            <option>Sperret</option>
-                            <option>Avslått</option>
+                    <label class="form-label">Status etter vurdering<select name="status" class="form-select" required>
+                            @if (org.approval_status == "Venter")
+                            {
+                                <option value="" selected disabled>Velg en vurdering (venter på behandling)</option>
+                            }
+                            @foreach (var status in new[] { "Godkjent", "Sperret", "Avslått" })
+                            {
+                                <option value="@status" selected="@(status == org.approval_status)">@status</option>
+                            }
                         </select>
                     </label>
-                    <label class="form-label">Dokumentert kontroll<textarea name="evidence" minlength="15" maxlength="1000" required class="form-control"></textarea>
+                    <label class="form-label">Begrunnelse for denne vurderingen<textarea name="evidence" minlength="15" maxlength="1000" required class="form-control"></textarea>
                     </label>
                 </div>
                 <button class="btn btn-outline-primary">Lagre vurdering</button>
@@ -52,6 +61,13 @@
         <div class="card-body">
             <h3 class="h5">@member.Account.contact_name</h3>
             <p>@member.Account.email · @member.PublicOrganization.organization_name · @(member.Account.access_revoked ? "Sperret" : !member.Account.email_confirmed ? "E-postbekreftelse gjenstår" : "Aktiv")</p>
+            @if (member.account_id.ToString() == ownAccountId)
+            {
+                <p>Din tilgang: <strong>@member.permission</strong></p>
+                <p class="field-help">Dette er din egen konto. Du kan ikke endre egen rolle eller fjerne egen tilgang her. Kontakt systemansvarlig hvis tilgangen må endres.</p>
+            }
+            else
+            {
             <form asp-action="Member" method="post">
                 <input name="id" value="@member.account_id" type="hidden" />
                 <label class="form-label">Tilgang<select name="permission" class="form-select">
@@ -63,6 +79,7 @@
                     <input name="revoked" type="checkbox" value="true" checked="@member.Account.access_revoked" /> Fjern tilgang</label>
                 <button class="btn btn-outline-primary">Oppdater ansatt</button>
             </form>
+            }
         </div>
     </section>}
     <h2 class="h4">Invitasjoner</h2>

@@ -125,7 +125,7 @@ public class OrganizationsController : Controller
         await context.SaveChangesAsync();
         try
         {
-            var local = await accounts.SendAsync(email, "Du er invitert til Reachout.", "/Login/Register?invitation=" + token);
+            var local = await accounts.SendAsync(email, "Du er invitert til Beredskapssentralen.", "/Login/Register?invitation=" + token);
             if (local != null)
             {
                 TempData["LocalLink"] = local;

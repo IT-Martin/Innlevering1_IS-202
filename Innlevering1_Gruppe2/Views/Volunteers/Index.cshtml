@@ -4,7 +4,17 @@
         <h1>Frivillige</h1>
         <p>Aktive frivilligprofiler. Kontaktpersonen vurderer selv hvem som passer behovet.</p>
         <section data-collection>
-            <partial name="_ListTools" />
+            @if (Model.Count == 0)
+            {
+                <div class="empty-state card"><div class="card-body">
+                    <h2 class="h4">Ingen aktive frivilligprofiler ennå</h2>
+                    <p class="mb-0">Frivillige vises her når leverandører har opprettet og aktivert en frivilligprofil. @if (User.FindFirst("Permission")?.Value != "Lesetilgang") { <span>Du kan melde et behov for frivillig hjelp under <a href="/Needs">Mine behov</a>.</span> }</p>
+                </div></div>
+            }
+            else
+            {
+                <partial name="_ListTools" />
+            }
                 <div class="resource-grid" data-items>
                     @foreach(var entry in Model){
                     var profile = entry.Profile;

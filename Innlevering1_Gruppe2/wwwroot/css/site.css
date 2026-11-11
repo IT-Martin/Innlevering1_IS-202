@@ -364,3 +364,125 @@ summary { min-height:44px; padding:10px 0; }
     .pending-tasks { gap:6px 16px; }
     .pending-tasks strong { flex-basis:100%; }
 }
+
+.map-mobile-action { display:none; }
+@media(max-width:700px) {
+    .map-mobile-action { display:inline-flex; position:absolute; top:16px; left:12px; z-index:650; min-height:44px; align-items:center; justify-content:center; gap:8px; max-width:calc(100% - 88px); box-shadow:0 3px 12px #20332f20; }
+    .map-panel-action { display:none; }
+    .map-legend-with-action { top:76px; }
+}
+
+/* Skygger på forsiden */
+.hero-section .hero-map-preview {
+    box-shadow: 0 4px 10px rgb(0 0 0 / 5%), 0 22px 48px rgb(0 0 0 / 11%);
+}
+
+.hero-section ~ .how-it-works .step-card {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 3%), 0 8px 22px rgb(0 0 0 / 5%);
+}
+
+/* Visuelt hierarki på forsiden */
+.hero-section h1 {
+    text-wrap: balance;
+    letter-spacing: -.045em;
+}
+
+.hero-section .hero-note,
+.hero-section ~ .how-it-works .step-card p {
+    font-size: .9375rem;
+    line-height: 1.6;
+}
+
+.hero-section ~ .how-it-works .section-heading h2 {
+    letter-spacing: -.025em;
+    text-wrap: balance;
+}
+
+.hero-section ~ .how-it-works .step-card h3 {
+    margin-top: 0;
+    line-height: 1.3;
+}
+
+.hero-section ~ .how-it-works .step-card .step-number + h3 {
+    margin-top: 12px;
+}
+
+.hero-section .hero-actions .btn-primary {
+    box-shadow: 0 3px 9px rgb(0 0 0 / 12%);
+}
+
+.hero-section .hero-map-preview {
+    box-shadow: 0 3px 8px rgb(0 0 0 / 5%), 0 18px 42px rgb(0 0 0 / 9%);
+}
+
+.hero-section .map-preview-label {
+    box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+}
+
+.hero-section ~ .how-it-works details summary {
+    padding-block: 12px;
+}
+
+/* Dempede fargeaksenter på forsiden */
+.how-it-works[aria-labelledby="how-it-works-title"] .step-card {
+    box-shadow: inset 0 3px var(--brand), 0 8px 22px rgb(0 0 0 / 5%);
+}
+
+.how-it-works[aria-labelledby="who-can-use-title"] .step-card {
+    background: color-mix(in srgb, var(--green-soft) 65%, white);
+}
+
+.how-it-works[aria-labelledby="resource-example-title"] .step-card {
+    box-shadow: inset 3px 0 var(--green), 0 8px 22px rgb(0 0 0 / 5%);
+}
+
+.how-it-works[aria-labelledby="emergency-title"] h3 a {
+    color: var(--brand);
+    text-underline-offset: .18em;
+}
+
+.how-it-works[aria-labelledby="faq-title"] details[open] summary {
+    color: var(--green);
+}
+
+.how-it-works[aria-labelledby="faq-title"] .step-card {
+    padding: 0;
+}
+
+.how-it-works[aria-labelledby="faq-title"] summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px clamp(16px, 3vw, 26px);
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.how-it-works[aria-labelledby="faq-title"] summary::-webkit-details-marker {
+    display: none;
+}
+
+.how-it-works[aria-labelledby="faq-title"] summary::after {
+    content: "";
+    flex: 0 0 8px;
+    height: 8px;
+    margin-inline-end: 3px;
+    border-right: 2px solid var(--green);
+    border-bottom: 2px solid var(--green);
+    transform: rotate(45deg);
+}
+
+.how-it-works[aria-labelledby="faq-title"] summary:hover,
+.how-it-works[aria-labelledby="faq-title"] details[open] summary {
+    background: var(--green-soft);
+}
+
+.how-it-works[aria-labelledby="faq-title"] details[open] summary::after {
+    transform: rotate(225deg);
+}
+
+.how-it-works[aria-labelledby="faq-title"] details p {
+    max-width: 74ch;
+    padding: 14px clamp(16px, 3vw, 26px);
+}

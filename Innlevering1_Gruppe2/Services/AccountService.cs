@@ -90,7 +90,7 @@ public class AccountService
             smtp.Credentials = new NetworkCredential(configuration["Smtp:User"], configuration["Smtp:Password"]);
         }
 
-        using var mail = new MailMessage(configuration["Smtp:From"] ?? throw new InvalidOperationException("Avsender mangler."), email, "Reachout", text);
+        using var mail = new MailMessage(configuration["Smtp:From"] ?? throw new InvalidOperationException("Avsender mangler."), email, "Beredskapssentralen", text);
         await smtp.SendMailAsync(mail);
         return null;
     }

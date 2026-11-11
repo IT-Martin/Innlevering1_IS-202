@@ -23,7 +23,14 @@ document.querySelectorAll('[data-collection]').forEach(collection => {
         const parent = collection.querySelector('[data-items]');
         sorted.forEach(item => parent?.append(item));
         const count = collection.querySelector('[data-count]'); if (count) count.textContent = visible + ' av ' + items.length + ' treff';
-        const empty = collection.querySelector('[data-empty]'); if (empty) empty.hidden = visible !== 0;
+        const empty = collection.querySelector('[data-empty]');
+        if (empty) {
+            empty.hidden = visible !== 0;
+            const filtered = !!search?.value || !!category?.value || !!kind?.value;
+            empty.textContent = items.length === 0 && !filtered
+                ? (empty.dataset.emptyInitial || 'Ingen registrert ennå.')
+                : 'Ingen treff med disse filtrene. Endre søket eller nullstill filtrene.';
+        }
         if (reset) reset.hidden = !search?.value && !category?.value && !kind?.value && (!sort?.value || sort.value === 'name');
         collection.dispatchEvent(new Event('collectionchange'));
     }
