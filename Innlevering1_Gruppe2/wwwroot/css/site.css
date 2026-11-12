@@ -144,11 +144,11 @@ details[open] summary { margin-bottom:14px; }
 .legend-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--green); }
 .legend-need { background:var(--brand); }
 .resource-marker-container { display:flex; justify-content:center; align-items:flex-start; padding-top:3px; background:transparent; border:0; }
-.map-category-water { --category-color:#416f89; --category-ink:#fff; }
+.map-category-water { --category-color: #06b6d4; --category-ink:#fff; }
 .map-category-power { --category-color:#b49352; --category-ink:#251e12; }
-.map-category-vehicle { --category-color:#536b7a; --category-ink:#fff; }
-.map-category-equipment { --category-color:#526e59; --category-ink:#fff; }
-.map-category-building { --category-color:#527c78; --category-ink:#fff; }
+.map-category-vehicle { --category-color: #2563eb; --category-ink:#fff; }
+.map-category-equipment { --category-color: #22c55e; --category-ink:#fff; }
+.map-category-building { --category-color: #64748b; --category-ink:#fff; }
 .map-category-other { --category-color:#536273; --category-ink:#fff; }
 .map-page .category-icon { background:var(--category-color,#536273); color:var(--category-ink,#fff); }
 .resource-marker { display:flex; align-items:center; justify-content:center; width:38px; height:38px; background:var(--category-color,#536273); color:var(--category-ink,#fff); border:3px solid white; border-radius:50% 50% 50% 8px; transform:rotate(-45deg); box-shadow:0 3px 10px #20332f35; }
