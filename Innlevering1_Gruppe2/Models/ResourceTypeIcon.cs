@@ -8,6 +8,7 @@ public static class ResourceTypeIcon
         "kjøretøy" or "kjoeretoy" or "bil" => "map-category-vehicle",
         "utstyr" or "verktøy" or "verktoy" or "heisekran" or "kran" or "tilhenger" => "map-category-equipment",
         "lokaler" => "map-category-building",
+        "frivillige" or "frivillig" => "map-category-volunteer",
         _ => "map-category-other"
     };
 
