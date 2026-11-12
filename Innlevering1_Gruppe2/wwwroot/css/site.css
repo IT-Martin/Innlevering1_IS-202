@@ -517,12 +517,25 @@ summary { min-height:44px; padding:10px 0; }
         box-shadow: 0 0 0 1px #252525;
         pointer-events: none;
         opacity: 0;
-        animation: urgent-badge-pulse 1.25s ease-out .6s 2;
+        animation: urgent-badge-pulse 4s ease-out infinite;
     }
 
     @keyframes urgent-badge-pulse {
-        from { opacity: 1; transform: scale(1); }
-        to { opacity: 0; transform: scale(2.1); }
+        /* Blinkingen varer i 2 sekunder */
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0;
+            transform: scale(2.1);
+        }
+        /* Pause i 2 sekunder */
+        100% {
+            opacity: 0;
+            transform: scale(2.1);
+        }
     }
 }
 
