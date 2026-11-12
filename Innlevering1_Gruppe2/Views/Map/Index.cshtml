@@ -139,6 +139,7 @@
             }
         ).addTo(map);
 
+        map.createPane("urgentMarkers").style.zIndex = "610";
         L.control.zoom({ position: "topright" }).addTo(map);
         const panel = document.querySelector('.map-sidebar');
         if (window.matchMedia('(max-width:700px)').matches) {
@@ -225,16 +226,15 @@
                 link.textContent = "Se detaljer";
                 popup.append(link);
                 const markerLabel = `${element.dataset.kind}: ${element.dataset.resourceName} (${element.dataset.category})` + (isNeed ? ` · ${element.dataset.status}` : "");
-                    // Hastebehov plasseres i et eget kartlag foran vanlige markører.
-                    const isUrgent = isNeed && element.dataset.status === "Haster";
-
-                    const marker = L.marker(position, {
-                        icon: markerIcon,
-                        title: markerLabel,
-                        alt: markerLabel,
-                        pane: isUrgent ? "urgentMarkers" : "markerPane"
-                    }).addTo(map).bindPopup(popup);
-
+                // Hastebehov plasseres i et eget kartlag foran vanlige markører.
+                const isUrgent = isNeed && element.dataset.status === "Haster";
+                const marker = L.marker(position, {
+                    icon: markerIcon,
+                    title: markerLabel,
+                    alt: markerLabel,
+                    pane: isUrgent ? "urgentMarkers" : "markerPane"
+                }).addTo(map).bindPopup(popup);
+                markerEntries.push({ element, marker });
             });
         function fitVisibleMarkers() {
             const visible = markerEntries.filter(entry => !entry.element.hidden).map(entry => entry.marker.getLatLng());
