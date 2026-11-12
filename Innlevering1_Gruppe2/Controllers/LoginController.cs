@@ -27,14 +27,14 @@ public class LoginController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(string role = "Private")
+    public IActionResult Index()
     {
         if (User.Identity?.IsAuthenticated == true)
         {
             return RedirectToAction("Index", "Home");
         }
 
-        return View(new LoginViewModel { Role = role is "Public" or "Platform" ? role : "Private" });
+        return View(new LoginViewModel());
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -65,12 +65,6 @@ public class LoginController : Controller
 
             await context.SaveChangesAsync();
             ModelState.AddModelError(string.Empty, "Feil e-post eller passord.");
-            return View(model);
-        }
-
-        if (account.account_type != model.Role)
-        {
-            ModelState.AddModelError(nameof(model.Role), "E-post og passord stemmer, men du har valgt feil brukerinngang. Velg inngangen som hører til kontoen din.");
             return View(model);
         }
 
@@ -185,7 +179,7 @@ public class LoginController : Controller
                 TempData["Message"] = "Kontoen er opprettet uten aktiv tilgang. E-post kunne ikke sendes. Bruk «Send bekreftelse på nytt» når e-posttjenesten virker.";
             }
 
-            return RedirectToAction(nameof(Index), new { role = "Public" });
+            return RedirectToAction(nameof(Index));
         }
 
         await accounts.SignInAsync(HttpContext, account);
@@ -221,7 +215,7 @@ public class LoginController : Controller
         }
 
         TempData["Message"] = "Jobbadressen er bekreftet. Du kan logge inn.";
-        return RedirectToAction(nameof(Index), new { role = "Public" });
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -246,7 +240,7 @@ public class LoginController : Controller
         }
 
         TempData["Message"] = "Hvis kontoen finnes og trenger bekreftelse, sendes en ny lenke.";
-        return RedirectToAction(nameof(Index), new { role = "Public" });
+        return RedirectToAction(nameof(Index));
     }
 
     [Authorize, HttpPost, ValidateAntiForgeryToken]
