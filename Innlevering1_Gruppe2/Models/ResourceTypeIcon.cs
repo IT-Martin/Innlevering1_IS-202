@@ -5,8 +5,8 @@ public static class ResourceTypeIcon
     {
         "vann" => "map-category-water",
         "strøm" => "map-category-power",
-        "kjøretøy" or "kjoeretoy" or "bil" or "tilhenger" => "map-category-vehicle",
-        "utstyr" or "verktøy" or "verktoy" or "heisekran" or "kran" => "map-category-equipment",
+        "kjøretøy" or "kjoeretoy" or "bil" => "map-category-vehicle",
+        "utstyr" or "verktøy" or "verktoy" or "heisekran" or "kran" or "tilhenger" => "map-category-equipment",
         "lokaler" => "map-category-building",
         _ => "map-category-other"
     };
