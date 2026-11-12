@@ -3,12 +3,10 @@ services:
   db:
     image: mariadb:11.8
     environment:
-      MARIADB_DATABASE: reachout_database
-      MARIADB_USER: gruppe2_app
-      MARIADB_PASSWORD: ${DB_PASSWORD:?Run ./start.sh first}
-      MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD:?Run ./start.sh first}
+      MARIADB_DATABASE: resourcedb
+      MARIADB_ROOT_PASSWORD: ${LOCAL_MARIADB_ROOT_PASSWORD:?Run ./start.sh first}
     ports:
-      - "127.0.0.1:${REACHOUT_DB_PORT:-3316}:3306"
+      - "127.0.0.1:3307:3306"
     volumes:
       - database:/var/lib/mysql
     healthcheck:
@@ -23,17 +21,13 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
-      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=reachout_database;User ID=gruppe2_app;Password=${DB_PASSWORD};"
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=resourcedb;User=root;Password=${LOCAL_MARIADB_ROOT_PASSWORD:?Run ./start.sh first};"
       DataDirectory: /data
-      InitialAdmin__Email: ${REACHOUT_ADMIN_EMAIL:?Run ./start.sh first}
-      InitialAdmin__Password: ${REACHOUT_ADMIN_PASSWORD:?Run ./start.sh first}
-      InitialPublicActor__Email: ${REACHOUT_PUBLIC_ACTOR_EMAIL:?Run ./start.sh first}
-      InitialPublicActor__Password: ${REACHOUT_PUBLIC_ACTOR_PASSWORD:?Run ./start.sh first}
       LocalPreview: true
       SeedDemoData: false
       TZ: Europe/Oslo
     ports:
-      - "127.0.0.1:${REACHOUT_WEB_PORT:-5205}:8080"
+      - "127.0.0.1:5205:8080"
     volumes:
       - app_keys:/data
     depends_on:
@@ -42,4 +36,5 @@ services:
 
 volumes:
   database:
+    name: reachout_local_database
   app_keys:
