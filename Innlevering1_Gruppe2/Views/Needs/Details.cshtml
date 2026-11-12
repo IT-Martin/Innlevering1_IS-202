@@ -35,7 +35,7 @@
                     </label>
                     <button class="btn btn-outline-primary">Oppdater status</button>
                 </form>
-                <form asp-action="Archive" method="post">
+                <form asp-action="Archive" method="post" onsubmit="return confirm('Vil du arkivere behovet? Du kan gjenopprette det fra oversikten over arkiverte behov.');">
                     <input name="id" value="@need.resource_need_id" type="hidden" />
                     <button class="btn btn-outline-secondary">Arkiver behov</button>
                 </form>

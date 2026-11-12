@@ -42,33 +42,46 @@
                         else if (User.IsInRole("Platform"))
                         {
                             <li class="nav-item"><a class="nav-link" href="/Organizations">Tilgangsadministrasjon</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/Account/Profile">Min konto</a></li>
                         }
                         else
                         {
                             <li class="nav-item"><a class="nav-link" href="/Map">@(User.IsInRole("Private") ? "Mitt kart" : "Kart og ressurser")</a></li>
                             <li class="nav-item"><a class="nav-link" href="@(User.IsInRole("Private") ? "/Resources/MyContributions" : "/Needs")">@(User.IsInRole("Private") ? "Mine bidrag" : "Mine behov")</a></li>
+                            @if (User.IsInRole("Private"))
+                            {
+                                <li class="nav-item"><a class="nav-link" href="/Needs">Åpne hjelpebehov</a></li>
+                            }
                             <li class="nav-item"><a class="nav-link" href="/Requests">Forespørsler</a></li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mer</a>
-                                <ul class="dropdown-menu">
-                                    @if (User.IsInRole("Private"))
-                                    {
-                                        <li><a class="dropdown-item" href="/Needs">Åpne hjelpebehov</a></li>
-                                        <li><a class="dropdown-item" href="/Volunteers/Edit">Min frivilligprofil</a></li>
-                                    }
-                                    else
-                                    {
+                            @if (!User.IsInRole("Private"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Frivillighet</a>
+                                    <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/Volunteers">Frivillige</a></li>
-                                        @if (User.FindFirst("Permission")?.Value == "Organisasjonsadministrator")
-                                        { <li><a class="dropdown-item" href="/Organizations">Organisasjon og ansatte</a></li> }
-                                        @if (User.FindFirst("Permission")?.Value != "Lesetilgang")
-                                        { <li><a class="dropdown-item" href="/Exports">Last ned ressursliste (CSV)</a></li> }
-                                    }
-                                    <li><a class="dropdown-item" href="/Interests">@(User.IsInRole("Private") ? "Mine påmeldinger" : "Frivilligpåmeldinger")</a></li>
-                                    <li><a class="dropdown-item" href="/Account/Profile">Min konto</a></li>
-                                </ul>
-                            </li>
+                                        <li><a class="dropdown-item" href="/Interests">Frivilligpåmeldinger</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (User.IsInRole("Private") || User.FindFirst("Permission")?.Value != "Lesetilgang")
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mer</a>
+                                    <ul class="dropdown-menu">
+                                        @if (User.IsInRole("Private"))
+                                        {
+                                            <li><a class="dropdown-item" href="/Volunteers/Edit">Min frivilligprofil</a></li>
+                                            <li><a class="dropdown-item" href="/Interests">Mine påmeldinger</a></li>
+                                        }
+                                        else
+                                        {
+                                            @if (User.FindFirst("Permission")?.Value == "Organisasjonsadministrator")
+                                            { <li><a class="dropdown-item" href="/Organizations">Organisasjon og ansatte</a></li> }
+                                            @if (User.FindFirst("Permission")?.Value != "Lesetilgang")
+                                            { <li><a class="dropdown-item" href="/Exports">Last ned ressursliste (CSV)</a></li> }
+                                        }
+                                    </ul>
+                                </li>
+                            }
                         }
                     </ul>
 
@@ -79,6 +92,7 @@
                                 <i class="fa-regular fa-user" aria-hidden="true"></i>
                                 @(User.IsInRole("Platform") ? "Systemansvarlig" : User.IsInRole("Private") ? "Leverandør" : "Offentlig aktør")
                             </span>
+                            <a class="nav-link" asp-controller="Account" asp-action="Profile">Min konto</a>
                             <form asp-controller="Login" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-link logout-button">Logg ut</button>

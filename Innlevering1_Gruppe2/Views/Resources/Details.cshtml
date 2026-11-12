@@ -1,8 +1,14 @@
 @model ResourceDetailsViewModel
-@{ ViewData["Title"] = "Ressursdetaljer"; }
+@{
+    var resource = Model.Resource;
+    ViewData["Title"] = resource.resource_name;
+    var canRequest = User.IsInRole("Public") && User.FindFirst("Permission")?.Value != "Lesetilgang"
+        && !resource.archived && resource.availability_status != "Ikke tilgjengelig"
+        && Model.Periods.Any(period => period.available_to > DateTime.Now);
+}
 <div class="management-page">
-    <h1>Ressursdetaljer</h1>
-    @{var resource = Model.Resource; var canRequest = User.IsInRole("Public") && User.FindFirst("Permission")?.Value != "Lesetilgang" && !resource.archived;}
+    <p class="eyebrow">Ressursdetaljer</p>
+    <h1>@resource.resource_name</h1>
     @if(resource.archived){
     <div class="alert alert-warning">Ressursen er arkivert. Dette er historikk.</div>}
     <section class="card">
@@ -10,21 +16,28 @@
             <span class="resource-type">
                 <i class="@Reachout.Models.ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name)">
                 </i> @resource.ResourceType.category_name</span>
-            <h2 class="mt-3">@resource.resource_name</h2>
-            <p>@resource.availability_status · @resource.verification_status</p>
-            <p>@resource.description</p>
+            <span class="status-pill">@resource.availability_status</span>
+            @if (canRequest)
+            {
+                <p class="mt-3"><a class="btn btn-primary" href="#resource-request">@(Model.Needs.Count > 0 ? "Gå til forespørsel" : "Se hvordan du sender forespørsel")</a></p>
+            }
+            <h2 class="h5 mt-4">Beskrivelse</h2>
+            <p>@(string.IsNullOrWhiteSpace(resource.description) ? "Ingen beskrivelse lagt til." : resource.description)</p>
             @if(resource.image_data != null){
             <img class="resource-photo mb-3" src="/Resources/Photo/@resource.resource_id" alt="Bilde av @resource.resource_name" />}
-            <p>@resource.Location.address_or_area</p>
-            <div data-detail-map class="map-picker" data-lat="@resource.Location.latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-lng="@resource.Location.longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+            <h2 class="h5 mt-4">Plassering</h2>
+            <p>@(string.IsNullOrWhiteSpace(resource.Location.address_or_area) ? "Se plasseringen på kartet." : resource.Location.address_or_area)</p>
+            <button type="button" class="btn btn-outline-primary mb-3" data-expand-detail-map aria-controls="resource-location-map" aria-expanded="false" hidden>Åpne i større kart</button>
+            <div id="resource-location-map" data-detail-map class="map-picker" role="region" aria-label="Ressursens plassering" data-lat="@resource.Location.latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-lng="@resource.Location.longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)">
             </div>
-            <h3 class="h5 mt-4">Tilgjengelige perioder</h3>
+            <h2 class="h5 mt-4">Tilgjengelige perioder</h2>
             @foreach(var period in Model.Periods){
             <p>@period.available_from.ToString("dd.MM.yyyy HH:mm") – @period.available_to.ToString("dd.MM.yyyy HH:mm")</p>}
             @if(Model.Periods.Count == 0){
             <p>Ingen tilgjengelige perioder. Nye forespørsler kan ikke sendes før en periode er lagt til.</p>}
-            <h3 class="h5">Kontakt</h3>
+            <h2 class="h5">Kontakt</h2>
             <p>@resource.ProviderAccount.contact_name · @resource.ProviderAccount.phone · @resource.ProviderAccount.Account.email</p>
+            <p class="small text-muted">Verifisering: @resource.verification_status</p>
             @if(Model.CanEdit){
             <div class="resource-actions">
                 <a class="btn btn-primary" href="/Resources/Edit/@resource.resource_id">Endre ressurs</a>
@@ -33,8 +46,8 @@
         </div>
     </section>
     <div asp-validation-summary="All" class="text-danger"></div>
-    @if(canRequest && resource.availability_status != "Ikke tilgjengelig" && Model.Periods.Any(period => period.available_to > DateTime.Now)){
-    <section class="card mt-4">
+    @if(canRequest){
+    <section id="resource-request" class="card mt-4">
         <div class="card-body">
             <h2 class="h4">Send forespørsel</h2>
             @if(Model.Needs.Count == 0){

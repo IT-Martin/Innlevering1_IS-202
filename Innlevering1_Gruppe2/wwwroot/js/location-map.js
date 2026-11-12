@@ -14,7 +14,19 @@ document.querySelectorAll('[data-picker-map], [data-detail-map]').forEach(elemen
     const button = form?.querySelector('#confirm-position');
     if (button && selected) button.disabled = false;
     if (status && selected) status.textContent = 'Plasseringen er valgt. Du kan flytte markøren ved å klikke på kartet.';
-    if (element.hasAttribute('data-detail-map')) return;
+    if (element.hasAttribute('data-detail-map')) {
+        const expandButton = element.parentElement.querySelector('[data-expand-detail-map]');
+        if (expandButton) {
+            expandButton.hidden = false;
+            expandButton.addEventListener('click', () => {
+                const expanded = element.classList.toggle('map-picker-expanded');
+                expandButton.setAttribute('aria-expanded', String(expanded));
+                expandButton.textContent = expanded ? 'Vis mindre kart' : 'Åpne i større kart';
+                map.invalidateSize();
+            });
+        }
+        return;
+    }
     map.on('click', event => {
         const point = event.latlng;
         if (marker) marker.setLatLng(point); else marker = L.marker(point).addTo(map);
