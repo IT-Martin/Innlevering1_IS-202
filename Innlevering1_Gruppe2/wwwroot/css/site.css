@@ -486,3 +486,46 @@ summary { min-height:44px; padding:10px 0; }
     max-width: 74ch;
     padding: 14px clamp(16px, 3vw, 26px);
 }
+
+.urgent-badge {
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border: 1px solid white;
+    border-radius: 50%;
+    background: #252525;
+    color: white;
+    font: 700 12px/1 system-ui, sans-serif;
+    vertical-align: middle;
+}
+
+.resource-marker.marker-need { position: relative; }
+
+.marker-need > .urgent-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .marker-need > .urgent-badge::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px #252525;
+        pointer-events: none;
+        opacity: 0;
+        animation: urgent-badge-pulse 1.25s ease-out .6s 2;
+    }
+
+    @keyframes urgent-badge-pulse {
+        from { opacity: 1; transform: scale(1); }
+        to { opacity: 0; transform: scale(2.1); }
+    }
+}
+
+#resource-location-map.map-picker-expanded { height: clamp(340px, 65vh, 680px); }
+#resource-request { scroll-margin-top: 100px; }
