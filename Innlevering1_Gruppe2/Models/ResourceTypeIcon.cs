@@ -13,15 +13,21 @@ public static class ResourceTypeIcon
 
     public static string For(string? categoryName, string? resourceName = null)
     {
-        var searchableText = $"{categoryName} {resourceName}".Trim().ToLowerInvariant();
-        if (searchableText.Contains("drone"))
-        {
-            return "fa-solid fa-helicopter";
-        }
+        var category = categoryName?.Trim().ToLowerInvariant() ?? "";
+        var name = resourceName?.Trim().ToLowerInvariant() ?? "";
 
-        if (searchableText.Contains("traktor"))
+// Traktorikon kun innenfor kjøretøy
+        if ((category == "kjøretøy" || category == "kjoeretoy" || category == "bil")
+            && name.Contains("traktor"))
         {
             return "fa-solid fa-tractor";
+        }
+
+// Droneikon kun innenfor utstyr
+        if ((category == "utstyr" || category == "verktøy" || category == "verktoy")
+            && name.Contains("drone"))
+        {
+            return "fa-solid fa-helicopter";
         }
 
         return categoryName?.Trim().ToLowerInvariant() switch
