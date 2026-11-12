@@ -2,49 +2,57 @@
 @{ ViewData["Title"] = "Søk om offentlig tilgang"; }
 <div class="form-page">
     <h1>Søk om offentlig tilgang</h1>
-    <p>For kommuner, fylkeskommuner og andre offentlige virksomheter. Systemansvarlig vurderer søknaden før ansatte kan inviteres.</p>
+    <p>Søk én gang på vegne av virksomheten. Er virksomheten allerede godkjent, kan organisasjonsadministratoren invitere deg.</p>
     <form asp-action="Apply" method="post" class="resource-form card">
         <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-grid">
-                <div>
-                    <label asp-for="Name" class="form-label">Virksomhetens navn</label>
-                    <input asp-for="Name" class="form-control" autocomplete="organization" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
+            <fieldset class="form-section">
+                <legend>Virksomhet</legend>
+                <div class="form-grid">
+                    <div>
+                        <label asp-for="Name" class="form-label">Virksomhetens navn</label>
+                        <input asp-for="Name" class="form-control" autocomplete="organization" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Type" class="form-label">Organisasjonstype</label>
+                        <select asp-for="Type" class="form-select">
+                            <option value="">Velg organisasjonstype</option>
+                            <option>Kommune</option>
+                            <option>Fylkeskommune</option>
+                            <option>Annen offentlig virksomhet</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Number" class="form-label">Organisasjonsnummer</label>
+                        <input asp-for="Number" class="form-control" inputmode="numeric" aria-describedby="organization-number-help" />
+                        <p id="organization-number-help" class="field-help mt-1"><a href="https://virksomhet.brreg.no/">Finn organisasjonsnummeret</a></p>
+                        <span asp-validation-for="Number" class="text-danger"></span>
+                    </div>
                 </div>
-                <div>
-                    <label asp-for="Type" class="form-label">Organisasjonstype</label>
-                    <select asp-for="Type" class="form-select">
-                        <option value="">Velg organisasjonstype</option>
-                        <option>Kommune</option>
-                        <option>Fylkeskommune</option>
-                        <option>Annen offentlig virksomhet</option>
-                    </select>
-                    <span asp-validation-for="Type" class="text-danger"></span>
+            </fieldset>
+            <fieldset class="form-section">
+                <legend>Kontaktperson</legend>
+                <div class="form-grid">
+                    <div>
+                        <label asp-for="Contact" class="form-label">Navn</label>
+                        <input asp-for="Contact" class="form-control" autocomplete="name" />
+                        <span asp-validation-for="Contact" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Email" class="form-label">Jobb-e-post</label>
+                        <input asp-for="Email" class="form-control" type="email" autocomplete="email" aria-describedby="organization-email-help" />
+                        <p id="organization-email-help" class="field-help mt-1">Ansatte som inviteres, må ha jobb-e-post med samme domene.</p>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Phone" class="form-label">Telefon (valgfritt)</label>
+                        <input asp-for="Phone" class="form-control" type="tel" autocomplete="tel" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
                 </div>
-                <div>
-                    <label asp-for="Number" class="form-label">Organisasjonsnummer</label>
-                    <input asp-for="Number" class="form-control" inputmode="numeric" aria-describedby="organization-number-help" />
-                    <p id="organization-number-help" class="field-help mt-1">Bruk de ni sifrene til virksomheten som søker. Søker du på vegne av kommunen, bruk kommunens nummer. <a href="https://virksomhet.brreg.no/">Finn nummeret hos Brønnøysundregistrene</a>.</p>
-                    <span asp-validation-for="Number" class="text-danger"></span>
-                </div>
-                <div>
-                    <label asp-for="Contact" class="form-label">Kontaktperson</label>
-                    <input asp-for="Contact" class="form-control" autocomplete="name" />
-                    <span asp-validation-for="Contact" class="text-danger"></span>
-                </div>
-                <div>
-                    <label asp-for="Email" class="form-label">Jobb-e-post</label>
-                    <input asp-for="Email" class="form-control" type="email" autocomplete="email" aria-describedby="organization-email-help" />
-                    <p id="organization-email-help" class="field-help mt-1">Delen etter @@ i e-postadressen brukes som domene for invitasjoner til ansatte.</p>
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div>
-                    <label asp-for="Phone" class="form-label">Telefon (valgfritt)</label>
-                    <input asp-for="Phone" class="form-control" type="tel" autocomplete="tel" />
-                    <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-            </div>
+            </fieldset>
             <button class="btn btn-primary">Send søknad</button>
         </div>
     </form>
