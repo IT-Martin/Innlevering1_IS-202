@@ -123,15 +123,18 @@
             document.getElementById('map').textContent = 'Kartet kunne ikke lastes. Prøv å laste siden på nytt. Du kan fortsatt bruke trefflisten.';
             document.querySelector('.map-sidebar').open = true;
         } else {
-        const map = L.map("map", { zoomControl: false }).setView([58.1467, 7.9956], 13);
-            // Eget kartlag for hastebehov, plassert foran vanlige markører.
-            map.createPane("urgentMarkers");
-            map.getPane("urgentMarkers").style.zIndex = 650;
+        const worldBounds = L.latLngBounds([-85.05112878, -180], [85.05112878, 180]);
+        const map = L.map("map", {
+            zoomControl: false,
+            maxBounds: worldBounds,
+            maxBoundsViscosity: 1
+        }).setView([58.1467, 7.9956], 13);
 
         L.tileLayer(
             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             {
                 maxZoom: 19,
+                noWrap: true,
                 attribution: "&copy; OpenStreetMap-bidragsytere"
             }
         ).addTo(map);
