@@ -155,7 +155,7 @@ details[open] summary { margin-bottom:14px; }
 .resource-marker.marker-need { border-radius:6px; transform:none; }
 .resource-marker-glyph { transform:rotate(45deg); font-size:1rem; }
 .need-urgent { --priority-color:#b4232a; }
-.need-normal { --priority-color: #dea903; }
+.need-normal { --priority-color: #e3ac03; }
 .need-planned { --priority-color:#6b7280; }
 .resource-marker.marker-need { border-color:var(--priority-color,white); }
 .resource-marker.marker-need:is(.need-urgent,.need-normal,.need-planned) {
