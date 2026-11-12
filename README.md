@@ -65,7 +65,7 @@ Når migreringene er fullført, endrer du `Server` i tilkoblingsstrengen til `ho
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=host.docker.internal;Port=3307;Database=resourcedb;User=root;Password=Password;"
+  "DefaultConnection": "Server=host.docker.internal;Port=3306;Database=resourcedb;User=root;Password=Password;"
 }
 ```
 
