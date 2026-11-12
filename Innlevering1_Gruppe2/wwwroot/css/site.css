@@ -542,3 +542,57 @@ summary { min-height:44px; padding:10px 0; }
 
 #resource-location-map.map-picker-expanded { height: clamp(340px, 65vh, 680px); }
 #resource-request { scroll-margin-top: 100px; }
+
+/* Kompakt temavelger med et vanlig nedtrekksfelt for tastatur og berøring. */
+.theme-picker {
+    position:relative;
+    display:inline-grid;
+    place-items:center;
+    width:44px;
+    height:44px;
+    flex:0 0 44px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    border-radius:8px;
+}
+.theme-picker:hover { background:var(--background); color:var(--ink); }
+.theme-picker:focus-within { outline:3px solid var(--green); outline-offset:2px; }
+.theme-picker .form-select { position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+.account-nav:has(.theme-picker) { flex-wrap:wrap; }
+
+/* Nøytrale grå flater i mørk modus. Kartflisene beholder originalfargene. */
+:root[data-bs-theme="dark"] {
+    --background: #181818;
+    --surface: #252525;
+    --ink: #f2f2f2;
+    --muted: #bfbfbf;
+    --line: #474747;
+    --brand-dark: #bc5240;
+    --brand-soft: #452b27;
+    --green: #a0d8be;
+    --green-soft: #343434;
+    --bs-body-color: var(--ink);
+    --bs-body-bg: var(--background);
+    --bs-border-color: var(--line);
+}
+
+[data-bs-theme="dark"] :is(.auth-card, .step-card, .collection-tools, .map-sidebar,
+.map-legend, .map-preview-label, .sort-select, .privacy-note, .skip-link,
+.btn-light, .btn-outline-primary, .btn-outline-secondary, .form-control, .form-select) {
+    background-color: var(--surface);
+    border-color: var(--line);
+}
+
+[data-bs-theme="dark"] :is(.site-header .nav-link, .form-label),
+[data-bs-theme="dark"] .form-control::placeholder { color: var(--muted); }
+[data-bs-theme="dark"] :is(.navbar-toggler, .map-filters, .map-results li, .pending-tasks, .alert-info) {
+    border-color: var(--line);
+}
+[data-bs-theme="dark"] :is(.eyebrow, .step-number, .btn-outline-danger,
+.how-it-works[aria-labelledby="emergency-title"] h3 a) { color: #ffad9c; }
+[data-bs-theme="dark"] .status-pill { color: #f6dda4; background: #483b23; }
+[data-bs-theme="dark"] .category-neutral { color: #cfdef0; background: #303d4e; }
+[data-bs-theme="dark"] .map-preview-label { color: var(--ink); }
+[data-bs-theme="dark"] .pending-tasks { background: var(--green-soft); }
+[data-bs-theme="dark"] .leaflet-popup-content a { color: #356854; }
+[data-bs-theme="dark"] .leaflet-popup-content > div > div { color: #606e68; }
