@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Reachout.Controllers;
-[Authorize(Roles = "Private,Public")]
+[Authorize(Roles = "Private,Public,Platform")]
 public class ResourcesController : Controller
 {
     private readonly ApplicationDbContext context;

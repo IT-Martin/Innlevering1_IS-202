@@ -1,12 +1,21 @@
 @model OrganizationAdminViewModel
 @{
     ViewData["Title"] = Model.Platform ? "Tilgangsadministrasjon" : "Organisasjon og ansatte";
+    var now = DateTime.UtcNow;
     var ownAccountId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 }
 <div class="management-page">
     <h1>@ViewData["Title"]</h1>
     <p>@(Model.Platform ? "Kontroller organisasjonen gjennom en uavhengig kanal før du godkjenner og inviterer første administrator." : "Inviter ansatte til egen organisasjon og gi bare tilgangen de trenger.")</p>
+    @if (Model.Platform)
+    {
+        <p class="mb-4"><strong>@Model.Organizations.Count()</strong> virksomheter · <strong>@Model.Organizations.Count(org => org.approval_status == "Venter")</strong> søknader til behandling · <strong>@Model.Members.Count(member => member.Account.email_confirmed && !member.Account.access_revoked && member.PublicOrganization.approval_status == "Godkjent")</strong> aktive ansatte</p>
+    }
     @foreach(var org in Model.Organizations){
+        var hasAdministrator = Model.Members.Any(member => member.public_organization_id == org.public_organization_id
+            && member.permission == "Organisasjonsadministrator" && !member.Account.access_revoked);
+        var hasPendingAdministratorInvite = Model.Invitations.Any(invite => invite.public_organization_id == org.public_organization_id
+            && invite.permission == "Organisasjonsadministrator" && !invite.revoked && !invite.used_at.HasValue && invite.expires_at > now);
     <section class="card mb-4">
         <div class="card-body">
             <h2 class="h4">@org.organization_name</h2>
@@ -34,7 +43,22 @@
                 </div>
                 <button class="btn btn-outline-primary">Lagre vurdering</button>
             </form>}
-            @if(org.approval_status == "Godkjent") {
+            @if (Model.Platform && org.approval_status == "Godkjent" && !hasAdministrator && !hasPendingAdministratorInvite)
+            {
+                <details class="mt-3" open>
+                    <summary>Inviter første administrator</summary>
+                    <p class="field-help">Velg jobbadressen til personen som skal administrere ansattilgangen.</p>
+                    <form asp-action="Invite" method="post">
+                        <input name="id" type="hidden" value="@org.public_organization_id" />
+                        <input name="permission" type="hidden" value="Organisasjonsadministrator" />
+                        <label class="form-label d-block">Jobb-e-post
+                            <input name="email" type="email" value="@org.contact_email" required class="form-control" />
+                        </label>
+                        <button class="btn btn-primary">Inviter første administrator</button>
+                    </form>
+                </details>
+            }
+            else if (org.approval_status == "Godkjent") {
             <details class="mt-3">
                 <summary>@(Model.Platform ? "Inviter organisasjonsadministrator eller ansatt" : "Inviter ansatt")</summary>
                 <form asp-action="Invite" method="post">

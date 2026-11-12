@@ -7,9 +7,9 @@
 
 <div class="management-page">
     <header class="mb-4">
-        <a class="d-inline-flex align-items-center gap-2 mb-4" href="/Needs">
+        <a class="d-inline-flex align-items-center gap-2 mb-4" href="@(User.IsInRole("Platform") ? "/Map" : "/Needs")">
             <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-            Tilbake til behovsoversikten
+            @(User.IsInRole("Platform") ? "Tilbake til kartet" : "Tilbake til behovsoversikten")
         </a>
         <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
             <div>
@@ -189,9 +189,9 @@
         </section>
     }
 
-    <a class="d-inline-flex align-items-center gap-2 mt-4" href="/Needs">
+    <a class="d-inline-flex align-items-center gap-2 mt-4" href="@(User.IsInRole("Platform") ? "/Map" : "/Needs")">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-        Tilbake til behovsoversikten
+        @(User.IsInRole("Platform") ? "Tilbake til kartet" : "Tilbake til behovsoversikten")
     </a>
 </div>
 

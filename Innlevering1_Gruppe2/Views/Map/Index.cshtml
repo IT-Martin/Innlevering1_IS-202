@@ -4,7 +4,9 @@
     ViewData["Title"] = "Kart og ressurser";
     ViewData["FullMap"] = true;
     var supplier = User.IsInRole("Private");
-    var canCreate = supplier || User.FindFirst("Permission")?.Value != "Lesetilgang";
+    var platform = User.IsInRole("Platform");
+    var canCreate = supplier || (User.IsInRole("Public") && User.FindFirst("Permission")?.Value != "Lesetilgang");
+    var mapTitle = platform ? "Kartoversikt" : supplier ? "Mitt kart" : "Kart og ressurser";
     var legendIcons = Model.Select(item => new
     {
         Icon = item.TypeIcon,
@@ -14,7 +16,7 @@
     }).Distinct().OrderBy(item => item.Label).ToList();
 }
 <div class="map-page">
-    <h1 class="visually-hidden">@(supplier ? "Mitt kart" : "Kart og ressurser")</h1>
+    <h1 class="visually-hidden">@mapTitle</h1>
     <section class="map-workspace" data-collection aria-label="Kart med søk og treff">
         @if (canCreate)
         {
@@ -26,14 +28,14 @@
     <div class="map-page-header">
         <div>
             <p class="eyebrow">RESSURSOVERSIKT</p>
-            <h2>@(supplier ? "Mitt kart" : "Kart og ressurser")</h2>
-            <p class="text-muted mb-0">@(supplier ? "Dine ressurser og åpne hjelpebehov, samlet på kartet." : "Finn ressursene som kan dekke behovene dine.")</p>
+            <h2>@mapTitle</h2>
+            <p class="text-muted mb-0">@(supplier ? "Dine ressurser og åpne hjelpebehov, samlet på kartet." : platform ? "Se registrerte ressurser og åpne hjelpebehov." : "Finn ressursene som kan dekke behovene dine.")</p>
         </div>
         @if (supplier)
         {
             <a class="btn btn-primary map-panel-action" href="/Resources/Register"><i class="fa-solid fa-plus" aria-hidden="true"></i> Registrer ressurs</a>
         }
-        else if (User.FindFirst("Permission")?.Value != "Lesetilgang")
+        else if (canCreate)
         {
             <a class="btn btn-primary map-panel-action" href="/Needs/Create"><i class="fa-solid fa-plus" aria-hidden="true"></i> Meld behov</a>
         }
