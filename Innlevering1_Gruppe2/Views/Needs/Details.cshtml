@@ -1,92 +1,201 @@
 @model NeedDetailsViewModel
-@{ ViewData["Title"] = "Behovsdetaljer"; }
+@{
+    ViewData["Title"] = "Behovsdetaljer";
+    var need = Model.Need;
+    var canVolunteer = !need.archived && need.status != "Løst" && need.required_end > DateTime.Now && (!need.deadline.HasValue || need.deadline >= DateTime.Now);
+}
+
 <div class="management-page">
-    <h1>Behovsdetaljer</h1>
-    @{
-        var need = Model.Need;
-        var canVolunteer = !need.archived && need.status != "Løst" && need.required_end > DateTime.Now && (!need.deadline.HasValue || need.deadline >= DateTime.Now);
+    <header class="mb-4">
+        <a class="d-inline-flex align-items-center gap-2 mb-4" href="/Needs">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Tilbake til behovsoversikten
+        </a>
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+            <div>
+                <p class="eyebrow mb-2">Behovsdetaljer</p>
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                    <span class="resource-type"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> @need.ResourceType.category_name</span>
+                    <span class="status-pill"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> @need.status</span>
+                </div>
+                <h1 class="mb-2">@need.title</h1>
+                <p class="text-muted mb-0">Informasjon om behovet, lokasjon og hvordan det kan følges opp.</p>
+            </div>
+            @if (Model.CanEdit)
+            {
+                <a class="btn btn-primary" href="/Needs/Edit/@need.resource_need_id">
+                    <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                    Rediger behov
+                </a>
+            }
+        </div>
+    </header>
+
+    <div class="row g-4 align-items-start">
+        <main class="col-12 col-lg-8">
+            <section class="card" aria-labelledby="overview-heading">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                        <div>
+                            <p class="eyebrow mb-1">Kort oppsummert</p>
+                            <h2 id="overview-heading" class="h4 mb-0">Om behovet</h2>
+                        </div>
+                        <span class="status-pill"><i class="fa-solid fa-flag" aria-hidden="true"></i> @need.priority</span>
+                    </div>
+                    <p class="resource-description mb-4">@need.description</p>
+                    <div class="resource-meta">
+                        <div><i class="fa-regular fa-calendar me-2" aria-hidden="true"></i><strong>Tidsrom:</strong> @need.required_start.ToString("dd.MM.yyyy HH:mm") – @need.required_end.ToString("dd.MM.yyyy HH:mm")</div>
+                        <div><i class="fa-solid fa-location-dot me-2" aria-hidden="true"></i><strong>Sted:</strong> @need.Location.address_or_area</div>
+                        @if (need.deadline.HasValue)
+                        {
+                            <div><i class="fa-regular fa-clock me-2" aria-hidden="true"></i><strong>Svarfrist:</strong> @need.deadline.Value.ToString("dd.MM.yyyy HH:mm")</div>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <section class="card mt-4" aria-labelledby="location-heading">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+                        <div><p class="eyebrow mb-1">Lokasjon</p><h2 id="location-heading" class="h4 mb-0">Hvor finner du behovet?</h2></div>
+                        <span class="text-muted small"><i class="fa-solid fa-location-dot me-1" aria-hidden="true"></i>@need.Location.address_or_area</span>
+                    </div>
+                    <div data-detail-map class="map-picker" data-lat="@need.Location.latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-lng="@need.Location.longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" aria-label="Kart som viser lokasjonen for behovet"></div>
+                </div>
+            </section>
+        </main>
+
+        <aside class="col-12 col-lg-4">
+            <div class="d-grid gap-4">
+                <section class="card" aria-labelledby="contact-heading">
+                    <div class="card-body">
+                        <p class="eyebrow mb-1">Kontaktperson</p>
+                        <h2 id="contact-heading" class="h4">@need.PublicActorAccount.Account.contact_name</h2>
+                        <div class="resource-meta mt-3">
+                            <div><i class="fa-solid fa-phone me-2" aria-hidden="true"></i><a href="tel:@need.PublicActorAccount.Account.phone">@need.PublicActorAccount.Account.phone</a></div>
+                            <div><i class="fa-regular fa-envelope me-2" aria-hidden="true"></i><a href="mailto:@need.PublicActorAccount.Account.email">@need.PublicActorAccount.Account.email</a></div>
+                        </div>
+                    </div>
+                </section>
+
+                @if (Model.CanEdit)
+                {
+                    <section class="card" aria-labelledby="manage-heading">
+                        <div class="card-body">
+                            <p class="eyebrow mb-1">Administrasjon</p>
+                            <h2 id="manage-heading" class="h4">Behandle behovet</h2>
+                            <form asp-action="Status" method="post" class="mt-3">
+                                <input name="id" value="@need.resource_need_id" type="hidden" />
+                                <label class="form-label" for="need-status">Behandlingsstatus</label>
+                                <select id="need-status" name="status" class="form-select">
+                                    @if (need.status == "Tildelt")
+                                    {
+                                        <option selected disabled>Tildelt</option>
+                                    }
+                                    @foreach (var status in new[] { "Ny", "Vurdert", "Løst" })
+                                    {
+                                        <option selected="@(status == need.status)">@status</option>
+                                    }
+                                </select>
+                                <button class="btn btn-outline-primary mt-2">Oppdater status</button>
+                            </form>
+                            <form asp-action="Archive" method="post" class="mt-2" onsubmit="return confirm('Vil du arkivere behovet? Du kan gjenopprette det fra oversikten over arkiverte behov.');">
+                                <input name="id" value="@need.resource_need_id" type="hidden" />
+                                <button class="btn btn-outline-secondary"><i class="fa-solid fa-box-archive" aria-hidden="true"></i> Arkiver behov</button>
+                            </form>
+                            <p class="text-muted small mt-3 mb-0"><i class="fa-solid fa-circle-info me-1" aria-hidden="true"></i>Tildelt settes automatisk ved en bekreftet reservasjon.</p>
+                        </div>
+                    </section>
+                }
+            </div>
+        </aside>
+    </div>
+
+    @if (User.IsInRole("Private") && (canVolunteer || Model.MyActiveInterest != null))
+    {
+        <section class="card mt-4" aria-labelledby="volunteer-heading">
+            <div class="card-body">
+                <p class="eyebrow mb-1">Mulighet for å bidra</p>
+                <h2 id="volunteer-heading" class="h4">Bidra som frivillig</h2>
+                @if (Model.MyActiveInterest != null)
+                {
+                    <div class="alert alert-info mt-3">@(Model.MyActiveInterest.interest_status == "Godtatt" ? "Kontaktpersonen ønsker kontakt med deg. Avtal oppgaver og tidspunkt før du møter opp." : "Påmeldingen din er sendt og venter på svar fra kontaktpersonen.")</div>
+                    <a class="btn btn-outline-primary" href="/Interests?status=Alle">Se eller trekk påmeldingen</a>
+                }
+                else if (Model.MyVolunteerProfile == null || Model.MyVolunteerProfile.archived)
+                {
+                    <p class="text-muted mt-3">Vil du tilby frivillig hjelp til dette behovet? @(Model.MyVolunteerProfile == null ? "Opprett først en frivilligprofil, og kom tilbake hit for å sende påmeldingen." : "Gjenopprett frivilligprofilen din før du melder deg på.")</p>
+                    <a class="btn btn-primary" asp-controller="Volunteers" asp-action="Edit" asp-route-needId="@need.resource_need_id">@(Model.MyVolunteerProfile == null ? "Opprett frivilligprofil" : "Åpne frivilligprofil")</a>
+                }
+                else
+                {
+                    <p class="text-muted mt-3">Dette er et frivillig tilbud om hjelp. Kontaktpersonen vurderer påmeldingen; dere avtaler deretter oppgaver og tidspunkt.</p>
+                    <form asp-controller="Interests" asp-action="Create" method="post">
+                        <input name="id" value="@need.resource_need_id" type="hidden" />
+                        <label class="form-label d-block" for="volunteer-message">Hvordan og når kan du bidra?</label>
+                        <textarea id="volunteer-message" name="message" maxlength="2000" class="form-control" required placeholder="Skriv kort om erfaring, kapasitet og tilgjengelighet..."></textarea>
+                        <div class="resource-actions">
+                            <button class="btn btn-primary">Meld meg som frivillig</button>
+                            <a asp-controller="Volunteers" asp-action="Edit" asp-route-needId="@need.resource_need_id">Se eller endre frivilligprofilen</a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </section>
     }
-    <section class="card">
-        <div class="card-body">
-            <span class="resource-type">@need.ResourceType.category_name</span>
-            <h2 class="mt-3">@need.title</h2>
-            <p>@need.priority · @need.status</p>
-            <p>@need.description</p>
-            <p>@need.required_start.ToString("dd.MM.yyyy HH:mm") – @need.required_end.ToString("dd.MM.yyyy HH:mm")</p>
-            <p>@need.Location.address_or_area</p>
-            @if(need.deadline.HasValue){
-            <p>Svarfrist: @need.deadline.Value.ToString("dd.MM.yyyy HH:mm")</p>}
-            <div data-detail-map class="map-picker" data-lat="@need.Location.latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-lng="@need.Location.longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+
+    @if (Model.Resources.Count > 0 && need.status != "Løst" && !need.archived)
+    {
+        <section class="mt-5" aria-labelledby="resources-heading">
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+                <div><p class="eyebrow mb-1">Mulige løsninger</p><h2 id="resources-heading" class="h4 mb-0">Ressurser i samme kategori</h2></div>
+                <span class="text-muted small">@Model.Resources.Count tilgjengelig</span>
             </div>
-            <p class="mt-3">Kontakt: @need.PublicActorAccount.Account.contact_name · @need.PublicActorAccount.Account.phone · @need.PublicActorAccount.Account.email</p>
-            @if(Model.CanEdit){
-            <div class="resource-actions">
-                <a class="btn btn-primary" href="/Needs/Edit/@need.resource_need_id">Rediger behov</a>
-                <form asp-action="Status" method="post">
-                    <input name="id" value="@need.resource_need_id" type="hidden" />
-                    <label class="form-label">Behandlingsstatus<select name="status" class="form-select">
-                            @if (need.status == "Tildelt")
-                            {
-                                <option selected disabled>Tildelt</option>
-                            }
-                            @foreach(var status in new[]{"Ny","Vurdert","Løst"}){
-                            <option selected="@(status == need.status)">@status</option>}
-                        </select>
-                    </label>
-                    <button class="btn btn-outline-primary">Oppdater status</button>
-                </form>
-                <form asp-action="Archive" method="post" onsubmit="return confirm('Vil du arkivere behovet? Du kan gjenopprette det fra oversikten over arkiverte behov.');">
-                    <input name="id" value="@need.resource_need_id" type="hidden" />
-                    <button class="btn btn-outline-secondary">Arkiver behov</button>
-                </form>
+            <p class="text-muted">Vurder selv om kapasitet og tilgjengelighet passer behovet.</p>
+            <div class="resource-grid">
+                @foreach (var resource in Model.Resources)
+                {
+                    <article class="card resource-card"><div class="card-body"><h3 class="h5">@resource.resource_name</h3><a href="/Resources/Details/@resource.resource_id">Se ressursen <i class="fa-solid fa-arrow-right ms-1" aria-hidden="true"></i></a></div></article>
+                }
             </div>
-            <p class="text-muted">Tildelt settes automatisk ved en bekreftet reservasjon.</p>}
-        </div>
-    </section>
-    @if(User.IsInRole("Private") && (canVolunteer || Model.MyActiveInterest != null)){
-    <section class="card mt-4">
-        <div class="card-body">
-            <h2 class="h4">Bidra som frivillig</h2>
-            @if (Model.MyActiveInterest != null)
+        </section>
+    }
+
+    @if (Model.CanEdit || Model.Reservations.Count > 0 || Model.Interests.Count > 0)
+    {
+        <section class="mt-5" aria-labelledby="requests-heading">
+            <p class="eyebrow mb-1">Oppfølging</p>
+            <h2 id="requests-heading" class="h4">Forespørsler for behovet</h2>
+            @if (Model.Reservations.Count > 0)
             {
-                <p>@(Model.MyActiveInterest.interest_status == "Godtatt" ? "Kontaktpersonen ønsker kontakt med deg. Avtal oppgaver og tidspunkt før du møter opp." : "Påmeldingen din er sendt og venter på svar fra kontaktpersonen.")</p>
-                <a class="btn btn-outline-primary" href="/Interests?status=Alle">Se eller trekk påmeldingen</a>
+                <h3 class="h5 mt-4">Ressursforespørsler</h3>
+                @foreach (var reservation in Model.Reservations)
+                {
+                    <partial name="_ReservationCard" model="reservation" />
+                }
             }
-            else if (Model.MyVolunteerProfile == null || Model.MyVolunteerProfile.archived)
+            @if (Model.Interests.Count > 0)
             {
-                <p>Vil du tilby frivillig hjelp til dette behovet? @(Model.MyVolunteerProfile == null ? "Opprett først en frivilligprofil, og kom tilbake hit for å sende påmeldingen." : "Gjenopprett frivilligprofilen din før du melder deg på.")</p>
-                <a class="btn btn-primary" asp-controller="Volunteers" asp-action="Edit" asp-route-needId="@need.resource_need_id">@(Model.MyVolunteerProfile == null ? "Opprett frivilligprofil" : "Åpne frivilligprofil")</a>
+                <h3 class="h5 mt-4">Frivilliginteresser</h3>
+                @foreach (var interest in Model.Interests)
+                {
+                    <partial name="_InterestCard" model="interest" />
+                }
             }
-            else
+            @if (Model.CanEdit && Model.Reservations.Count == 0 && Model.Interests.Count == 0)
             {
-                <p>Dette er et frivillig tilbud om hjelp. Kontaktpersonen vurderer påmeldingen; dere avtaler deretter oppgaver og tidspunkt.</p>
-                <form asp-controller="Interests" asp-action="Create" method="post">
-                    <input name="id" value="@need.resource_need_id" type="hidden" />
-                    <label class="form-label d-block">Hvordan og når kan du bidra?<textarea name="message" maxlength="2000" class="form-control" required></textarea></label>
-                    <button class="btn btn-primary">Meld meg som frivillig</button>
-                    <a asp-controller="Volunteers" asp-action="Edit" asp-route-needId="@need.resource_need_id">Se eller endre frivilligprofilen</a>
-                </form>
+                <p class="text-muted">Det har ikke kommet inn noen forespørsler ennå.</p>
             }
-        </div>
-    </section>}
-    @if(Model.Resources.Count > 0 && need.status != "Løst" && !need.archived){
-    <h2 class="h4 mt-4">Ressurser i samme kategori</h2>
-    <p>Vurder selv om kapasitet og tilgjengelighet passer behovet.</p>
-    @foreach(var resource in Model.Resources){
-    <p>
-        <a href="/Resources/Details/@resource.resource_id">@resource.resource_name →</a>
-    </p>}}
-    @if(Model.CanEdit || Model.Reservations.Count > 0 || Model.Interests.Count > 0){
-    <h2 class="h4 mt-4">Forespørsler for behovet</h2>
-    @foreach(var reservation in Model.Reservations){
-    <partial name="_ReservationCard" model="reservation" />}
-        <h2 class="h4 mt-4">Frivilliginteresser</h2>
-        @foreach(var interest in Model.Interests){
-        <partial name="_InterestCard" model="interest" />}}
-            <a class="d-block mt-3" href="/Needs">Tilbake til behovsoversikten</a>
-            @section Scripts {
-            <script src="~/lib/leaflet/leaflet.js">
-            </script>
-            <script src="/js/location-map.js" asp-append-version="true">
-            </script>}
-        </div>
+        </section>
+    }
+
+    <a class="d-inline-flex align-items-center gap-2 mt-4" href="/Needs">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        Tilbake til behovsoversikten
+    </a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/leaflet/leaflet.js"></script>
+    <script src="/js/location-map.js" asp-append-version="true"></script>
+}
