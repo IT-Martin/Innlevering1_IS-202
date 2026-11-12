@@ -124,6 +124,9 @@
             document.querySelector('.map-sidebar').open = true;
         } else {
         const map = L.map("map", { zoomControl: false }).setView([58.1467, 7.9956], 13);
+            // Eget kartlag for hastebehov, plassert foran vanlige markører.
+            map.createPane("urgentMarkers");
+            map.getPane("urgentMarkers").style.zIndex = 650;
 
         L.tileLayer(
             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -219,8 +222,16 @@
                 link.textContent = "Se detaljer";
                 popup.append(link);
                 const markerLabel = `${element.dataset.kind}: ${element.dataset.resourceName} (${element.dataset.category})` + (isNeed ? ` · ${element.dataset.status}` : "");
-                const marker = L.marker(position, { icon: markerIcon, title: markerLabel, alt: markerLabel }).addTo(map).bindPopup(popup);
-                markerEntries.push({ element, marker });
+                    // Hastebehov plasseres i et eget kartlag foran vanlige markører.
+                    const isUrgent = isNeed && element.dataset.status === "Haster";
+
+                    const marker = L.marker(position, {
+                        icon: markerIcon,
+                        title: markerLabel,
+                        alt: markerLabel,
+                        pane: isUrgent ? "urgentMarkers" : "markerPane"
+                    }).addTo(map).bindPopup(popup);
+
             });
         function fitVisibleMarkers() {
             const visible = markerEntries.filter(entry => !entry.element.hidden).map(entry => entry.marker.getLatLng());
