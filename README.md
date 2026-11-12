@@ -6,19 +6,40 @@ Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ress
 
 ---
 
-## Local demonstration and startup
+## Lokal demonstrasjonskonto
 
-The local startup command creates a system administrator and a **Kristiansand kommune (demo)** account in Development mode. Their generated credentials are kept in the ignored `.env` file; choose the matching account type on the sign-in page. These accounts are for local demonstration only, not for a published deployment. Existing accounts are not changed on restart.
+Når applikasjonen starter med miljøet `Development`, opprettes en systemansvarlig i den tilkoblede databasen dersom databasen ikke allerede har en systemansvarlig:
 
-Requirements: **Docker Desktop** (running) and **Python 3**. From the repository root, start the database and app with one command:
+- E-post: `admin@test.no`
+- Passord: `adminadminadmin`
+- Velg **Systemansvarlig** på innloggingssiden.
+
+Hvert gruppemedlem får kontoen i sin egen lokale database. Rider-profilene `http` og `https` bruker `Development`. Ved Docker-kjøring må utviklingsmiljøet velges eksplisitt med `ASPNETCORE_ENVIRONMENT=Development`. Databaseforbindelsen må være konfigurert først.
+
+Eksisterende kontoer og passord endres ikke. Dersom e-postadressen allerede brukes av en annen rolle, stoppes oppstarten med en feilmelding fremfor å gi kontoen flere rettigheter. Innstillingene kan overstyres lokalt med `InitialAdmin:Email` og `InitialAdmin:Password`. Den delte innloggingen er kun for lokal demonstrasjon og skal ikke brukes i en publisert løsning. Automatisk opprettelse kjøres ikke utenfor `Development`; en allerede opprettet konto blir værende i databasen.
+
+### Offentlig demonstrasjonskonto
+
+I `Development` opprettes også **Kristiansand kommune (demo)** og en tilknyttet offentlig konto:
+
+- E-post: `offentlig@test.no`
+- Passord: `offentligoffentligoffentlig`
+- Velg **Offentlig aktør** på innloggingssiden.
+- Tilgang: **Organisasjonsadministrator** for demonstrasjonsorganisasjonen.
+
+Organisasjonen er forhåndsgodkjent og e-postadressen forhåndsbekreftet kun for denne lokale demonstrasjonen. Dette representerer ikke en faktisk godkjenning fra kommunen. Den vanlige invitasjonsflyten er uendret. Eksisterende kontoer endres ikke ved omstart, og en adressekonflikt med en annen kontotype stopper oppstarten. Innloggingen kan overstyres lokalt med `InitialPublicActor:Email` og `InitialPublicActor:Password`. Kontoen blir værende i den lokale databasen etter opprettelse.
+
+## Lokal oppstart
+
+Krav: **.NET 10 SDK**, **Docker Desktop** og Docker Compose. Kjør én kommando fra prosjektmappen:
 
 ```bash
 ./start.sh
 ```
 
-On first run, the script creates private local credentials in `.env` and `Innlevering1_Gruppe2/appsettings.Local.json`; both files are ignored by Git. Docker builds and starts MariaDB and the web app, and database migrations run automatically. Open [http://localhost:5205](http://localhost:5205) when the command completes. The first run may take a few minutes while Docker downloads and builds the image.
+Skriptet oppretter en lokal MariaDB-database i Docker med et tilfeldig root-passord lagret i den Git-ignorerte filen `.local-db.env`, starter databasen og venter til den er klar. Databasemigreringer kjøres automatisk når applikasjonen starter i `Development`-miljøet. Åpne [http://localhost:5062](http://localhost:5062).
 
-The generated account emails and passwords are in `.env`. Stop the services with `docker compose down`. Database contents are kept in a Docker volume, so run `./start.sh` again to restart. Keep `.env` if you want to retain access to that existing database volume.
+Stopp applikasjonen med `Ctrl+C`. Hvis port `5062` allerede er i bruk, velger skriptet automatisk neste ledige port og viser hvilken URL du skal åpne. Du kan også angi port selv, for eksempel `APP_PORT=5063 ./start.sh`. Databasen og passordet beholdes ved omstart; `./start.sh` starter samme Docker-volum igjen.
 
 ## Systemarkitektur
 

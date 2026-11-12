@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 .env
+.local-db.env
 Innlevering1_Gruppe2/appsettings.Local.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
