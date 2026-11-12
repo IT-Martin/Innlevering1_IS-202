@@ -4,8 +4,6 @@ namespace Reachout.Models
 {
     public class LoginViewModel
     {
-        public string Role { get; set; } = "Private";
-
         [Required(ErrorMessage = "E-post er påkrevd.")]
         [EmailAddress(ErrorMessage = "Skriv inn en gyldig e-postadresse.")]
         public string Email { get; set; } = string.Empty;

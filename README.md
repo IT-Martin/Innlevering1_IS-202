@@ -6,117 +6,19 @@ Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ress
 
 ---
 
-## Lokal demonstrasjonskonto
+## Local demonstration and startup
 
-Når applikasjonen starter med miljøet `Development`, opprettes en systemansvarlig i den tilkoblede databasen dersom databasen ikke allerede har en systemansvarlig:
+The local startup command creates a system administrator and a **Kristiansand kommune (demo)** account in Development mode. Their generated credentials are kept in the ignored `.env` file; choose the matching account type on the sign-in page. These accounts are for local demonstration only, not for a published deployment. Existing accounts are not changed on restart.
 
-- E-post: `admin@test.no`
-- Passord: `adminadminadmin`
-- Velg **Systemansvarlig** på innloggingssiden.
+Requirements: **Docker Desktop** (running) and **Python 3**. From the repository root, start the database and app with one command:
 
-Hvert gruppemedlem får kontoen i sin egen lokale database. Rider-profilene `http` og `https` bruker `Development`. Ved Docker-kjøring må utviklingsmiljøet velges eksplisitt med `ASPNETCORE_ENVIRONMENT=Development`. Databaseforbindelsen må være konfigurert først.
-
-Eksisterende kontoer og passord endres ikke. Dersom e-postadressen allerede brukes av en annen rolle, stoppes oppstarten med en feilmelding fremfor å gi kontoen flere rettigheter. Innstillingene kan overstyres lokalt med `InitialAdmin:Email` og `InitialAdmin:Password`. Den delte innloggingen er kun for lokal demonstrasjon og skal ikke brukes i en publisert løsning. Automatisk opprettelse kjøres ikke utenfor `Development`; en allerede opprettet konto blir værende i databasen.
-
-### Offentlig demonstrasjonskonto
-
-I `Development` opprettes også **Kristiansand kommune (demo)** og en tilknyttet offentlig konto:
-
-- E-post: `offentlig@test.no`
-- Passord: `offentligoffentligoffentlig`
-- Velg **Offentlig aktør** på innloggingssiden.
-- Tilgang: **Organisasjonsadministrator** for demonstrasjonsorganisasjonen.
-
-Organisasjonen er forhåndsgodkjent og e-postadressen forhåndsbekreftet kun for denne lokale demonstrasjonen. Dette representerer ikke en faktisk godkjenning fra kommunen. Den vanlige invitasjonsflyten er uendret. Eksisterende kontoer endres ikke ved omstart, og en adressekonflikt med en annen kontotype stopper oppstarten. Innloggingen kan overstyres lokalt med `InitialPublicActor:Email` og `InitialPublicActor:Password`. Kontoen blir værende i den lokale databasen etter opprettelse.
-
-## 1. Drift og oppstart
-
-For å kjøre prosjektet trenger du:
-
-- **Visual Studio** med støtte for **.NET 10** og **ASP.NET Core**
-- **Docker Desktop**
-- En tilgjengelig **MySQL/MariaDB-database**
-- Internettilgang for eksterne ressurser som **Leaflet** og **OpenStreetMap**
-- Database kobling med
-
----
-
-## 1. Førstegangsoppsett
-
-### Åpne prosjektet
-
-1. Klon GitHub-repositoriet eller last ned prosjektet.
-2. Start **Docker Desktop**.
-3. Åpne `Innlevering1.slnx` i **Visual Studio**.
-4. Sett `Innlevering1_Gruppe2` som **oppstartsprosjekt**.
-
-### Opprett databasen i Docker
-
-Kjør følgende kommando i terminalen:
-
-```powershell
-docker run --name resourcedb -p 127.0.0.1:3307:3306 -v resourcedb-data:/var/lib/mysql -e MARIADB_ROOT_PASSWORD=Password -e MARIADB_DATABASE=resourcedb -d mariadb:latest
+```bash
+./start.sh
 ```
 
-Kommandoen oppretter MariaDB-containeren `resourcedb` og en database med samme navn. Databasen er tilgjengelig på port `3307` på din PC.
+On first run, the script creates private local credentials in `.env` and `Innlevering1_Gruppe2/appsettings.Local.json`; both files are ignored by Git. Docker builds and starts MariaDB and the web app, and database migrations run automatically. Open [http://localhost:5205](http://localhost:5205) when the command completes. The first run may take a few minutes while Docker downloads and builds the image.
 
-### Konfigurer tilkoblingen for migreringer
-
-Åpne `appsettings.json` og oppdater `ConnectionStrings`. Behold de øvrige innstillingene i filen.
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=127.0.0.1;Port=3307;Database=resourcedb;User=root;Password=Password;"
-}
-```
-
-> Adressen `127.0.0.1` brukes når du oppdaterer databasen med migreringer fra Visual Studio.
-
-### Opprett databasestrukturen
-
-Åpne **Tools → NuGet Package Manager → Package Manager Console** i Visual Studio og kjør:
-
-```powershell
-Update-Database
-```
-
-Kommandoen bruker prosjektets eksisterende migreringer til å opprette eller oppdatere tabeller og relasjoner i databasen.
-
-### Konfigurer tilkoblingen for applikasjonen
-
-Når migreringene er fullført, endrer du `Server` i tilkoblingsstrengen til `host.docker.internal`:
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=host.docker.internal;Port=3307;Database=resourcedb;User=root;Password=Password;"
-}
-```
-
----
-
-## 2. Starte applikasjonen
-
-Når førstegangsoppsettet er fullført:
-
-1. Start **Docker Desktop**.
-2. Start databasecontaineren fra **Docker Desktop**, eller kjør:
-
-   ```powershell
-   docker start resourcedb
-   ```
-
-3. Åpne `Innlevering1.slnx` i **Visual Studio**.
-4. Kontroller at `Innlevering1_Gruppe2` er **oppstartsprosjektet**.
-5. Kontroller at `DefaultConnection` bruker `Server=host.docker.internal` og `Port=3307`.
-6. Velg **Container (Dockerfile)** som oppstartsprofil.
-7. Klikk på den **grønne startknappen**.
-
-> Første oppstart kan ta litt tid fordi Docker må bygge applikasjonscontaineren. Følg fremdriften i **Output**-vinduet i Visual Studio.
-
-
-### Stoppe applikasjonen
-
-Stopp kjøringen i Visual Studio ved å trykke på "Stop Debugging" oppe til høyre.
+The generated account emails and passwords are in `.env`. Stop the services with `docker compose down`. Database contents are kept in a Docker volume, so run `./start.sh` again to restart. Keep `.env` if you want to retain access to that existing database volume.
 
 ## Systemarkitektur
 

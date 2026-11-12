@@ -5,8 +5,8 @@ services:
     environment:
       MARIADB_DATABASE: reachout_database
       MARIADB_USER: gruppe2_app
-      MARIADB_PASSWORD: ${DB_PASSWORD:?Kjør database/setup.py først}
-      MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD:?Kjør database/setup.py først}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Run ./start.sh first}
+      MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD:?Run ./start.sh first}
     ports:
       - "127.0.0.1:${REACHOUT_DB_PORT:-3316}:3306"
     volumes:
@@ -19,16 +19,19 @@ services:
   app:
     build:
       context: .
-      dockerfile: Reachout/Dockerfile
+      dockerfile: Innlevering1_Gruppe2/Dockerfile
     environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
       ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=reachout_database;User ID=gruppe2_app;Password=${DB_PASSWORD};"
+      DataDirectory: /data
+      InitialAdmin__Email: ${REACHOUT_ADMIN_EMAIL:?Run ./start.sh first}
+      InitialAdmin__Password: ${REACHOUT_ADMIN_PASSWORD:?Run ./start.sh first}
+      InitialPublicActor__Email: ${REACHOUT_PUBLIC_ACTOR_EMAIL:?Run ./start.sh first}
+      InitialPublicActor__Password: ${REACHOUT_PUBLIC_ACTOR_PASSWORD:?Run ./start.sh first}
       LocalPreview: true
       SeedDemoData: false
-      InitialAdmin__Email: ${REACHOUT_ADMIN_EMAIL:?Kjør database/setup.py først}
-      InitialAdmin__Password: ${REACHOUT_ADMIN_PASSWORD:?Kjør database/setup.py først}
-      DataDirectory: /data
       TZ: Europe/Oslo
-      ASPNETCORE_HTTP_PORTS: 8080
     ports:
       - "127.0.0.1:${REACHOUT_WEB_PORT:-5205}:8080"
     volumes:

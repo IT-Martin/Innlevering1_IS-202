@@ -18,11 +18,6 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">
-                <label asp-for="Role" class="form-label">Brukerinngang</label>
-                <select asp-for="Role" class="form-select"><option value="Private">Ressursleverandør</option><option value="Public">Offentlig aktør</option><option value="Platform">Systemansvarlig</option></select>
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
                 <label asp-for="Email" class="form-label">E-post</label>
                 <input asp-for="Email" class="form-control" autocomplete="email" />
                 <span asp-validation-for="Email" class="text-danger"></span>

@@ -14,18 +14,20 @@
             <input asp-for="Invitation" type="hidden" />
             @if (string.IsNullOrEmpty(Model.Invitation))
             {
-                <div class="mb-3">
-                    <label asp-for="ProviderType" class="form-label">Hvem registrerer du deg som?</label>
-                    <select asp-for="ProviderType" class="form-select">
-                        <option>Privatperson</option>
-                        <option>Bedrift</option>
-                        <option>Organisasjon</option>
-                    </select>
-                    <span asp-validation-for="ProviderType" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Organization" class="form-label">Navn på bedrift eller organisasjon (valgfritt)</label>
-                    <input asp-for="Organization" class="form-control" maxlength="200" />
+                <div class="row g-3 align-items-end mb-3">
+                    <div class="col-auto">
+                        <label asp-for="ProviderType" class="form-label">Leverandørtype</label>
+                        <select asp-for="ProviderType" class="form-select" style="width: 150px;">
+                            <option>Privatperson</option>
+                            <option>Bedrift</option>
+                            <option>Organisasjon</option>
+                        </select>
+                        <span asp-validation-for="ProviderType" class="text-danger"></span>
+                    </div>
+                    <div class="col-auto">
+                        <label asp-for="Organization" class="form-label">Navn på bedrift eller organisasjon (valgfritt)</label>
+                        <input asp-for="Organization" class="form-control" style="width: 260px;" maxlength="260" />
+                    </div>
                 </div>
             }
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

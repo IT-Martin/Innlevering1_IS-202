@@ -10,17 +10,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Reachout/Reachout.csproj", "Reachout/"]
-RUN dotnet restore "./Reachout/Reachout.csproj"
+COPY ["Innlevering1_Gruppe2/Innlevering1_Gruppe2.csproj", "Innlevering1_Gruppe2/"]
+RUN dotnet restore "./Innlevering1_Gruppe2/Innlevering1_Gruppe2.csproj"
 COPY . .
-WORKDIR "/src/Reachout"
-RUN dotnet build "./Reachout.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Innlevering1_Gruppe2"
+RUN dotnet build "./Innlevering1_Gruppe2.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Reachout.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Innlevering1_Gruppe2.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Reachout.dll"]
+ENTRYPOINT ["dotnet", "Innlevering1_Gruppe2.dll"]
