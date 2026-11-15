@@ -24,6 +24,12 @@
                     <span>Beredskapssentralen<span class="brand-caption">RESSURSER · BEREDSKAP</span></span>
                 </a>
 
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <span class="nav-link d-lg-none ms-auto me-2 d-inline-flex align-items-center" aria-hidden="true">
+                        <i class="fa-solid fa-bell"></i>
+                    </span>
+                }
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
@@ -95,6 +101,7 @@
                                 <i class="fa-regular fa-user" aria-hidden="true"></i>
                                 @(User.IsInRole("Platform") ? "Systemansvarlig" : User.IsInRole("Private") ? "Leverandør" : "Offentlig aktør")
                             </span>
+                            <span class="nav-link d-none d-lg-inline-flex" aria-hidden="true"><i class="fa-solid fa-bell"></i></span>
                             <a class="nav-link" asp-controller="Account" asp-action="Profile">Min konto</a>
                             <form asp-controller="Login" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
