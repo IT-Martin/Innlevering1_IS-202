@@ -175,8 +175,6 @@ Windows (PowerShell eller Ledetekst):
 
 Testene dekker validering av registrerings-, innloggings- og ressursmodeller, ikonvalg for ressurstyper, innlogging med ukjent e-post eller feil passord, ressursregistrering og redigering, tilgang til egne ressurser og repository-operasjoner. Databasetestene bruker en isolert EF Core-database i minnet og krever ikke en kjørende MariaDB-instans. Skriptet bruker den vanlige oppsummeringen fra `dotnet test`.
 
-## Systemstesting
-
 ## Sikkerhetstesting
 
 | ID | Test | Gjennomføring | Resultat | Vurdering |
