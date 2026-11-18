@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Felles Ressurs</title>
+    <title>@ViewData["Title"] - Beredskapssentralen</title>
     <script type="importmap"></script>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -19,9 +20,15 @@
                     <span class="brand-mark" aria-hidden="true">
                         <i class="fa-solid fa-people-group"></i>
                     </span>
-                    <span>Felles Ressurs</span>
+                    <span>Beredskapssentralen<span class="brand-caption">RESSURSER · BEREDSKAP</span></span>
                 </a>
 
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <span class="nav-link d-lg-none ms-auto me-2 d-inline-flex align-items-center" aria-hidden="true">
+                        <i class="fa-solid fa-bell"></i>
+                    </span>
+                }
                 <button class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
@@ -42,12 +49,53 @@
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Resource" asp-action="Register">Legg til ressurs</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Resource" asp-action="MyResources">Mine ressurser</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="/">Hjem</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organizations" asp-action="Apply">Søk om offentlig tilgang</a></li>
+                        }
+                        else if (User.IsInRole("Platform"))
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/Organizations">Tilgangsadministrasjon</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Map" asp-action="Index">Kartoversikt</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" href="/Map">@(User.IsInRole("Private") ? "Mitt kart" : "Kart og ressurser")</a></li>
+                            <li class="nav-item"><a class="nav-link" href="@(User.IsInRole("Private") ? "/Resources/MyContributions" : "/Needs")">@(User.IsInRole("Private") ? "Mine bidrag" : "Mine behov")</a></li>
+                            @if (User.IsInRole("Private"))
+                            {
+                                <li class="nav-item"><a class="nav-link" href="/Needs">Åpne hjelpebehov</a></li>
+                            }
+                            <li class="nav-item"><a class="nav-link" href="/Requests">Forespørsler</a></li>
+                            @if (!User.IsInRole("Private"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Frivillighet</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/Volunteers">Frivillige</a></li>
+                                        <li><a class="dropdown-item" href="/Interests">Frivilligpåmeldinger</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (User.IsInRole("Private") || User.FindFirst("Permission")?.Value != "Lesetilgang")
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Mer</a>
+                                    <ul class="dropdown-menu">
+                                        @if (User.IsInRole("Private"))
+                                        {
+                                            <li><a class="dropdown-item" href="/Volunteers/Edit">Min frivilligprofil</a></li>
+                                            <li><a class="dropdown-item" href="/Interests">Mine påmeldinger</a></li>
+                                        }
+                                        else
+                                        {
+                                            @if (User.FindFirst("Permission")?.Value == "Organisasjonsadministrator")
+                                            { <li><a class="dropdown-item" href="/Organizations">Organisasjon og ansatte</a></li> }
+                                            @if (User.FindFirst("Permission")?.Value != "Lesetilgang")
+                                            { <li><a class="dropdown-item" href="/Exports">Last ned ressursliste (CSV)</a></li> }
+                                        }
+                                    </ul>
+                                </li>
+                            }
                         }
                     </ul>
 
@@ -58,10 +106,17 @@
                                 <span class="account-dot" aria-hidden="true"></span>
                                 @User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value
                             </span>
+                            <span class="nav-link d-none d-lg-inline-flex" aria-hidden="true"><i class="fa-solid fa-bell"></i></span>
+                            <a class="nav-link" asp-controller="Account" asp-action="Profile">Min konto</a>
                             <form asp-controller="Login" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-link logout-button">Logg ut</button>
                             </form>
+                        }
+                        else if (ViewData["LandingPage"] is true)
+                        {
+                            <partial name="_ThemePicker" />
+                            <a class="account-action" asp-controller="Home" asp-action="About">Om Beredskapssentralen</a>
                         }
                         else
                         {
@@ -87,8 +142,8 @@
     </div>
 
     <footer class="site-footer">
-        <div class="container">
-            <span>&copy; 2026 Felles Ressurs</span>
+        <div class="container app-container">
+            <span>&copy; 2026 Beredskapssentralen</span>
             <span>Enklere deling av viktige ressurser</span>
         </div>
     </footer>

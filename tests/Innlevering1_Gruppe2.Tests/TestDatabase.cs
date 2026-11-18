@@ -1,8 +1,8 @@
-using Innlevering1_Gruppe2.DataAccess;
-using Innlevering1_Gruppe2.Models.Entities;
+using Reachout.DataAccess;
+using Reachout.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Innlevering1_Gruppe2.Tests;
+namespace Reachout.Tests;
 
 /* Testklasse for å opprette testdatabaser.
  Disse testene sikrer at vi har en isolert testmiljø med kjente data.*/

@@ -1,9 +1,8 @@
-namespace Innlevering1_Gruppe2.Models
+namespace Reachout.Models
 {
     public class ErrorViewModel
     {
         public string? RequestId { get; set; }
-
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }

@@ -1,34 +1,33 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Innlevering1_Gruppe2.Models.Entities
+namespace Reachout.Models.Entities
 {
     public class ProviderAccount
     {
-        public int account_id { get; set; } // PK og eventuelt FK
+        public int account_id { get; set; }
+        public Account Account { get; set; } = null!;
+        public ICollection<Resource> Resources { get; set; } = new List<Resource>();
 
         [Required]
         [MaxLength(100)]
-        public string provider_type { get; set; }
+        public string provider_type { get; set; } = "Privatperson";
 
         [Required]
         [MaxLength(200)]
-        public string contact_name { get; set; }
+        public string contact_name { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(50)]
-        public string? phone { get; set; }
+        public string? phone { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(100)]
-        public string? address { get; set; }
+        public string? address { get; set; } = string.Empty;
 
-        
         [MaxLength(200)]
         public string organization_name { get; set; } = string.Empty;
 
-        
         [MaxLength(100)]
         public string organization_number { get; set; } = string.Empty;
-
     }
 }

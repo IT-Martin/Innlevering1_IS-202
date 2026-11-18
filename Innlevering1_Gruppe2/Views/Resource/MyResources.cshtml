@@ -1,4 +1,4 @@
-@model IReadOnlyList<Innlevering1_Gruppe2.Models.Entities.Resource>
+@model IReadOnlyList<Reachout.Models.Entities.Resource>
 
 @{
     ViewData["Title"] = "Mine ressurser";
@@ -40,12 +40,12 @@
                             <div>
                                 <span class="status-pill">@resource.verification_status</span>
                                 <h2>
-                                    <i class="@Innlevering1_Gruppe2.Models.ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name) resource-type-icon" aria-hidden="true"></i>
+                                    <i class="@Reachout.Models.ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name) resource-type-icon" aria-hidden="true"></i>
                                     @resource.resource_name
                                 </h2>
                             </div>
                             <span class="resource-type">
-                                <i class="@Innlevering1_Gruppe2.Models.ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name)" aria-hidden="true"></i>
+                                <i class="@Reachout.Models.ResourceTypeIcon.For(resource.ResourceType.category_name, resource.resource_name)" aria-hidden="true"></i>
                                 @resource.ResourceType.category_name
                             </span>
                         </div>

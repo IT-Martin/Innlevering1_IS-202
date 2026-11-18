@@ -1,6 +1,6 @@
-using Innlevering1_Gruppe2.DataAccess.Repositories;
+using Reachout.DataAccess.Repositories;
 
-namespace Innlevering1_Gruppe2.Tests;
+namespace Reachout.Tests;
 
 /* Testklasse for testing av ResourceRepository */
 public class ResourceRepositoryTests
@@ -41,7 +41,7 @@ public class ResourceRepositoryTests
         Assert.Null(result);
     }
 
-    /* Test for å sikre at GetByIdAsync returnerer ressursen med relaterte data (Location, Account og ResourceType). */
+    /* Test for å sikre at GetByIdForAccountAsync returnerer ressursen med relaterte data (Location og ResourceType). */
     [Fact]
     public async Task GetByIdAsync_ReturnsResourceWithRelatedData()
     {
@@ -49,11 +49,10 @@ public class ResourceRepositoryTests
         var resource = TestDatabase.CreateResource(context);
         var repository = new ResourceRepository(context);
 
-        var result = await repository.GetByIdAsync(resource.resource_id);
+        var result = await repository.GetByIdForAccountAsync(resource.resource_id, 1);
 
         Assert.NotNull(result);
         Assert.NotNull(result.Location);
-        Assert.NotNull(result.Account);
         Assert.NotNull(result.ResourceType);
     }
 
@@ -63,7 +62,7 @@ public class ResourceRepositoryTests
     {
         await using var context = TestDatabase.CreateContext();
         var repository = new ResourceRepository(context);
-        var resource = new Innlevering1_Gruppe2.Models.Entities.Resource
+        var resource = new Reachout.Models.Entities.Resource
         {
             account_id = 1,
             resource_name = "Ny ressurs",
@@ -72,7 +71,7 @@ public class ResourceRepositoryTests
             verification_status = "Pending",
             resource_type_id = 1,
             ResourceType = context.ResourceTypes.Single(type => type.resource_type_id == 1),
-            Location = new Innlevering1_Gruppe2.Models.Entities.Location
+            Location = new Reachout.Models.Entities.Location
             {
                 address_or_area = "Teststed",
                 latitude = 59.9m,

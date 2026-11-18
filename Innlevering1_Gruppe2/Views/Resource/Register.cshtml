@@ -1,9 +1,9 @@
-﻿@model Innlevering1_Gruppe2.Models.ResourceCreateViewModel
+﻿@model Reachout.Models.ResourceEditViewModel
 
 @{
     ViewData["Title"] = "Registrer ressurs";
-    var resourceTypes = ViewBag.ResourceTypes as IEnumerable<Innlevering1_Gruppe2.Models.Entities.ResourceType>
-        ?? Enumerable.Empty<Innlevering1_Gruppe2.Models.Entities.ResourceType>();
+    var resourceTypes = ViewBag.ResourceTypes as IEnumerable<Reachout.Models.Entities.ResourceType>
+        ?? Enumerable.Empty<Reachout.Models.Entities.ResourceType>();
 }
 
 <div class="register-page">

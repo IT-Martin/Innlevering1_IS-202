@@ -1,75 +1,74 @@
 using System.ComponentModel.DataAnnotations;
-using Innlevering1_Gruppe2.Models;
-using Innlevering1_Gruppe2.Models.ViewModels;
+using Reachout.Models;
 
-namespace Innlevering1_Gruppe2.Tests;
+namespace Reachout.Tests;
 
 /* Testklasse for å validere ViewModels.
  Tester ulike scenarier for å sikre at validering fungerer som forventet. */
 
 public class ViewModelValidationTests
 {
-    /* Test for å sikre at ResourceCreateViewModel aksepterer gyldige koordinater innenfor grensene,
+    /* Test for å sikre at ResourceEditViewModel aksepterer gyldige koordinater innenfor grensene,
      og at ingen valideringsfeil oppstår.*/
     [Theory]
     [InlineData(-90, -180)]
     [InlineData(0, 0)]
     [InlineData(90, 180)]
-    public void ResourceCreateViewModel_AcceptsCoordinateBoundaries(
+    public void ResourceEditViewModel_AcceptsCoordinateBoundaries(
         double latitude,
         double longitude)
     {
-        var model = ValidResourceCreateModel();
+        var model = ValidResourceEditModel();
         model.Latitude = latitude;
         model.Longitude = longitude;
 
         Assert.Empty(Validate(model));
     }
 
-    /* Test for å sikre at ResourceCreateViewModel avviser koordinater utenfor grensene,
+    /* Test for å sikre at ResourceEditViewModel avviser koordinater utenfor grensene,
      og at valideringsfeil oppstår.*/
     [Theory]
     [InlineData(-90.01, 0)]
     [InlineData(90.01, 0)]
     [InlineData(0, -180.01)]
     [InlineData(0, 180.01)]
-    public void ResourceCreateViewModel_RejectsCoordinatesOutsideBounds(
+    public void ResourceEditViewModel_RejectsCoordinatesOutsideBounds(
         double latitude,
         double longitude)
     {
-        var model = ValidResourceCreateModel();
+        var model = ValidResourceEditModel();
         model.Latitude = latitude;
         model.Longitude = longitude;
 
         Assert.NotEmpty(Validate(model));
     }
 
-    /* Test for å sikre at ResourceCreateViewModel krever navn, ressurskategori og koordinater,
+    /* Test for å sikre at ResourceEditViewModel krever navn, ressurskategori og koordinater,
      og at valideringsfeil oppstår når disse feltene mangler.*/
     [Fact]
-    public void ResourceCreateViewModel_RequiresNameTypeAndCoordinates()
+    public void ResourceEditViewModel_RequiresNameTypeAndCoordinates()
     {
-        var errors = Validate(new ResourceCreateViewModel());
+        var errors = Validate(new ResourceEditViewModel());
 
-        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceCreateViewModel.Name)));
-        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceCreateViewModel.ResourceTypeId)));
-        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceCreateViewModel.Latitude)));
-        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceCreateViewModel.Longitude)));
+        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceEditViewModel.Name)));
+        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceEditViewModel.ResourceTypeId)));
+        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceEditViewModel.Latitude)));
+        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceEditViewModel.Longitude)));
     }
 
-    /* Test for å sikre at ResourceCreateViewModel avviser navn og
+    /* Test for å sikre at ResourceEditViewModel avviser navn og
      beskrivelse som overskrider grensen for antall tegn */
     [Fact]
-    public void ResourceCreateViewModel_RejectsNameAndDescriptionOverMaximumLength()
+    public void ResourceEditViewModel_RejectsNameAndDescriptionOverMaximumLength()
     {
-        var model = ValidResourceCreateModel();
+        var model = ValidResourceEditModel();
         model.Name = new string('n', 201);
         model.Description = new string('d', 4001);
 
         var errors = Validate(model);
 
-        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceCreateViewModel.Name)));
-        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceCreateViewModel.Description)));
+        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceEditViewModel.Name)));
+        Assert.Contains(errors, error => error.MemberNames.Contains(nameof(ResourceEditViewModel.Description)));
     }
 
     /* Test for å sikre at ResourceEditViewModel krever gyldige ressursfelt,
@@ -143,7 +142,7 @@ public class ViewModelValidationTests
         }));
     }
 
-    private static ResourceCreateViewModel ValidResourceCreateModel() => new()
+    private static ResourceEditViewModel ValidResourceEditModel() => new()
     {
         Name = "Traktor",
         Description = "En fungerende traktor",

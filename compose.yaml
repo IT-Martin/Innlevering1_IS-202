@@ -1,0 +1,40 @@
+name: reachout-team
+services:
+  db:
+    image: mariadb:11.8
+    environment:
+      MARIADB_DATABASE: resourcedb
+      MARIADB_ROOT_PASSWORD: ${LOCAL_MARIADB_ROOT_PASSWORD:?Run ./start.sh first}
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+  app:
+    build:
+      context: .
+      dockerfile: Innlevering1_Gruppe2/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=resourcedb;User=root;Password=${LOCAL_MARIADB_ROOT_PASSWORD:?Run ./start.sh first};"
+      DataDirectory: /data
+      LocalPreview: true
+      SeedDemoData: false
+      TZ: Europe/Oslo
+    ports:
+      - "127.0.0.1:5205:8080"
+    volumes:
+      - app_keys:/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  database:
+    name: reachout_local_database
+  app_keys:
