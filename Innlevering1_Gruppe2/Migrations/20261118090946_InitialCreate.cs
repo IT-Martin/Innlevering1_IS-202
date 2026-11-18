@@ -6,115 +6,43 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Reachout.Migrations
+namespace Innlevering1_Gruppe2.Migrations
 {
     /// <inheritdoc />
-    public partial class ExpandedWorkflows : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Resource_Account_account_id",
-                table: "Resource");
-
-            migrationBuilder.Sql("CREATE INDEX IX_Resource_location_support ON Resource(location_id)");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Resource_location_id",
-                table: "Resource");
-
-            migrationBuilder.AddColumn<bool>(
-                name: "archived",
-                table: "Resource",
-                type: "tinyint(1)",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<string>(
-                name: "availability_status",
-                table: "Resource",
-                type: "varchar(40)",
-                maxLength: 40,
-                nullable: false,
-                defaultValue: "")
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.AddColumn<string>(
-                name: "image_content_type",
-                table: "Resource",
-                type: "varchar(30)",
-                maxLength: 30,
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.AddColumn<byte[]>(
-                name: "image_data",
-                table: "Resource",
-                type: "mediumblob",
-                nullable: true);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "access_revoked",
-                table: "Account",
-                type: "tinyint(1)",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<bool>(
-                name: "email_confirmed",
-                table: "Account",
-                type: "tinyint(1)",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<int>(
-                name: "failed_attempts",
-                table: "Account",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "locked_until",
-                table: "Account",
-                type: "datetime(6)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "security_stamp",
-                table: "Account",
-                type: "varchar(100)",
-                maxLength: 100,
-                nullable: false,
-                defaultValue: "")
+            migrationBuilder.AlterDatabase()
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AccountToken",
+                name: "Account",
                 columns: table => new
                 {
-                    account_token_id = table.Column<int>(type: "int", nullable: false)
+                    account_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     security_stamp = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    account_id = table.Column<int>(type: "int", nullable: false),
-                    token_hash = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    failed_attempts = table.Column<int>(type: "int", nullable: false),
+                    locked_until = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    access_revoked = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    email_confirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    account_type = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    purpose = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
+                    email = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    expires_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    used_at = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    contact_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false, defaultValue: "")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    phone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false, defaultValue: "")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    password_hash = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountToken", x => x.account_token_id);
-                    table.ForeignKey(
-                        name: "FK_AccountToken_Account_account_id",
-                        column: x => x.account_id,
-                        principalTable: "Account",
-                        principalColumn: "account_id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Account", x => x.account_id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -151,6 +79,23 @@ namespace Reachout.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Location",
+                columns: table => new
+                {
+                    location_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    address_or_area = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    latitude = table.Column<decimal>(type: "decimal(9,6)", precision: 9, scale: 6, nullable: false),
+                    longitude = table.Column<decimal>(type: "decimal(10,7)", precision: 10, scale: 7, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Location", x => x.location_id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "PublicOrganization",
                 columns: table => new
                 {
@@ -183,6 +128,21 @@ namespace Reachout.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "ResourceType",
+                columns: table => new
+                {
+                    resource_type_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    category_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResourceType", x => x.resource_type_id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Skill",
                 columns: table => new
                 {
@@ -200,29 +160,60 @@ namespace Reachout.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "VolunteerProfile",
+                name: "AccountToken",
                 columns: table => new
                 {
-                    volunteer_profile_id = table.Column<int>(type: "int", nullable: false)
+                    account_token_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    security_stamp = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     account_id = table.Column<int>(type: "int", nullable: false),
-                    service_area = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                    token_hash = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    volunteer_role = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                    purpose = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    additional_information = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    archived = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    expires_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    used_at = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VolunteerProfile", x => x.volunteer_profile_id);
+                    table.PrimaryKey("PK_AccountToken", x => x.account_token_id);
                     table.ForeignKey(
-                        name: "FK_VolunteerProfile_ProviderAccount_account_id",
+                        name: "FK_AccountToken_Account_account_id",
                         column: x => x.account_id,
-                        principalTable: "ProviderAccount",
+                        principalTable: "Account",
                         principalColumn: "account_id",
                         onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ProviderAccount",
+                columns: table => new
+                {
+                    account_id = table.Column<int>(type: "int", nullable: false),
+                    provider_type = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    contact_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    phone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    address = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    organization_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    organization_number = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProviderAccount", x => x.account_id);
+                    table.ForeignKey(
+                        name: "FK_ProviderAccount_Account_account_id",
+                        column: x => x.account_id,
+                        principalTable: "Account",
+                        principalColumn: "account_id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -283,6 +274,128 @@ namespace Reachout.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Resource",
+                columns: table => new
+                {
+                    resource_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    account_id = table.Column<int>(type: "int", nullable: false),
+                    resource_type_id = table.Column<int>(type: "int", nullable: false),
+                    location_id = table.Column<int>(type: "int", nullable: false),
+                    resource_name = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    description = table.Column<string>(type: "varchar(4000)", maxLength: 4000, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    contact_details = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    verification_status = table.Column<string>(type: "varchar(75)", maxLength: 75, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    availability_status = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    archived = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    image_data = table.Column<byte[]>(type: "mediumblob", nullable: true),
+                    image_content_type = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resource", x => x.resource_id);
+                    table.ForeignKey(
+                        name: "FK_Resource_Location_location_id",
+                        column: x => x.location_id,
+                        principalTable: "Location",
+                        principalColumn: "location_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Resource_ProviderAccount_account_id",
+                        column: x => x.account_id,
+                        principalTable: "ProviderAccount",
+                        principalColumn: "account_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Resource_ResourceType_resource_type_id",
+                        column: x => x.resource_type_id,
+                        principalTable: "ResourceType",
+                        principalColumn: "resource_type_id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "VolunteerProfile",
+                columns: table => new
+                {
+                    volunteer_profile_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    account_id = table.Column<int>(type: "int", nullable: false),
+                    service_area = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    volunteer_role = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    additional_information = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    archived = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VolunteerProfile", x => x.volunteer_profile_id);
+                    table.ForeignKey(
+                        name: "FK_VolunteerProfile_ProviderAccount_account_id",
+                        column: x => x.account_id,
+                        principalTable: "ProviderAccount",
+                        principalColumn: "account_id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ResourceNeed",
+                columns: table => new
+                {
+                    resource_need_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    public_actor_account_id = table.Column<int>(type: "int", nullable: false),
+                    resource_type_id = table.Column<int>(type: "int", nullable: false),
+                    location_id = table.Column<int>(type: "int", nullable: false),
+                    title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    description = table.Column<string>(type: "varchar(4000)", maxLength: 4000, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    priority = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    status = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    required_start = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    required_end = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    deadline = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    archived = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResourceNeed", x => x.resource_need_id);
+                    table.UniqueConstraint("AK_ResourceNeed_resource_need_id_public_actor_account_id", x => new { x.resource_need_id, x.public_actor_account_id });
+                    table.ForeignKey(
+                        name: "FK_ResourceNeed_Location_location_id",
+                        column: x => x.location_id,
+                        principalTable: "Location",
+                        principalColumn: "location_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ResourceNeed_PublicActorAccount_public_actor_account_id",
+                        column: x => x.public_actor_account_id,
+                        principalTable: "PublicActorAccount",
+                        principalColumn: "account_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ResourceNeed_ResourceType_resource_type_id",
+                        column: x => x.resource_type_id,
+                        principalTable: "ResourceType",
+                        principalColumn: "resource_type_id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Availability",
                 columns: table => new
                 {
@@ -334,53 +447,6 @@ namespace Reachout.Migrations
                         column: x => x.volunteer_profile_id,
                         principalTable: "VolunteerProfile",
                         principalColumn: "volunteer_profile_id",
-                        onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "ResourceNeed",
-                columns: table => new
-                {
-                    resource_need_id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    public_actor_account_id = table.Column<int>(type: "int", nullable: false),
-                    resource_type_id = table.Column<int>(type: "int", nullable: false),
-                    location_id = table.Column<int>(type: "int", nullable: false),
-                    title = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    description = table.Column<string>(type: "varchar(4000)", maxLength: 4000, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    priority = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    status = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    required_start = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    required_end = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    deadline = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    archived = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ResourceNeed", x => x.resource_need_id);
-                    table.UniqueConstraint("AK_ResourceNeed_resource_need_id_public_actor_account_id", x => new { x.resource_need_id, x.public_actor_account_id });
-                    table.ForeignKey(
-                        name: "FK_ResourceNeed_Location_location_id",
-                        column: x => x.location_id,
-                        principalTable: "Location",
-                        principalColumn: "location_id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ResourceNeed_PublicActorAccount_public_actor_account_id",
-                        column: x => x.public_actor_account_id,
-                        principalTable: "PublicActorAccount",
-                        principalColumn: "account_id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ResourceNeed_ResourceType_resource_type_id",
-                        column: x => x.resource_type_id,
-                        principalTable: "ResourceType",
-                        principalColumn: "resource_type_id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -492,6 +558,10 @@ namespace Reachout.Migrations
                 columns: new[] { "resource_type_id", "category_name" },
                 values: new object[,]
                 {
+                    { 1, "Kjøretøy" },
+                    { 2, "Heisekran" },
+                    { 3, "Frivillige" },
+                    { 4, "Tilhenger" },
                     { 5, "Utstyr" },
                     { 6, "Lokaler" },
                     { 7, "Strøm" },
@@ -499,12 +569,10 @@ namespace Reachout.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resource_location_id",
-                table: "Resource",
-                column: "location_id",
+                name: "IX_Account_email",
+                table: "Account",
+                column: "email",
                 unique: true);
-
-            migrationBuilder.Sql("DROP INDEX IX_Resource_location_support ON Resource");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccountToken_account_id",
@@ -556,6 +624,22 @@ namespace Reachout.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Resource_account_id",
+                table: "Resource",
+                column: "account_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resource_location_id",
+                table: "Resource",
+                column: "location_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resource_resource_type_id",
+                table: "Resource",
+                column: "resource_type_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ResourceMatch_public_actor_account_id",
                 table: "ResourceMatch",
                 column: "public_actor_account_id");
@@ -564,6 +648,12 @@ namespace Reachout.Migrations
                 name: "IX_ResourceMatch_resource_id",
                 table: "ResourceMatch",
                 column: "resource_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResourceMatch_resource_need_id",
+                table: "ResourceMatch",
+                column: "resource_need_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ResourceMatch_resource_need_id_public_actor_account_id",
@@ -584,6 +674,12 @@ namespace Reachout.Migrations
                 name: "IX_ResourceNeed_resource_type_id",
                 table: "ResourceNeed",
                 column: "resource_type_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResourceType_category_name",
+                table: "ResourceType",
+                column: "category_name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Skill_name",
@@ -611,32 +707,11 @@ namespace Reachout.Migrations
                 name: "IX_VolunteerProfileSkill_skill_id",
                 table: "VolunteerProfileSkill",
                 column: "skill_id");
-
-            // Eksisterende leverandører får undertypen før den strengere fremmednøkkelen legges til.
-            migrationBuilder.Sql(@"INSERT IGNORE INTO ProviderAccount
-                (account_id, provider_type, contact_name, phone, address, organization_name, organization_number)
-                SELECT account_id, 'Privatperson', contact_name, phone, '', '', '' FROM Account WHERE account_type='Private';
-                UPDATE Account SET security_stamp=UUID() WHERE security_stamp='';
-                UPDATE Resource SET availability_status='Etter avtale' WHERE availability_status='';
-                INSERT INTO Availability (resource_id, volunteer_profile_id, available_from, available_to)
-                SELECT resource_id, NULL, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY) FROM Resource;");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Resource_ProviderAccount_account_id",
-                table: "Resource",
-                column: "account_id",
-                principalTable: "ProviderAccount",
-                principalColumn: "account_id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Resource_ProviderAccount_account_id",
-                table: "Resource");
-
             migrationBuilder.DropTable(
                 name: "AccountToken");
 
@@ -674,87 +749,25 @@ namespace Reachout.Migrations
                 name: "ResourceNeed");
 
             migrationBuilder.DropTable(
+                name: "Resource");
+
+            migrationBuilder.DropTable(
                 name: "PublicActorAccount");
+
+            migrationBuilder.DropTable(
+                name: "Location");
+
+            migrationBuilder.DropTable(
+                name: "ProviderAccount");
+
+            migrationBuilder.DropTable(
+                name: "ResourceType");
 
             migrationBuilder.DropTable(
                 name: "PublicOrganization");
 
-            migrationBuilder.Sql("CREATE INDEX IX_Resource_location_support ON Resource(location_id)");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Resource_location_id",
-                table: "Resource");
-
-            migrationBuilder.DeleteData(
-                table: "ResourceType",
-                keyColumn: "resource_type_id",
-                keyValue: 5);
-
-            migrationBuilder.DeleteData(
-                table: "ResourceType",
-                keyColumn: "resource_type_id",
-                keyValue: 6);
-
-            migrationBuilder.DeleteData(
-                table: "ResourceType",
-                keyColumn: "resource_type_id",
-                keyValue: 7);
-
-            migrationBuilder.DeleteData(
-                table: "ResourceType",
-                keyColumn: "resource_type_id",
-                keyValue: 8);
-
-            migrationBuilder.DropColumn(
-                name: "archived",
-                table: "Resource");
-
-            migrationBuilder.DropColumn(
-                name: "availability_status",
-                table: "Resource");
-
-            migrationBuilder.DropColumn(
-                name: "image_content_type",
-                table: "Resource");
-
-            migrationBuilder.DropColumn(
-                name: "image_data",
-                table: "Resource");
-
-            migrationBuilder.DropColumn(
-                name: "access_revoked",
-                table: "Account");
-
-            migrationBuilder.DropColumn(
-                name: "email_confirmed",
-                table: "Account");
-
-            migrationBuilder.DropColumn(
-                name: "failed_attempts",
-                table: "Account");
-
-            migrationBuilder.DropColumn(
-                name: "locked_until",
-                table: "Account");
-
-            migrationBuilder.DropColumn(
-                name: "security_stamp",
-                table: "Account");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Resource_location_id",
-                table: "Resource",
-                column: "location_id");
-
-            migrationBuilder.Sql("DROP INDEX IX_Resource_location_support ON Resource");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Resource_Account_account_id",
-                table: "Resource",
-                column: "account_id",
-                principalTable: "Account",
-                principalColumn: "account_id",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.DropTable(
+                name: "Account");
         }
     }
 }
