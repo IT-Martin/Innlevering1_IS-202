@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Reachout.Controllers;
-[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)] //tester på nytt
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)] //tester på nyttttt
 public class AccountController : Controller
 {
     private readonly ApplicationDbContext context;
