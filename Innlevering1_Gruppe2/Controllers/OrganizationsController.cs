@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Reachout.Controllers;
 [EnableRateLimiting("accounts")]
-public class OrganizationsController : Controller
+public class OrganizationsController : Controller 
 {
     private readonly ApplicationDbContext context;
     private readonly AccountService accounts;
