@@ -31,15 +31,22 @@ Organisasjonen er forhåndsgodkjent og e-postadressen forhåndsbekreftet kun for
 
 ## Lokal oppstart
 
-Krav: **.NET 10 SDK**, **Docker Desktop** og Docker Compose. Kjør én kommando fra prosjektmappen:
+Krav: **Docker Desktop** og Docker Compose. Opprett først en lokal, Git-ignorert `.env`-fil i prosjektmappen med to tilfeldige passord:
 
-```bash
-./start.sh
+```dotenv
+LOCAL_MARIADB_ROOT_PASSWORD=velg-et-langt-tilfeldig-root-passord
+LOCAL_MARIADB_APP_PASSWORD=velg-et-langt-tilfeldig-app-passord
 ```
 
-Skriptet oppretter en lokal MariaDB-database i Docker med et tilfeldig root-passord lagret i den Git-ignorerte filen `.local-db.env`, starter databasen og venter til den er klar. Databasemigreringer kjøres automatisk når applikasjonen starter i `Development`-miljøet. Åpne [http://localhost:5062](http://localhost:5062).
+Start deretter applikasjonen fra prosjektmappen:
 
-Stopp applikasjonen med `Ctrl+C`. Hvis port `5062` allerede er i bruk, velger skriptet automatisk neste ledige port og viser hvilken URL du skal åpne. Du kan også angi port selv, for eksempel `APP_PORT=5063 ./start.sh`. Databasen og passordet beholdes ved omstart; `./start.sh` starter samme Docker-volum igjen.
+```bash
+docker compose up --build
+```
+
+Compose oppretter en lokal MariaDB-database og brukeren `beredskap_app`. Applikasjonen kobler til databasen med denne brukeren, ikke med `root`. Databasemigreringer kjøres automatisk når applikasjonen starter i `Development`-miljøet. Åpne [http://localhost:5205](http://localhost:5205).
+
+Stopp applikasjonen med `Ctrl+C`. Databasen og passordene beholdes ved omstart fordi Docker-volumet beholdes. Hvis databasen ble opprettet før `beredskap_app` ble lagt til, må volumet initialiseres på nytt med `docker compose down -v` før `docker compose up --build` kjøres igjen. Dette sletter den lokale databasen.
 
 ## Systemarkitektur
 

@@ -4,7 +4,9 @@ services:
     image: mariadb:11.8
     environment:
       MARIADB_DATABASE: resourcedb
-      MARIADB_ROOT_PASSWORD: ${LOCAL_MARIADB_ROOT_PASSWORD:?Run ./start.sh first}
+      MARIADB_ROOT_PASSWORD: ${LOCAL_MARIADB_ROOT_PASSWORD:?Set LOCAL_MARIADB_ROOT_PASSWORD in .env}
+      MARIADB_USER: beredskap_app
+      MARIADB_PASSWORD: ${LOCAL_MARIADB_APP_PASSWORD:?Set LOCAL_MARIADB_APP_PASSWORD in .env}
     ports:
       - "127.0.0.1:3307:3306"
     volumes:
@@ -21,7 +23,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
-      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=resourcedb;User=root;Password=${LOCAL_MARIADB_ROOT_PASSWORD:?Run ./start.sh first};"
+      ConnectionStrings__DefaultConnection: "Server=db;Port=3306;Database=resourcedb;User=beredskap_app;Password=${LOCAL_MARIADB_APP_PASSWORD:?Set LOCAL_MARIADB_APP_PASSWORD in .env}"
       DataDirectory: /data
       LocalPreview: true
       SeedDemoData: false
