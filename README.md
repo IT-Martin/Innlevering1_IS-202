@@ -14,7 +14,6 @@ For å kjøre prosjektet trenger du:
 - **Docker Desktop**
 - En tilgjengelig **MySQL/MariaDB-database**
 - Internettilgang for eksterne ressurser som **Leaflet** og **OpenStreetMap**
-- Database kobling med
 
 
 ## 1. Førstegangsoppsett
@@ -92,6 +91,8 @@ Logge inn som offentlig konto:
 
 - E-post: `offentlig@test.no`
 - Passord: `offentligoffentligoffentlig`
+
+Kontoen er i appsettings.Development.json
 
 ## Systemarkitektur
 
