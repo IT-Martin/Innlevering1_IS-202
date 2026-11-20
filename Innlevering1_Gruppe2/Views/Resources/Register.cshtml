@@ -81,6 +81,10 @@
 
                 <h2 class="h5 mb-3">Velg posisjon</h2>
 
+                <button type="button" class="btn btn-outline-primary mb-3" data-use-current-location>
+                    Bruk min nåværende posisjon
+                </button>
+
                 <div id="map" data-picker-map
                      aria-label="Kart for valg av posisjon">
                 </div>
@@ -113,7 +117,18 @@
                     Klikk på kartet for å velge en posisjon.
                 </div>
 
-                <label class="form-label d-block mt-3">Adresse eller område<input asp-for="Address" class="form-control" /></label>
+                <label class="form-label d-block mt-3">
+                    Område
+                    <select asp-for="Address" class="form-select">
+                        <option value="">Velg område</option>
+                        <option value="Kristiansand">Kristiansand</option>
+                        <option value="Lindesnes">Lindesnes</option>
+                        <option value="Vennesla">Vennesla</option>
+                        <option value="Lillesand">Lillesand</option>
+                        <option value="Birkenes">Birkenes</option>
+                        <option value="Iveland">Iveland</option>
+                    </select>
+                </label>
                 <h2 class="form-section-title">Tilgjengelighet</h2>
                 <label class="form-label d-block">Når kan ressursen brukes?<select asp-for="AvailabilityStatus" class="form-select"><option>Tilgjengelig nå</option><option>Etter avtale</option><option>Ikke tilgjengelig</option></select></label>
                 <p class="field-help">Perioden angir når ressursen kan forespørres. Ved «Etter avtale» avklares bruken med deg.</p>

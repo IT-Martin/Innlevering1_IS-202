@@ -1,0 +1,55 @@
+@model Reachout.Models.ResourceExportViewModel
+@{
+    ViewData["Title"] = "Lagre ressursliste som PDF";
+}
+
+<div class="management-page print-page">
+    <div class="d-print-none">
+        <h1>Skriv ut ressursliste</h1>
+        <p class="text-muted">Trykk på knappen og velg «Lagre som PDF» som skriver i nettleseren.</p>
+        <form method="get" asp-action="Print" class="form-grid mb-4">
+            <label class="form-label">
+                Område
+                <select name="region" class="form-select">
+                    <option value="">Alle områder</option>
+                    @foreach (var region in Reachout.Models.ResourceExportViewModel.Regions)
+                    {
+                        <option value="@region" selected="@(Model.Region == region)">@region</option>
+                    }
+                </select>
+            </label>
+            <div class="align-self-end">
+                <button class="btn btn-primary" type="submit">Vis liste</button>
+                <a class="btn btn-light" asp-action="Index" asp-route-region="@Model.Region">Last ned CSV</a>
+                <button class="btn btn-outline-primary" type="button" onclick="window.print()">Lagre som PDF</button>
+            </div>
+        </form>
+    </div>
+
+    <h2>Ressursliste@(string.IsNullOrWhiteSpace(Model.Region) ? "" : $" – {Model.Region}")</h2>
+    <p class="text-muted">Antall ressurser: @Model.Resources.Count</p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Navn</th>
+                <th>Kategori</th>
+                <th>Område</th>
+                <th>Posisjon</th>
+                <th>Tilgjengelighet</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var resource in Model.Resources)
+        {
+            <tr>
+                <td>@resource.Name</td>
+                <td>@resource.Category</td>
+                <td>@resource.Region</td>
+                <td>@resource.Latitude.ToString("0.000000"), @resource.Longitude.ToString("0.000000")</td>
+                <td>@resource.Availability</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
