@@ -86,7 +86,9 @@
                                             @if (User.FindFirst("Permission")?.Value == "Organisasjonsadministrator")
                                             { <li><a class="dropdown-item" href="/Organizations">Organisasjon og ansatte</a></li> }
                                             @if (User.FindFirst("Permission")?.Value != "Lesetilgang")
-                                            { <li><a class="dropdown-item" href="/Exports">Last ned ressursliste (CSV)</a></li> }
+                                             { 
+                                                <li><a class="dropdown-item" href="/Exports/Print">Last ned ressursliste</a></li>
+                                             }
                                         }
                                     </ul>
                                 </li>

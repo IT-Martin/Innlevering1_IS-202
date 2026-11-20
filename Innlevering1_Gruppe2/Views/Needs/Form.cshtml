@@ -26,8 +26,19 @@
             </fieldset>
             <fieldset class="form-section">
                 <legend>Plassering</legend>
-                <label class="form-label d-block">Adresse eller område<input asp-for="Address" class="form-control" /></label>
                 <partial name="_LocationPicker" />
+                <label class="form-label d-block mt-3">
+                    Område
+                    <select asp-for="Address" class="form-select">
+                        <option value="">Velg område</option>
+                        <option value="Kristiansand">Kristiansand</option>
+                        <option value="Lindesnes">Lindesnes</option>
+                        <option value="Vennesla">Vennesla</option>
+                        <option value="Lillesand">Lillesand</option>
+                        <option value="Birkenes">Birkenes</option>
+                        <option value="Iveland">Iveland</option>
+                    </select>
+                </label>
                 <input asp-for="Latitude" type="hidden" data-latitude />
                 <input asp-for="Longitude" type="hidden" data-longitude />
             </fieldset>
