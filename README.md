@@ -6,40 +6,93 @@ Brukeren kan skrive inn et ressursnavn, velge en kartposisjon og registrere ress
 
 ---
 
-## Lokal demonstrasjonskonto
+## 1. Drift og oppstart
 
-Når applikasjonen starter med miljøet `Development`, opprettes en systemansvarlig i den tilkoblede databasen dersom databasen ikke allerede har en systemansvarlig:
+For å kjøre prosjektet trenger du:
 
-- E-post: `admin@test.no`
-- Passord: `adminadminadmin`
-- Velg **Systemansvarlig** på innloggingssiden.
+- **Visual Studio** med støtte for **.NET 10** og **ASP.NET Core**
+- **Docker Desktop**
+- En tilgjengelig **MySQL/MariaDB-database**
+- Internettilgang for eksterne ressurser som **Leaflet** og **OpenStreetMap**
 
-Hvert gruppemedlem får kontoen i sin egen lokale database. Rider-profilene `http` og `https` bruker `Development`. Ved Docker-kjøring må utviklingsmiljøet velges eksplisitt med `ASPNETCORE_ENVIRONMENT=Development`. Databaseforbindelsen må være konfigurert først.
 
-Eksisterende kontoer og passord endres ikke. Dersom e-postadressen allerede brukes av en annen rolle, stoppes oppstarten med en feilmelding fremfor å gi kontoen flere rettigheter. Innstillingene kan overstyres lokalt med `InitialAdmin:Email` og `InitialAdmin:Password`. Den delte innloggingen er kun for lokal demonstrasjon og skal ikke brukes i en publisert løsning. Automatisk opprettelse kjøres ikke utenfor `Development`; en allerede opprettet konto blir værende i databasen.
+## 1. Førstegangsoppsett
 
-### Offentlig demonstrasjonskonto
+### Åpne prosjektet
 
-I `Development` opprettes også **Kristiansand kommune (demo)** og en tilknyttet offentlig konto:
+1. Klon GitHub-repositoriet eller last ned prosjektet.
+2. Start **Docker Desktop**.
+3. Åpne `Innlevering1.slnx` i **Visual Studio**.
+4. Sett `Innlevering1_Gruppe2` som **oppstartsprosjekt**.
+
+### Opprett databasen i Docker
+
+Kjør følgende kommando i terminalen:
+
+```powershell
+docker run --name resourcedb -p 127.0.0.1:3307:3306 -v resourcedb-data:/var/lib/mysql -e MARIADB_ROOT_PASSWORD=Password -e MARIADB_DATABASE=resourcedb -d mariadb:latest
+```
+
+Kommandoen oppretter MariaDB-containeren `resourcedb` og en database med samme navn. Databasen er tilgjengelig på port `3307` på din PC.
+
+## Opprett bruker inni databasen:
+```
+CREATE USER 'beredskap_app'@'%'
+IDENTIFIED BY 'SETT_INN_DET_GENERERTE_APPPASSORDET';
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON resourcedb.*
+TO 'beredskap_app'@'%';
+
+SHOW GRANTS FOR 'beredskap_app'@'%';
+```
+Denne brukeren har kun tilgang til resourcedb, å ikke andre databaser i mariadb containern.
+
+### Konfigurer tilkoblingen for migreringer
+
+Åpne `appsettings.json` og oppdater `ConnectionStrings`. Behold de øvrige innstillingene i filen.
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=127.0.0.1;Port=3306;Database=resourcedb;User=beredskap_app;Password=hemmeligpassord;"
+}
+```
+
+> Adressen `127.0.0.1` brukes når du oppdaterer databasen med migreringer fra Visual Studio.
+
+### Opprett databasestrukturen
+
+Åpne **Tools → NuGet Package Manager → Package Manager Console** i Visual Studio og kjør:
+
+```powershell
+Update-Database
+```
+
+Kommandoen bruker prosjektets eksisterende migreringer til å opprette eller oppdatere tabeller og relasjoner i databasen.
+
+### Konfigurer tilkoblingen for applikasjonen
+
+Når migreringene er fullført, endrer du `Server` i tilkoblingsstrengen til `host.docker.internal`:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=host.docker.internal;Port=3307;Database=resourcedb;User=beredskap_app;Password=hemmeligpassord;"
+}
+```
+
+---
+
+## Opprette Konto
+Brukere har mulighet til å opprette leverandør konto. Denne konto lagres i mariadb.
+
+### Lokal demonstrasjons konto
+
+Logge inn som offentlig konto:
 
 - E-post: `offentlig@test.no`
 - Passord: `offentligoffentligoffentlig`
-- Velg **Offentlig aktør** på innloggingssiden.
-- Tilgang: **Organisasjonsadministrator** for demonstrasjonsorganisasjonen.
 
-Organisasjonen er forhåndsgodkjent og e-postadressen forhåndsbekreftet kun for denne lokale demonstrasjonen. Dette representerer ikke en faktisk godkjenning fra kommunen. Den vanlige invitasjonsflyten er uendret. Eksisterende kontoer endres ikke ved omstart, og en adressekonflikt med en annen kontotype stopper oppstarten. Innloggingen kan overstyres lokalt med `InitialPublicActor:Email` og `InitialPublicActor:Password`. Kontoen blir værende i den lokale databasen etter opprettelse.
-
-## Lokal oppstart
-
-Krav: **.NET 10 SDK**, **Docker Desktop** og Docker Compose. Kjør én kommando fra prosjektmappen:
-
-```bash
-./start.sh
-```
-
-Skriptet oppretter en lokal MariaDB-database i Docker med et tilfeldig root-passord lagret i den Git-ignorerte filen `.local-db.env`, starter databasen og venter til den er klar. Databasemigreringer kjøres automatisk når applikasjonen starter i `Development`-miljøet. Åpne [http://localhost:5062](http://localhost:5062).
-
-Stopp applikasjonen med `Ctrl+C`. Hvis port `5062` allerede er i bruk, velger skriptet automatisk neste ledige port og viser hvilken URL du skal åpne. Du kan også angi port selv, for eksempel `APP_PORT=5063 ./start.sh`. Databasen og passordet beholdes ved omstart; `./start.sh` starter samme Docker-volum igjen.
+Kontoen er i appsettings.Development.json
 
 ## Systemarkitektur
 
@@ -52,23 +105,28 @@ Applikasjonen følger Model-View-Controller-arkitekturen:
 
 | Komponent | Ansvar |
 | --- | --- |
-| `Controllers/LoginController.cs` | Håndterer registrering, innlogging, utlogging og tilgangsavvisning. Validerer brukerdata, hasher og verifiserer passord, oppretter autentiserings-cookie og claims. |
-| `Controllers/ResourceController.cs` | Håndterer kartvisning, registrering, redigering, sletting og visning av brukerens egne ressurser. Krever innlogging og kontrollerer at brukeren eier ressursen før redigering eller sletting. |
-| `Controllers/HomeController.cs` | Viser forsiden, personvernsiden og feilsiden. |
-| `DataAccess/ApplicationDbContext.cs` | Kobler applikasjonen til databasen gjennom Entity Framework Core. Definerer entiteter, relasjoner, nøkler, valideringsregler, indekser og standardtyper for ressurser. |
-| `DataAccess/Repositories/IResourceRepository.cs` | Definerer operasjonene repository-laget må støtte for å hente, opprette, oppdatere og slette ressurser. |
-| `DataAccess/Repositories/ResourceRepository.cs` | Implementerer databaseoperasjoner for ressurser ved hjelp av Entity Framework Core. Håndterer også henting av eier, lokasjon og ressurstype. |
-| `Models/Entities/Account.cs` | Representerer en brukerkonto med e-post, kontaktinformasjon, passordhash, kontotype og eide ressurser. |
-| `Models/Entities/Resource.cs` | Representerer en ressurs med navn, beskrivelse, eier, ressurstype, lokasjon og kontaktinformasjon. |
-| `Models/Entities/Location.cs` | Lagrer adresseinformasjon og geografiske koordinater for en ressurs. |
-| `Models/Entities/ResourceType.cs` | Representerer kategorier som kan brukes til å klassifisere ressurser. |
-| `Models/Entities/ProviderAccount.cs` | Representerer leverandør- eller organisasjonsinformasjon. Entiteten er konfigurert i databasen, men brukes ikke aktivt i hovedflyten ennå. |
-| `Models/AccountRegistrationViewModel.cs` | Inputmodell for brukerregistrering med validering av navn, telefon, e-post og passord. |
-| `Models/LoginViewModel.cs` | Inputmodell for innlogging med validering av e-post og passord. |
-| `Models/ResourceCreateViewModel.cs` | Inputmodell for registrering av ressurs, inkludert navn, beskrivelse, kategori og koordinater. |
-| `Models/ResourceEditViewModel.cs` | Inputmodell for redigering av en eksisterende ressurs. |
-| `Models/RessursViewModel.cs` | Presentasjonsmodell som brukes til å vise ressurser, ikoner og koordinater på kartet og resultatsiden. |
-| `Models/ResourceTypeIcon.cs` | Kobler ressurstyper og ressursnavn til passende Font Awesome-ikoner. |
+| `Program.cs` | Konfigurerer applikasjonen, databaseforbindelse, avhengighetsinjeksjon, cookie-autentisering, autorisering, rate limiting, middleware og MVC-routing. Kjører også migreringer og eventuell startdata ved oppstart. |
+| `Controllers/LoginController.cs` | Håndterer registrering, innlogging, utlogging, e-postbekreftelse og tilgangsavvisning. Bruker `AccountService` for autentisering og claims. |
+| `Controllers/AccountController.cs` | Håndterer glemt passord, nytt passord og visning av brukerprofil. |
+| `Controllers/ResourcesController.cs` | Håndterer registrering, redigering, arkivering, detaljer og egne ressurser. Kontrollerer innlogging og at brukeren har tilgang til ressursen. |
+| `Controllers/NeedsController.cs` | Håndterer opprettelse, redigering, arkivering, detaljer og visning av ressursbehov. |
+| `Controllers/RequestsController.cs` | Viser forespørsler og lar leverandører eller offentlige aktører svare på og oppdatere forespørsler. |
+| `Controllers/AvailabilityController.cs` | Viser, oppretter og fjerner tilgjengelighetsperioder for ressurser og frivilligprofiler. |
+| `Controllers/VolunteersController.cs` | Viser frivilligkatalogen og lar private brukere opprette, redigere og arkivere frivilligprofilen sin. |
+| `Controllers/IntrestsController.cs` | Håndterer interesser og påmeldinger knyttet til frivilligoppdrag. Filnavnet følger den eksisterende skrivemåten `Intrests`. |
+| `Controllers/OrganizationsController.cs` | Håndterer søknader om organisasjoner, godkjenning, invitasjoner og administrasjon av organisasjonsmedlemmer. |
+| `Controllers/MapController.cs` | Henter ressurser og behov og gjør dem tilgjengelige som kartdata for kartvisningen. |
+| `Controllers/ExportsController.cs` | Eksporterer tilgjengelige ressurser som CSV og viser en utskriftsvennlig oversikt. |
+| `Controllers/HomeController.cs` | Viser forsiden, informasjonssiden og feilsider. |
+| `DataAccess/ApplicationDbContext.cs` | Kobler applikasjonen til MariaDB gjennom Entity Framework Core og definerer entiteter, relasjoner, nøkler, validering, indekser og standarddata. |
+| `DataAccess/Repositories/IResourceRepository.cs` | Definerer operasjonene repository-laget tilbyr for å hente og administrere ressurser. |
+| `DataAccess/Repositories/ResourceRepository.cs` | Implementerer databaseoperasjoner for ressurser, inkludert henting av eier, lokasjon og ressurstype. |
+| `Services/AccountService.cs` | Håndterer tilgangskontroll for kontoer, hashing av tokens, passordrelaterte lenker, e-post og cookie-baserte claims. |
+| `Services/WorkflowService.cs` | Samler regler for ressurskoblinger, forespørsler, reservasjoner og tilgjengelighetsperioder. Bruker transaksjoner og en databaselås for å hindre samtidige konflikter. |
+| `Models/Entities/*.cs` | Representerer domenedataene som lagres i databasen, blant annet kontoer, organisasjoner, ressurser, behov, reservasjoner, frivillige og ferdigheter. |
+| `Models/*ViewModel.cs` | Input- og presentasjonsmodeller med validering for skjemaer og visning av data i views. |
+| `Views/**/*.cshtml` | Razor Views som rendrer HTML-sidene og skjemaene i MVC-applikasjonen. |
+| `wwwroot/` | Inneholder statiske filer som CSS, JavaScript, Bootstrap, Leaflet, bilder og andre frontend-ressurser. |
 
 
 
@@ -82,14 +140,15 @@ Databaseforbindelsen konfigureres gjennom `ConnectionStrings:DefaultConnection`,
 ## 4. Testing
 
 | ID | Testscenario | Forventet resultat | Faktisk resultat | Status |
-|---|---|---|---|---|
-| T1 | Skriv inn “Traktor”, velg en kartposisjon og klikk på “Registrer ressurs”. | Riktig navn og koordinater vises. | Riktig navn og koordinater ble vist. | Bestått |
-| T2 | Forsøk å sende skjemaet med tomt ressursnavn. | Innsendingen stoppes, og brukeren får beskjed om at navnet må fylles ut. | Resultatet viser at brukeren får beskjed “Vennligst fyll ut dette feltet”. | Bestått. |
-| T3 | Skriv inn navn uten å velge kartposisjon | Registreringsknappen er deaktivert. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T4 | Registrer to ressurser på forskjellige posisjoner | Begge vises i listen og som markører på kartet. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T5 | Oppdater resultatsiden etter registrering | Ressursnavn og koordinater forblir uendret, og ingen ekstra ressurser opprettes. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T6 | Klikk på en posisjon i registreringsskartet, og klikk deretter et annet sted. | Den gamle markøren fjernes. En markør vises på den nye posisjonen, og koordinatene oppdateres. | Faktisk resultat viser til å stemme med forventet resultat. | Bestått. |
-| T7 | Registrerer “Traktor”, trykk “Se alle ressursene på kartet” og se om markøren kommer med navnet “Traktor”. | En popup viser ressursnavnet ‘Traktor’. Etter registreringen. | Kartet ble sentrert på ressursen. Da jeg klikket på markøren, viste popupen navnet “Traktor” | Ikke bestått. |
+| --- | --- | --- | --- | --- |
+| T1 | Logg inn med riktig e-postadresse og passord. | Brukeren blir logget inn og sendt videre til kart- eller ressurssiden. | Brukeren ble logget inn og sendt videre til kartet. | Bestått |
+| T2 | Logg inn med riktig e-postadresse, men feil passord. | Innloggingen stoppes, og meldingen «Feil e-post eller passord» vises. | Innloggingen ble stoppet, og riktig feilmelding ble vist. | Bestått |
+| T3 | Registrer en konto med en e-postadresse som allerede finnes. | Kontoen opprettes ikke, og brukeren får beskjed om at e-postadressen allerede er i bruk. | Kontoen ble ikke opprettet, og feilmeldingen ble vist. | Bestått |
+| T4 | Registrer en ressurs, åpne «Mine ressurser» og rediger navn og beskrivelse. | De oppdaterte verdiene lagres og vises korrekt etter redigering. | Ressursen ble oppdatert, og de nye verdiene ble vist. | Bestått |
+| T5 | Registrer en ressurs og slett den fra «Mine ressurser». | Ressursen fjernes fra listen og vises ikke lenger på kartet. | Ressursen ble fjernet fra både listen og kartet. | Bestått |
+| T6 | Logg inn med én konto og forsøk å åpne eller redigere en ressurs som tilhører en annen konto. | Brukeren får ikke tilgang til den andre brukerens ressurs. | Tilgang til ressursen ble nektet. | Bestått |
+| T7 | Logg inn, logg ut, og prøv deretter å åpne kartet eller «Mine ressurser» direkte. | Brukeren blir sendt til innloggingssiden og får ikke tilgang til beskyttede sider. | Brukeren ble sendt til innloggingssiden, og sidene var ikke tilgjengelige. | Bestått |
+
 
 ## Enhetstesting:
 
@@ -107,8 +166,6 @@ Windows (PowerShell eller Ledetekst):
 
 Testene dekker validering av registrerings-, innloggings- og ressursmodeller, ikonvalg for ressurstyper, innlogging med ukjent e-post eller feil passord, ressursregistrering og redigering, tilgang til egne ressurser og repository-operasjoner. Databasetestene bruker en isolert EF Core-database i minnet og krever ikke en kjørende MariaDB-instans. Skriptet bruker den vanlige oppsummeringen fra `dotnet test`.
 
-## Systemstesting
-
 ## Sikkerhetstesting
 
 | ID | Test | Gjennomføring | Resultat | Vurdering |
@@ -122,9 +179,17 @@ Testene dekker validering av registrerings-, innloggings- og ressursmodeller, ik
 
 ## Brukervennlighetstesting
 
+Begge testpersonene fikk samme oppgave i Beredskapssentralen: «Tenk deg at du har et aggregat du kan låne ut. Registrer det slik at andre kan se hvor det er tilgjengelig.» Vi ba dem starte på forsiden og observerte hvordan de fant registreringsskjemaet, fylte ut ressursinformasjonen og valgte en plassering på kartet. 
 
+### Bruker test 1
+Personen fikk til å legge inn ressurs. Det tok litt tid å lete på hvor på siden man kan legge til ressursen hen. Inne på registrer ressurs, fant brukeren greit ut hvordan man legger inn informasjon for å registrere aggregat.
 
+Hva vi forbedret: Vi la til en rød knapp med teksten «Registrer ressurs» for å gjøre funksjonen lettere å finne. Vi gjorde også kartet større, slik at menyen med ressursinformasjon og knappen tar opp en mindre del av kartvisningen.
 
+### Bruker test 2
+Personen reagerte litt på det å finne knappen for å legge til ressurs, brukte litt ekstra tid. Nevnte blant annet om å bruke sin nåværende GPS for å legge til en ressurs hadde vært veldig fint.
+
+Hva vi forbedret: Vi la til en knapp som henter brukerens nåværende GPS-posisjon. Knappen er tilgjengelig både når brukeren registrerer en ressurs og når brukeren melder et behov. Vi la også til knappen «Legg til ressurs» direkte på kartet, slik at brukeren kan starte registreringen derfra.
 
 ## Vår bruk av AI:
 Dokumentasjon på vårres bruk a KI i prosjektet fra ide til koding i Github (bruksområder, verktøy, prompt kommandoer)

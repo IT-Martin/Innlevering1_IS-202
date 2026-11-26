@@ -11,6 +11,7 @@ namespace Reachout.Controllers;
 [Authorize(Roles = "Private,Public,Platform")]
 public class NeedsController : Controller
 {
+    private static readonly string[] AllowedRegions = { "Kristiansand", "Lindesnes", "Vennesla", "Lillesand", "Birkenes", "Iveland" };
     private readonly ApplicationDbContext context;
     private readonly WorkflowService workflow;
     public NeedsController(ApplicationDbContext context, WorkflowService workflow)
@@ -97,6 +98,11 @@ public class NeedsController : Controller
         if (!await context.ResourceTypes.AnyAsync(type => type.resource_type_id == model.ResourceTypeId))
         {
             ModelState.AddModelError("ResourceTypeId", "Velg en gyldig kategori.");
+        }
+
+        if (!AllowedRegions.Contains(model.Address, StringComparer.Ordinal))
+        {
+            ModelState.AddModelError("Address", "Velg et gyldig område.");
         }
 
         if (!ModelState.IsValid)

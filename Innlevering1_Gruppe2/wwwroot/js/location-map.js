@@ -12,8 +12,44 @@ document.querySelectorAll('[data-picker-map], [data-detail-map]').forEach(elemen
     let marker = selected ? L.marker([initialLatitude,initialLongitude]).addTo(map) : null;
     const status = form?.querySelector('[data-picker-status], #map-message');
     const button = form?.querySelector('#confirm-position');
+    const currentLocationButton = form?.querySelector('[data-use-current-location]');
+    const setPosition = point => {
+        if (marker) marker.setLatLng(point); else marker = L.marker(point).addTo(map);
+        latitude.value = point.lat;
+        longitude.value = point.lng;
+        map.setView(point, 14);
+        if (status) status.textContent = 'Plassering valgt.';
+        if (button) button.disabled = false;
+        ['latitude','latitudeDisplay'].forEach(id => { const node = form.querySelector('#'+id); if (node) node.textContent = point.lat.toFixed(6); });
+        ['longitude','longitudeDisplay'].forEach(id => { const node = form.querySelector('#'+id); if (node) node.textContent = point.lng.toFixed(6); });
+    };
     if (button && selected) button.disabled = false;
-    if (status && selected) status.textContent = 'Plasseringen er valgt. Du kan flytte markøren ved å klikke på kartet.';
+    if (selected) {
+        if (status) status.textContent = 'Plasseringen er valgt. Du kan flytte markøren ved å klikke på kartet.';
+        ['latitude','latitudeDisplay'].forEach(id => { const node = form?.querySelector('#'+id); if (node) node.textContent = initialLatitude.toFixed(6); });
+        ['longitude','longitudeDisplay'].forEach(id => { const node = form?.querySelector('#'+id); if (node) node.textContent = initialLongitude.toFixed(6); });
+    }
+    if (currentLocationButton) {
+        currentLocationButton.addEventListener('click', () => {
+            if (!navigator.geolocation) {
+                if (status) status.textContent = 'Nettleseren støtter ikke posisjon.';
+                return;
+            }
+
+            currentLocationButton.disabled = true;
+            if (status) status.textContent = 'Henter nåværende posisjon ...';
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    setPosition(L.latLng(position.coords.latitude, position.coords.longitude));
+                    currentLocationButton.disabled = false;
+                },
+                () => {
+                    if (status) status.textContent = 'Kunne ikke hente posisjonen. Tillat posisjon i nettleseren og prøv igjen.';
+                    currentLocationButton.disabled = false;
+                }
+            );
+        });
+    }
     if (element.hasAttribute('data-detail-map')) {
         const expandButton = element.parentElement.querySelector('[data-expand-detail-map]');
         if (expandButton) {
@@ -28,12 +64,6 @@ document.querySelectorAll('[data-picker-map], [data-detail-map]').forEach(elemen
         return;
     }
     map.on('click', event => {
-        const point = event.latlng;
-        if (marker) marker.setLatLng(point); else marker = L.marker(point).addTo(map);
-        latitude.value = point.lat; longitude.value = point.lng;
-        if (status) status.textContent = 'Plassering valgt.';
-        if (button) button.disabled = false;
-        ['latitude','latitudeDisplay'].forEach(id => { const node = form.querySelector('#'+id); if (node) node.textContent = point.lat.toFixed(6); });
-        ['longitude','longitudeDisplay'].forEach(id => { const node = form.querySelector('#'+id); if (node) node.textContent = point.lng.toFixed(6); });
+        setPosition(event.latlng);
     });
 });
