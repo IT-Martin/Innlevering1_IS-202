@@ -38,13 +38,11 @@ Kommandoen oppretter MariaDB-containeren `resourcedb` og en database med samme n
 ## Opprett bruker inni databasen:
 ```
 CREATE USER 'beredskap_app'@'%'
-IDENTIFIED BY 'SETT_INN_DET_GENERERTE_APPPASSORDET';
+IDENTIFIED BY 'hemmeligpassord';
 
-GRANT SELECT, INSERT, UPDATE, DELETE
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE
 ON resourcedb.*
 TO 'beredskap_app'@'%';
-
-SHOW GRANTS FOR 'beredskap_app'@'%';
 ```
 Denne brukeren har kun tilgang til resourcedb, å ikke andre databaser i mariadb containern.
 
@@ -54,7 +52,7 @@ Denne brukeren har kun tilgang til resourcedb, å ikke andre databaser i mariadb
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=127.0.0.1;Port=3306;Database=resourcedb;User=beredskap_app;Password=hemmeligpassord;"
+  "DefaultConnection": "Server=127.0.0.1;Port=3307;Database=resourcedb;User=beredskap_app;Password=hemmeligpassord;"
 }
 ```
 
